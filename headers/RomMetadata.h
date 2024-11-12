@@ -1,5 +1,6 @@
 /*
-https://www.nesdev.org/wiki/NES_2.0
+iNES: https://www.nesdev.org/wiki/INES
+NES 2.0: https://www.nesdev.org/wiki/NES_2.0
 */
 
 #ifndef H_ROM_METADATA
@@ -10,32 +11,27 @@ https://www.nesdev.org/wiki/NES_2.0
 class RomMetadata {
     public:
         RomMetadata(uint8_t[16]);
-        bool isSupported();
-        uint16_t programRomSize();
-        uint16_t characterRomSize();
-        bool isMirroredVertically();
-        bool isMirroredHorizontally();
-        bool isMapperControlled();
-        bool hasBattery();
-        bool hasTrainer();
-        uint16_t getMapperNumber();
-        bool isNES();
-        bool isVS();
-        bool isPlaychoice();
-        bool isExtendConsole();
-        bool isNES2();
-        uint8_t getSubmapper();
-        uint8_t programRamSize();
-        uint8_t characterRamSize();
-        bool isNTSC();
-        bool isPAL();
-        bool isMultiRegional();
-        bool isDendy();
-        // TODO: byte 13 (Vs. system ppu and hardare type or extended console type)
-        // TODO: byte 14 (Number of miscellaneous roms)
-        uint8_t defaultExpansionDevice();
-    private:
-        uint8_t _metadata[16];
+        char identification[4];
+        int programROMSize : 12;
+        int characterROMSize : 12;
+        bool hardwiredNametableLayout : 1;
+        bool batteryPresent : 1;
+        bool trainerPresent : 1;
+        bool alternativeNametables : 1;
+        int mapperNumber : 12;
+        int consoleType : 2;
+        int nesTwoIdentifier : 2;
+        int submapperNumber : 4;
+        int programRAMShift : 4;
+        int programNVRAMShift : 4;
+        int characterRAMShift : 4;
+        int characterNVRAMShift : 4;
+        int clockTiming : 2;
+        int VsPPUType : 4;
+        int VsHardwareType : 4;
+        int extendedConsoleType : 4;
+        int miscellaneousROMsPresent : 2;
+        int defaultExpansionDevice : 6;
 };
 
 #endif // H_ROM_METADATA
