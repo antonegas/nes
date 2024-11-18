@@ -26,8 +26,8 @@ class RomMetadata {
          * iNES: https://www.nesdev.org/wiki/INES
          * NES 2.0: https://www.nesdev.org/wiki/NES_2.0
          */
-        bool unsupportedRom();
-        bool isINES(); // If not NES 2.0
+        bool unsupported();
+        bool isINES(); 
         bool isNES2();
 
         /**
@@ -49,7 +49,7 @@ class RomMetadata {
          *
          * Reference: https://www.nesdev.org/wiki/INES#Flags_6
          */
-        bool batteryPresent();
+        bool isBatteryPresent();
 
         /**
          * TRAINER AREA
@@ -59,7 +59,7 @@ class RomMetadata {
          *
          * Reference: https://www.nesdev.org/wiki/NES_2.0#Trainer_Area
          */
-        bool trainerPresent();
+        bool isTrainerPresent();
 
         /**
          * MAPPERS AND SUBMAPPERS
@@ -77,8 +77,8 @@ class RomMetadata {
          * Mapper reference: https://www.nesdev.org/wiki/Mapper
          * Submapper reference: https://www.nesdev.org/wiki/NES_2.0_submappers
          */
-        int mapperNumber();
-        int submapperNumber();
+        int getMapperNumber();
+        int getSubmapperNumber();
 
         /**
          * CONSOLE TYPES
@@ -146,9 +146,9 @@ class RomMetadata {
          * Vs. System type reference: https://www.nesdev.org/wiki/NES_2.0#Vs._System_Type
          * Extended type reference: https://www.nesdev.org/wiki/NES_2.0#Extended_Console_Type
          */
-        int VsPpuType();
-        int VsHardwareType();
-        int extendedConsoleType();
+        int getVsPpu();
+        int getVsHardware();
+        int getExtendedConsole();
 
         /**
          * MISCELLANOUS ROM AREA
@@ -168,8 +168,9 @@ class RomMetadata {
          *
          * Reference: https://www.nesdev.org/wiki/NES_2.0#Default_Expansion_Device
          */
-        int defaultExpansionDevice();
+        int getExpansionDevice(); // TODO: change to bools for different devices.
 
+    private:
         char identification[4];
         int programROMSize : 12;
         int characterROMSize : 12;

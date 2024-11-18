@@ -24,3 +24,120 @@ RomMetadata::RomMetadata(uint8_t metadata[16]) {
     miscellaneousROMsPresent = metadata[14] & 0x03;
     defaultExpansionDevice = metadata[15] & 0x3F;
 }
+
+bool RomMetadata::unsupported() {
+    if (!isINES() && !isNES2) return true;
+    return false
+}
+
+bool RomMetadata::isINES() {
+    return identification[0] == 'N' && identification[1] == 'E' && identification[2] == 'S' && identification[3] == 0x1A && nesTwoIdentifier != 0x02;
+}
+
+bool RomMetadata::isNES2() {
+    return identification[0] == 'N' && identification[1] == 'E' && identification[2] == 'S' && identification[3] == 0x1A && nesTwoIdentifier == 0x02;
+}
+
+bool RomMetadata::horizontallyMirroredNametable() {
+    return hardwiredNametableLayout == 0x00 && alternativeNametables != 0x01;
+}
+
+bool RomMetadata::verticallyMirroredNametable() {
+    return hardwiredNametableLayout == 0x01 && alternativeNametables != 0x01;
+}
+
+bool RomMetadata::mapperControlledNametable() {
+    return alternativeNametables;
+}
+
+bool RomMetadata::isBatteryPresent() {
+    return batteryPresent;
+}
+
+bool RomMetadata::isTrainerPresent() {
+    return trainerPresent;
+}
+
+int RomMetadata::getMapperNumber() {
+    return mapperNumber;
+}
+
+int RomMetadata::getSubmapperNumber() {
+    return submapperNumber;
+}
+
+bool RomMetadata::isEntertainmentSystem() {
+    return consoleType == 0x00;
+}
+
+bool RomMetadata::isVsSystem() {
+    return consoleType == 0x01;
+}
+
+bool RomMetadata::isPlaychoice() {
+    return consoleType == 0x02;
+}
+
+bool RomMetadata::isExtendedConsole() {
+    return consoleType == 0x03;
+}
+
+int RomMetadata::programRomSize() {
+    return programROMSize;
+}
+
+int RomMetadata::characterRomSize() {
+    return characterROMSize;
+}
+
+int RomMetadata::programRamSize() {
+    return 64 << programRAMShift;
+}   
+
+int RomMetadata::programNvramSize() {
+    return 64 << programNVRAMShift;
+}   
+
+int RomMetadata::characterRamSize() {
+    return 64 << characterRAMShift;
+} 
+
+int RomMetadata::characterNvramSize() {
+    return 64 << characterNVRAMShift;
+}
+
+bool RomMetadata::isNtscTiming() {
+    return clockTiming == 0x00;
+}
+
+bool RomMetadata::isPalTiming() {
+    return clockTiming == 0x01;
+}
+
+bool RomMetadata::isMultiregionTiming() {
+    return clockTiming == 0x02;
+}
+
+bool RomMetadata::isDendyTiming() {
+    return clockTiming == 0x03;
+}
+
+int RomMetadata::getVsPpu() {
+    return isVsSystem() ? VsPPUType : -1; 
+}
+
+int RomMetadata::getVsHardware() {
+    return isVsSystem() ? VsHardwareType : -1;
+}
+
+int RomMetadata::getExtendedConsole() {
+    return isExtendedConsole() ? extendedConsoleType : -1;
+}
+
+int RomMetadata::numberOfMiscellanous() {
+    return miscellaneousROMsPresent;
+}
+
+int RomMetadata::getExpansionDevice() {
+    return defaultExpansionDevice;
+}
