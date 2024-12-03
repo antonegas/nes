@@ -7,8 +7,7 @@ class Bus {
     public:
         uint8_t read(uint16_t address);
         void write(uint16_t address, uint8_t data);
-        void clock();
-    
+        void clock(); 
     private:
         uint8_t ram[2048];
 
