@@ -1,3 +1,5 @@
+#include <cstdint>
+
 #include "../headers/CPU.h"
 
 uint8_t CPU::ZPX() {

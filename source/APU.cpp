@@ -1,4 +1,9 @@
+#include <cstdint>
+
 #include "../headers/APU.h"
+
+using std::uint16_t;
+using std::uint8_t;
 
 uint8_t APU::read(uint16_t address)
 {

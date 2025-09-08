@@ -7,6 +7,9 @@
 #include "PPU.h"
 #include "APU.h"
 
+using std::uint16_t;
+using std::uint8_t;
+
 class Bus {
     public:
         // TODO: Bus constructor should set the bus pointer of the cpu to itself

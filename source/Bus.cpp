@@ -1,4 +1,9 @@
+#include <cstdint>
+
 #include "../headers/Bus.h"
+
+using std::uint16_t;
+using std::uint8_t;
 
 uint8_t Bus::read(uint16_t address) {
     uint16_t masked_address; // Used when addresses are repeated

@@ -8,6 +8,9 @@ NES 2.0: https://www.nesdev.org/wiki/NES_2.0
 
 #include <cstdint>
 
+using std::uint16_t;
+using std::uint8_t;
+
 class RomMetadata {
     public:
         /**

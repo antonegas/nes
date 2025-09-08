@@ -1,4 +1,9 @@
+#include <cstdint>
+
 #include "../headers/PPU.h"
+
+using std::uint16_t;
+using std::uint8_t;
 
 uint8_t PPU::read(uint16_t address) {
     switch (address) {

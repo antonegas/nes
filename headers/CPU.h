@@ -3,6 +3,9 @@
 
 #include <cstdint>
 
+using std::uint16_t;
+using std::uint8_t;
+
 class Bus;
 
 class CPU {

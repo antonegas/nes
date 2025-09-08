@@ -3,6 +3,9 @@
 
 #include <cstdint>
 
+using std::uint16_t;
+using std::uint8_t;
+
 class PPU {
     public:
         uint8_t read(uint16_t address);

@@ -1,8 +1,13 @@
-#include "../headers/RomMetadata.h"
 #include <cstring>
+#include <cstdint>
+
+#include "../headers/RomMetadata.h"
+
+using std::uint16_t;
+using std::uint8_t;
 
 RomMetadata::RomMetadata(uint8_t metadata[16]) {
-    memcpy(identification, &metadata[0], 4 * sizeof(char));
+    std::memcpy(identification, &metadata[0], 4 * sizeof(char));
     programROMSize = ((metadata[9] & 0x0F) << 8) + metadata[4];
     characterROMSize = ((metadata[9] & 0xF0) << 4) + metadata[5];
     hardwiredNametableLayout = metadata[6] & 0x01;
