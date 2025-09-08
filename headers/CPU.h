@@ -60,7 +60,7 @@ class CPU {
         /**
          * CPU INSTRUCTIONS
          * 
-         * The CPU has 56 official instructions and 56 additional illegal opcodes.
+         * The CPU has 56 official instructions and 21 additional illegal opcodes.
          *
          * Reference: https://www.nesdev.org/wiki/Instruction_reference
          * Illegal opcodes reference: https://www.nesdev.org/wiki/CPU_unofficial_opcodes
@@ -124,7 +124,36 @@ class CPU {
         void TXS(); // SP = X
         void TYA(); // A = Y
 
-        void XXX(); // Illegal instruction
+        /**
+         * ILLEGAL OPCODES
+         *
+         * Some opcodes although unintended have useful effects.
+         *
+         * Reference: https://www.oxyron.de/html/opcodes02.html
+         */
+        void XXX(); // Unimplemented illegal instruction
+
+        // void SLO();
+        // void RLA();
+        // void SRE();
+        // void RRA();
+        // void SAX();
+        // void LAX();
+        // void DCP();
+        // void ISC();
+        // void ANC();
+        // void ANC();
+        // void ALR();
+        // void ARR();
+        // void XAA();
+        // void LAX();
+        // void AXS();
+        // void SBC();
+        // void AHX();
+        // void SHY();
+        // void SHX();
+        // void TAS();
+        // void LAS();
 };
 
 #endif // H_CPU
