@@ -43,19 +43,20 @@ class CPU {
          *
          * Reference: https://www.nesdev.org/wiki/CPU_addressing_modes
          */
-        uint8_t ZPX(); // Zero page indexed by X
-        uint8_t ZPY(); // Zero page indexed by Y
-        uint8_t ABX(); // Absolute indexed by X
-        uint8_t ABY(); // Absolute indexed by Y
-        uint8_t INX(); // Indexed indirect by X
-        uint8_t INY(); // Indirect Indexed by Y
+        uint16_t ZPX(); // Zero page indexed by X
+        uint16_t ZPY(); // Zero page indexed by Y
+        uint16_t ABX(); // Absolute indexed by X
+        uint16_t ABY(); // Absolute indexed by Y
+        uint16_t IZX(); // Indexed indirect by X
+        uint16_t IZY(); // Indirect Indexed by Y
 
-        uint8_t ACC(); // Accumulator addressing
-        uint8_t IMM(); // Immediate addressing
-        uint8_t ZP0(); // Zero page addressing
-        uint8_t ABS(); // Absolute adressing
-        uint8_t REL(); // Relative addressing
-        uint8_t IND(); // Indirect addressing
+        uint16_t IMP(); // Implicit addressing
+        uint16_t ACC(); // Accumulator addressing
+        uint16_t IMM(); // Immediate addressing
+        uint16_t ZP0(); // Zero page addressing
+        uint16_t ABS(); // Absolute adressing
+        uint16_t REL(); // Relative addressing
+        uint16_t IND(); // Indirect addressing
 
         /**
          * CPU INSTRUCTIONS
