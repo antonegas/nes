@@ -36,6 +36,20 @@ class CPU {
         uint8_t s; // Stack
         uint8_t p; // Status register P: NV1BDIZC
 
+        enum StatusFlag {
+            C = 1 << 0,
+            Z = 1 << 1,
+            I = 1 << 2,
+            D = 1 << 3,
+            B = 1 << 4,
+            U = 1 << 5,
+            V = 1 << 6,
+            N = 1 << 7
+        };
+
+        uint8_t getFlag(StatusFlag flag);
+        void setFlag(StatusFlag flag, bool value);
+
         /**
          * CPU ADDRESSING MODES
          * 

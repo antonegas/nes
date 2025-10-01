@@ -5,6 +5,20 @@
 using std::uint16_t;
 using std::uint8_t;
 
+uint8_t CPU::getFlag(StatusFlag flag) {
+    return (bool)(p & flag);
+}
+
+void CPU::setFlag(StatusFlag flag, bool value) {
+    if (flag == U) return; // Should always be set.
+
+    if (value) {
+        p = p | flag;
+    } else {
+        p = p & ~flag;
+    }
+}
+
 // TODO: Handle oops cycles for addressing modes.
 uint16_t CPU::ZPX() {
     uint16_t arg = read(pc++);
