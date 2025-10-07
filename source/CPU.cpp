@@ -5,6 +5,35 @@
 using std::uint16_t;
 using std::uint8_t;
 
+void CPU::power() {
+    a = 0x00;
+    x = 0x00;
+    y = 0x00;
+
+    // Set program counter to value set by ROM.
+    uint16_t arg = 0xFFFC;
+    uint16_t low = read(arg);
+    uint16_t high = read(arg + 1);
+    pc = (high << 8) | low;
+
+    s = 0xFD;
+    p = I | U;
+}
+
+void CPU::reset() {
+    // Set program counter to value set by ROM.
+    uint16_t arg = 0xFFFC;
+    uint16_t low = read(arg);
+    uint16_t high = read(arg + 1);
+    pc = (high << 8) | low;
+
+    // Tries to push pc and p to stack but writes are prohibited during reset.
+    s = s - 3;
+
+    // Disable interupts
+    setFlag(I, true);
+}
+
 uint8_t CPU::getFlag(StatusFlag flag) {
     return (bool)(p & flag);
 }
