@@ -116,7 +116,7 @@ uint16_t CPU::IZX() {
     uint16_t arg = read(pc++);
     uint16_t low = read((arg + x) & 0x00FF);
     uint16_t high = read((arg + x + 1) & 0x00FF);
-    uint16_t addr = (high << 8) | low + y;
+    uint16_t addr = (high << 8) | low;
     return addr;
 }
 
@@ -125,7 +125,7 @@ uint16_t CPU::IZY() {
     uint16_t arg = read(pc++);
     uint16_t low = read(arg);
     uint16_t high = read((arg + 1) & 0x00FF);
-    uint16_t addr = (high << 8) | low;
+    uint16_t addr = (high << 8) | low + y;
     return addr;
 }
 
