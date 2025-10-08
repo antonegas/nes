@@ -153,6 +153,7 @@ uint16_t CPU::ABS() {
 }
 
 uint16_t CPU::REL() {
+    // NOTE: might cause oops cycle.
     uint16_t arg = read(pc++);
 
     // If the 8:th bit is set the offset is negative.
