@@ -31,7 +31,7 @@ void CPU::reset() {
     s = s - 3;
 
     // Disable interupts
-    setFlag(I, true);
+    setFlag(I, 1);
 }
 
 uint8_t CPU::getFlag(StatusFlag flag) {
