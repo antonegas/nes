@@ -34,6 +34,15 @@ void CPU::reset() {
     setFlag(I, 1);
 }
 
+void CPU::irq() {
+    if (getFlag(I)) return; // Ignore interrupt requests if interrupts are disabled.
+    interrupt(0xFFFE, 0);
+}
+
+void CPU::nmi() {
+    interrupt(0xFFFA, 0);
+}
+
 uint8_t CPU::pop() {
     s++;
     return read(0x0100 + s);
@@ -44,13 +53,13 @@ void CPU::push(uint8_t data) {
     s--;
 }
 
-void CPU::interrupt(uint16_t addr) {
+void CPU::interrupt(uint16_t addr, bool brk) {
     // Push program counter.
     push((pc >> 8) & 0x00FF);
     push(pc & 0x00FF);
 
     // Push the status register with the B flag set.
-    setFlag(B, 0);
+    setFlag(B, brk);
     push(p);
 
     // Disable interrupts
