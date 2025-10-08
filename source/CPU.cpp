@@ -130,7 +130,7 @@ uint16_t CPU::IZY() {
 }
 
 uint16_t CPU::IMP() {
-    return 0x0000; // TODO: because of this hack it is probably better to set addr instead of returning.
+    return 0x0000;
 }
 
 uint16_t CPU::IMM() {
