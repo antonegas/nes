@@ -133,6 +133,10 @@ uint16_t CPU::IMP() {
     return 0x0000;
 }
 
+uint16_t CPU::ACC() {
+    return 0x0000;
+}
+
 uint16_t CPU::IMM() {
     uint16_t addr = pc;
     pc++;
