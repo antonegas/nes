@@ -133,10 +133,6 @@ uint16_t CPU::IMP() {
     return 0x0000; // TODO: because of this hack it is probably better to set addr instead of returning.
 }
 
-uint16_t CPU::ACC() {
-    return a;
-}
-
 uint16_t CPU::IMM() {
     uint16_t addr = pc;
     pc++;

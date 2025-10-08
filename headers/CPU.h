@@ -78,8 +78,7 @@ class CPU {
         uint16_t IZX(); // Indexed indirect by X
         uint16_t IZY(); // Indirect Indexed by Y
 
-        uint16_t IMP(); // Implicit addressing
-        uint16_t ACC(); // Accumulator addressing
+        uint16_t IMP(); // Implicit/accumulator addressing
         uint16_t IMM(); // Immediate addressing
         uint16_t ZP0(); // Zero page addressing
         uint16_t ABS(); // Absolute adressing
