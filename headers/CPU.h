@@ -10,12 +10,15 @@ class Bus;
 
 class CPU {
     public:
-        uint8_t read(uint16_t address);
-        void write(uint16_t address, uint8_t data);
+        void power();
+        void reset();
         void clock();
     private:
         Bus *bus = nullptr;
 
+        uint8_t read(uint16_t address);
+        void write(uint16_t address, uint8_t data);
+        
         /**
          * CPU REGISTERS
          *
@@ -29,13 +32,6 @@ class CPU {
          * CPU registers reference: https://www.nesdev.org/wiki/CPU_registers
          * CPU status flags reference: https://www.nesdev.org/wiki/Status_flags
          */
-        uint8_t a; // Accumulator
-        uint8_t x; // X index
-        uint8_t y; // Y index
-        uint16_t pc; // Program counter
-        uint8_t s; // Stack
-        uint8_t p; // Status register P: NV1BDIZC
-
         enum StatusFlag {
             C = 1 << 0,
             Z = 1 << 1,
@@ -46,6 +42,14 @@ class CPU {
             V = 1 << 6,
             N = 1 << 7
         };
+
+        uint8_t a = 0x00; // Accumulator
+        uint8_t x = 0x00; // X index
+        uint8_t y = 0x00; // Y index
+        uint16_t pc = 0x00; // Program counter (set by power/reset)
+        uint8_t s = 0xFD; // Stack 
+        uint8_t p = I | U; // Status register P: NV1BDIZC
+
 
         uint8_t getFlag(StatusFlag flag);
         void setFlag(StatusFlag flag, bool value);
