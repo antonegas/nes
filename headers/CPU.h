@@ -12,12 +12,22 @@ class CPU {
     public:
         void power();
         void reset();
+        void irq();
+        void nmi();
         void clock();
     private:
         Bus *bus = nullptr;
 
+        /**
+         * HELPER FUNCTIONS
+         * 
+         * Some helper functions for logic which is used repeatedly.
+         */
         uint8_t read(uint16_t address);
         void write(uint16_t address, uint8_t data);
+        uint8_t pop();
+        void push(uint8_t data);
+        void interrupt(uint16_t address);
         
         /**
          * CPU REGISTERS
