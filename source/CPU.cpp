@@ -30,7 +30,7 @@ void CPU::reset() {
     // Tries to push pc and p to stack but writes are prohibited during reset.
     s = s - 3;
 
-    // Disable interupts
+    // Disable interrupts
     setFlag(I, 1);
 }
 
