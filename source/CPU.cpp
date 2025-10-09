@@ -71,13 +71,13 @@ void CPU::interrupt(uint16_t addr, bool brk) {
     pc = (high << 8) | low;
 }
 
-void CPU::irq() {
-    if (getFlag(I)) return; // Ignore interupt requests if interupts are disabled.
-    interrupt(0xFFFE);
-}
-
-void CPU::nmi() {
-    interrupt(0xFFFA);
+void CPU::branch() {
+    // TODO: Handle extra cycles.
+    // PC = PC + 2 + memory (signed)
+    // +2 happens in relative addressing mode method.
+    uint16_t mem = (this->*addrMode)();
+    uint16_t res = pc + mem;
+    pc = res;
 }
 
 uint8_t CPU::getFlag(StatusFlag flag) {
