@@ -197,3 +197,552 @@ uint16_t CPU::IND() {
 
     return addr;
 }
+
+void CPU::ADC() {
+    // A = A + memory + C
+    uint16_t addr = (this->*addrMode)();
+    uint8_t mem = read(addr);
+    uint16_t res = a + mem + getFlag(C);
+
+    // Set affected flags.
+    setFlag(C, res > 0x00FF);
+    setFlag(Z, res == 0x0000);
+    setFlag(V, (res ^ a) & (res ^ mem) & 0x0080);
+    setFlag(N, res & 0x0080);
+
+    a = res & 0xFF;
+}
+
+void CPU::AND() {
+    // A = A & memory
+    uint16_t addr = (this->*addrMode)();
+    uint8_t mem = read(addr);
+    uint8_t res = a & mem;
+
+    // Set affected flags.
+    setFlag(Z, res == 0x00);
+    setFlag(N, res & 0x80);
+
+    a = res;
+}
+
+void CPU::ASL() {
+    // value = value << 1
+    uint8_t val = 0x00;
+    uint16_t addr = 0x0000;
+    if (addrMode == &ACC) {
+        val = a;
+    } else {
+        addr = (this->*addrMode)();
+        val = read(addr);
+    }
+
+    uint8_t res = val << 1;
+
+    // Set affected flags.
+    setFlag(C, val & 0x80);
+    setFlag(Z, res == 0x00);
+    setFlag(N, res & 0x80);
+
+    if (addrMode == &ACC) {
+        a = res;
+    } else {
+        write(addr, res);
+    }
+}
+
+void CPU::BCC() {
+    // Branch if C is clear.
+    if (getFlag(C)) return;
+    branch();
+}
+
+void CPU::BCS() {
+    // Branch if C is set.
+    if (!getFlag(C)) return;
+    branch();
+}
+
+void CPU::BEQ() {
+    // Branch if Z is set.
+    if (!getFlag(Z)) return;
+    branch();
+}
+
+void CPU::BIT() {
+    // A & memory
+    uint16_t addr = (this->*addrMode)();
+    uint8_t mem = read(addr);
+    uint8_t res = a & mem;
+
+    // Set affected flags.
+    setFlag(Z, res == 0x00);
+    setFlag(V, res & 0x40);
+    setFlag(N, res & 0x80);
+}
+
+void CPU::BMI() {
+    // Branch if N is set.
+    if (!getFlag(N)) return;
+    branch();
+}
+
+void CPU::BNE() {
+    // Branch if Z is clear.
+    if (getFlag(Z)) return;
+    branch();
+}
+
+void CPU::BPL() {
+    // Branch if N is clear.
+    if (getFlag(N)) return;
+    branch();
+}
+
+void CPU::BRK() {
+    interrupt(0xFFFE, 1);
+}
+
+void CPU::BVC() {
+    // Branch if V is clear.
+    if (getFlag(V)) return;
+    branch();
+}
+
+void CPU::BVS() {
+    // Branch if V is set.
+    if (!getFlag(V)) return;
+    branch();
+}
+
+void CPU::CLC() {
+    // C = 0
+    setFlag(C, 0);
+}
+
+void CPU::CLD() {
+    // D = 0
+    setFlag(D, 0);
+}
+
+void CPU::CLI() {
+    // I = 0
+    setFlag(I, 0);
+}
+
+void CPU::CLV() {
+    // V = 0
+    setFlag(V, 0);
+}
+
+void CPU::CMP() {
+    // A - memory
+    uint16_t addr = (this->*addrMode)();
+    uint8_t mem = read(addr);
+    uint8_t res = a - mem;
+
+    // Set affected flags.
+    setFlag(C, a >= mem);
+    setFlag(Z, a == mem);
+    setFlag(N, res & 0x80);
+}
+
+void CPU::CPX() {
+    // X - memory
+    uint16_t addr = (this->*addrMode)();
+    uint8_t mem = read(addr);
+    uint8_t res = x - mem;
+
+    // Set affected flags.
+    setFlag(C, x >= mem);
+    setFlag(Z, x == mem);
+    setFlag(N, res & 0x80);
+}
+
+void CPU::CPY() {
+    // Y - memory
+    uint16_t addr = (this->*addrMode)();
+    uint8_t mem = read(addr);
+    uint8_t res = y - mem;
+
+    // Set affected flags.
+    setFlag(C, y >= mem);
+    setFlag(Z, y == mem);
+    setFlag(N, res & 0x80);
+}
+
+void CPU::DEC() {
+    // memory = memory - 1
+    uint16_t addr = (this->*addrMode)();
+    uint8_t mem = read(addr);
+    uint8_t res = mem - 1;
+
+    // Set affected flags.
+    setFlag(Z, res == 0x00);
+    setFlag(N, res & 0x80);
+
+    write(addr, res);
+}
+
+void CPU::DEX() {
+    // X = X - 1
+    uint8_t res = x - 1;
+
+    // Set affected flags.
+    setFlag(Z, res == 0x00);
+    setFlag(N, res & 0x80);
+
+    x = res;
+}
+
+void CPU::DEY() {
+    // Y = Y - 1
+    uint8_t res = y - 1;
+
+    // Set affected flags.
+    setFlag(Z, res == 0x00);
+    setFlag(N, res & 0x80);
+
+    y = res;
+}
+
+void CPU::EOR() {
+    // A = A ^ memory
+    uint16_t addr = (this->*addrMode)();
+    uint8_t mem = read(addr);
+    uint8_t res = a ^ mem;
+
+    // Set affected flags.
+    setFlag(Z, res == 0x00);
+    setFlag(N, res & 0x80);
+
+    a = res;
+}
+
+void CPU::INC() {
+    // memory = memory + 1
+    uint16_t addr = (this->*addrMode)();
+    uint8_t mem = read(addr);
+    uint8_t res = mem + 1;
+
+    // Set affected flags.
+    setFlag(Z, res == 0x00);
+    setFlag(N, res & 0x80);
+
+    write(addr, res);
+}
+
+void CPU::INX() {
+    // X = X + 1
+    uint8_t res = x + 1;
+
+    // Set affected flags.
+    setFlag(Z, res == 0x00);
+    setFlag(N, res & 0x80);
+
+    x = res;
+}
+
+void CPU::INY() {
+    // Y = Y + 1
+    uint8_t res = y + 1;
+
+    // Set affected flags.
+    setFlag(Z, res == 0x00);
+    setFlag(N, res & 0x80);
+
+    y = res;
+}
+
+void CPU::JMP() {
+    // PC = memory
+    uint16_t addr = (this->*addrMode)();
+    uint8_t mem = read(addr);
+
+    pc = mem;
+}
+
+void CPU::JSR() {
+    // Push program counter.
+    push((pc >> 8) & 0x00FF);
+    push(pc & 0x00FF);
+
+    // PC = memory
+    uint16_t addr = (this->*addrMode)();
+    uint8_t mem = read(addr);
+
+    pc = mem;
+}
+
+void CPU::LDA() {
+    // A = memory
+    uint16_t addr = (this->*addrMode)();
+    uint8_t mem = read(addr);
+
+    // Set affected flags.
+    setFlag(Z, mem == 0x00);
+    setFlag(N, mem & 0x80);
+
+    a = mem;
+}
+
+void CPU::LDX() {
+    // X = memory
+    uint16_t addr = (this->*addrMode)();
+    uint8_t mem = read(addr);
+
+    // Set affected flags.
+    setFlag(Z, mem == 0x00);
+    setFlag(N, mem & 0x80);
+
+    x = mem;
+}
+
+void CPU::LDY() {
+    // Y = memory
+    uint16_t addr = (this->*addrMode)();
+    uint8_t mem = read(addr);
+
+    // Set affected flags.
+    setFlag(Z, mem == 0x00);
+    setFlag(N, mem & 0x80);
+
+    x = mem;
+}
+
+void CPU::LSR() {
+    // value = value >> 1
+    uint8_t val = 0x00;
+    uint16_t addr = 0x0000;
+    if (addrMode == &ACC) {
+        val = a;
+    } else {
+        addr = (this->*addrMode)();
+        val = read(addr);
+    }
+
+    uint8_t res = val >> 1;
+
+    // Set affected flags.
+    setFlag(C, val & 0x01);
+    setFlag(Z, res == 0x00);
+    setFlag(N, 0);
+
+    if (addrMode == &ACC) {
+        a = res;
+    } else {
+        write(addr, res);
+    }
+}
+
+void CPU::NOP() {
+    // no effect
+}
+
+void CPU::ORA() {
+    // A = A | memory
+    uint16_t addr = (this->*addrMode)();
+    uint8_t mem = read(addr);
+    uint8_t res = a | mem;
+
+    // Set affected flags.
+    setFlag(Z, res == 0x00);
+    setFlag(N, res & 0x80);
+
+    a = res;
+}
+
+void CPU::PHA() {
+    // Push accumulator.
+    push(a);
+}
+
+void CPU::PHP() {
+    // Set affected flags.
+    setFlag(B, 1);
+
+    // Push status register.
+    push(p);
+}
+
+void CPU::PLA() {
+    // Pop into accumulator.
+    a = pop();
+
+    // Set affected flags.
+    setFlag(Z, a == 0x00);
+    setFlag(N, a & 0x80);
+}
+
+void CPU::PLP() {
+    // Pop into status register.
+    p = pop();
+}
+
+void CPU::ROL() {
+    // value = value << 1 through C
+    uint8_t val = 0x00;
+    uint16_t addr = 0x0000;
+    if (addrMode == &ACC) {
+        val = a;
+    } else {
+        addr = (this->*addrMode)();
+        val = read(addr);
+    }
+
+    uint8_t res = (val << 1) | getFlag(C);
+
+    // Set affected flags.
+    setFlag(C, val & 0x80);
+    setFlag(Z, res == 0x00);
+    setFlag(N, res & 0x80);
+
+    if (addrMode == &ACC) {
+        a = res;
+    } else {
+        write(addr, res);
+    }
+}
+
+void CPU::ROR() {
+    // value = value >> 1 through C
+    uint8_t val = 0x00;
+    uint16_t addr = 0x0000;
+    if (addrMode == &ACC) {
+        val = a;
+    } else {
+        addr = (this->*addrMode)();
+        val = read(addr);
+    }
+
+    uint8_t res = (getFlag(C) << 7) | (val >> 1);
+
+    // Set affected flags.
+    setFlag(C, val & 0x01);
+    setFlag(Z, res == 0x00);
+    setFlag(N, res & 0x80);
+
+    if (addrMode == &ACC) {
+        a = res;
+    } else {
+        write(addr, res);
+    }
+}
+
+void CPU::RTI() {
+    // Pop status register.
+    p = pop();
+
+    // Pop program counter.
+    uint16_t low = pop();
+    uint16_t high = pop();
+    pc = (high << 8) | low;
+}
+
+void CPU::RTS() {
+    // Pop program counter.
+    uint16_t low = pop();
+    uint16_t high = pop();
+    pc = (high << 8) | low;
+
+    // Increment program counter.
+    pc++;
+}
+
+void CPU::SBC() {
+    // A = A - memory - ~C
+    uint16_t addr = (this->*addrMode)();
+    uint8_t mem = read(addr);
+    uint16_t res = a - mem - ~getFlag(C);
+
+    // Set affected flags.
+    setFlag(C, res & 0xFF00);
+    setFlag(Z, res == 0x0000);
+    setFlag(V, (res ^ a) & (res ^ ~mem) & 0x0080);
+    setFlag(N, res & 0x0080);
+
+    a = res;
+}
+
+void CPU::SEC() {
+    // C = 1
+    setFlag(C, 1);
+}
+
+void CPU::SED() {
+    // D = 1
+    setFlag(D, 1);
+}
+
+void CPU::SEI() {
+    // I = 1
+    setFlag(I, 1);
+}
+
+void CPU::STA() {
+    // memory = A
+    uint16_t addr = (this->*addrMode)();
+    write(addr, a);
+}
+
+void CPU::STX() {
+    // memory = X
+    uint16_t addr = (this->*addrMode)();
+    write(addr, x);
+}
+
+void CPU::STY() {
+    // memory = Y
+    uint16_t addr = (this->*addrMode)();
+    write(addr, y);
+}
+
+void CPU::TAX() {
+    // X = A
+    x = a;
+
+    // Set affected flags.
+    setFlag(Z, x == 0x00);
+    setFlag(N, x & 0x80);
+}
+
+void CPU::TAY() {
+    // Y = A
+    y = a;
+
+    // Set affected flags.
+    setFlag(Z, y == 0x00);
+    setFlag(N, y & 0x80);
+}
+
+void CPU::TSX() {
+    // X = SP
+    x = s;
+
+    // Set affected flags.
+    setFlag(Z, x == 0x00);
+    setFlag(N, x & 0x80);
+}
+
+void CPU::TXA() {
+    // A = X
+    a = x;
+
+    // Set affected flags.
+    setFlag(Z, a == 0x00);
+    setFlag(N, a & 0x80);
+}
+
+void CPU::TXS() {
+    // SP = X
+    s = x;
+}
+
+void CPU::TYA() {
+    // A = Y
+    a = y;
+
+    // Set affected flags.
+    setFlag(Z, a == 0x00);
+    setFlag(N, a & 0x80);
+}

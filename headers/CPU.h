@@ -19,15 +19,18 @@ class CPU {
         Bus *bus = nullptr;
 
         /**
-         * HELPER FUNCTIONS
+         * HELPER MEMBER/FUNCTIONS
          * 
          * Some helper functions for logic which is used repeatedly.
          */
-        uint8_t read(uint16_t address);
-        void write(uint16_t address, uint8_t data);
+        uint16_t (CPU::*addrMode)();
+
+        uint8_t read(uint16_t addr);
+        void write(uint16_t addr, uint8_t data);
         uint8_t pop();
         void push(uint8_t data);
-        void interrupt(uint16_t address);
+        void interrupt(uint16_t addr, bool brk);
+        void branch();
         
         /**
          * CPU REGISTERS
