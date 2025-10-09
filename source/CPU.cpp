@@ -1,6 +1,7 @@
 #include <cstdint>
 
 #include "../headers/CPU.h"
+#include "../headers/Bus.h"
 
 using std::uint16_t;
 using std::uint8_t;
@@ -66,6 +67,14 @@ void CPU::irq() {
 
 void CPU::nmi() {
     interrupt(0xFFFA, 0);
+}
+
+uint8_t CPU::read(uint16_t addr) {
+    return bus->read(addr);
+}
+
+void CPU::write(uint16_t addr, uint8_t data) {
+    bus->write(addr, data);
 }
 
 uint8_t CPU::pop() {
