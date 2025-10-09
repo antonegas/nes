@@ -26,6 +26,7 @@ void CPU::tick() {
 
     // Add oops cycle if there was one.
     if (oops) wait++;
+    oops = false;
 
     // The performed tick also consumed a wait cycle.
     wait--;
@@ -106,12 +107,22 @@ void CPU::interrupt(uint16_t addr, bool brk) {
 }
 
 void CPU::branch() {
-    // TODO: Handle extra cycles.
     // PC = PC + 2 + memory (signed)
     // +2 happens in relative addressing mode method.
     uint16_t mem = (this->*addrMode)();
     uint16_t res = pc + mem;
+
+    // There is an extra cycle since the branch was taken.
+    wait++;
+
+    // If pc crossed a page there is an extra cycle.
+    if (crossed(pc, res)) wait++;
+
     pc = res;
+}
+
+bool CPU::crossed(uint16_t arg, uint16_t addr) {
+    return (arg & 0xFF00) != (addr & 0xFF00);
 }
 
 uint8_t CPU::getFlag(StatusFlag flag) {
@@ -142,20 +153,30 @@ uint16_t CPU::ZPY() {
 }
 
 uint16_t CPU::ABX() {
-    // NOTE: might cause oops cycle.
-    uint16_t arg = read(pc++);
+    uint16_t low = read(pc++);
+    uint16_t high = read(pc++);
+    uint16_t arg = (high << 8) | low;
     uint16_t addr = arg + x;
+
+    // If a page is crossed there might be an oops cycle.
+    oops = crossed(arg, addr);
+
     return addr;
 }
 
 uint16_t CPU::ABY() {
-    // NOTE: might cause oops cycle.
-    uint16_t arg = read(pc++);
+    uint16_t low = read(pc++);
+    uint16_t high = read(pc++);
+    uint16_t arg = (high << 8) | low;
     uint16_t addr = arg + y;
+
+    // If a page is crossed there might be an oops cycle.
+    oops = crossed(arg, addr);
+
     return addr;
 }
 
-uint16_t CPU::IZX() {
+uint16_t CPU::IDX() {
     uint16_t arg = read(pc++);
     uint16_t low = read((arg + x) & 0x00FF);
     uint16_t high = read((arg + x + 1) & 0x00FF);
@@ -163,12 +184,15 @@ uint16_t CPU::IZX() {
     return addr;
 }
 
-uint16_t CPU::IZY() {
-    // NOTE: might cause oops cycle.
+uint16_t CPU::IDY() {
     uint16_t arg = read(pc++);
     uint16_t low = read(arg);
     uint16_t high = read((arg + 1) & 0x00FF);
     uint16_t addr = (high << 8) | low + y;
+
+    // If a page is crossed there might be an oops cycle.
+    oops = crossed(high << 8, addr);
+
     return addr;
 }
 
@@ -200,7 +224,6 @@ uint16_t CPU::ABS() {
 }
 
 uint16_t CPU::REL() {
-    // NOTE: might cause oops cycle.
     uint16_t arg = read(pc++);
 
     // If the 8:th bit is set the offset is negative.
@@ -283,6 +306,9 @@ void CPU::ASL() {
     } else {
         write(addr, res);
     }
+
+    // Should not give an oops cycle.
+    oops = false;
 }
 
 void CPU::BCC() {
@@ -417,6 +443,9 @@ void CPU::DEC() {
     setFlag(N, res & 0x80);
 
     write(addr, res);
+
+    // Should not give an oops cycle.
+    oops = false;
 }
 
 void CPU::DEX() {
@@ -465,6 +494,9 @@ void CPU::INC() {
     setFlag(N, res & 0x80);
 
     write(addr, res);
+
+    // Should not give an oops cycle.
+    oops = false;
 }
 
 void CPU::INX() {
@@ -568,6 +600,9 @@ void CPU::LSR() {
     } else {
         write(addr, res);
     }
+
+    // Should not give an oops cycle.
+    oops = false;
 }
 
 void CPU::NOP() {
@@ -637,6 +672,9 @@ void CPU::ROL() {
     } else {
         write(addr, res);
     }
+
+    // Should not give an oops cycle.
+    oops = false;
 }
 
 void CPU::ROR() {
@@ -662,6 +700,9 @@ void CPU::ROR() {
     } else {
         write(addr, res);
     }
+
+    // Should not give an oops cycle.
+    oops = false;
 }
 
 void CPU::RTI() {
@@ -718,6 +759,9 @@ void CPU::STA() {
     // memory = A
     uint16_t addr = (this->*addrMode)();
     write(addr, a);
+
+    // Should not give an oops cycle.
+    oops = false;
 }
 
 void CPU::STX() {

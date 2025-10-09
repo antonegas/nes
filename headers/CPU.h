@@ -34,6 +34,7 @@ class CPU {
         void push(uint8_t data);
         void interrupt(uint16_t addr, bool brk);
         void branch();
+        bool crossed(uint16_t arg, uint16_t addr);
         
         /**
          * CPU REGISTERS
@@ -81,8 +82,8 @@ class CPU {
         uint16_t ZPY(); // Zero page indexed by Y
         uint16_t ABX(); // Absolute indexed by X
         uint16_t ABY(); // Absolute indexed by Y
-        uint16_t IZX(); // Indexed indirect by X
-        uint16_t IZY(); // Indirect Indexed by Y
+        uint16_t IDX(); // Indexed indirect by X
+        uint16_t IDY(); // Indirect Indexed by Y
 
         uint16_t IMP(); // Implicit addressing
         uint16_t ACC(); // Accumulator addressing
