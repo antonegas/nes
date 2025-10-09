@@ -300,6 +300,7 @@ void CPU::BPL() {
 }
 
 void CPU::BRK() {
+    pc++; // break skips one address for some reason.
     interrupt(0xFFFE, 1);
 }
 
