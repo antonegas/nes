@@ -8,9 +8,9 @@ using std::uint8_t;
 
 class PPU {
     public:
+        void tick();
         uint8_t read(uint16_t address);
         void write(uint16_t address, uint8_t data);
-        void clock();
     private:
         // PPU registers
         uint8_t ppuctrl;

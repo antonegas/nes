@@ -10,11 +10,11 @@ class Bus;
 
 class CPU {
     public:
+        void tick();
         void power();
         void reset();
         void irq();
         void nmi();
-        void clock();
     private:
         Bus *bus = nullptr;
 
