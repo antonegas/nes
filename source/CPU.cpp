@@ -746,3 +746,7 @@ void CPU::TYA() {
     setFlag(Z, a == 0x00);
     setFlag(N, a & 0x80);
 }
+
+void CPU::XXX() {
+    // Placeholder for illegal instructions.
+}
