@@ -23,7 +23,10 @@ class CPU {
          * 
          * Some helper functions for logic which is used repeatedly.
          */
+        uint8_t wait = 0x00;
+        bool oops = false;
         uint16_t (CPU::*addrMode)();
+        void (CPU::*op)();
 
         uint8_t read(uint16_t addr);
         void write(uint16_t addr, uint8_t data);
@@ -186,6 +189,8 @@ class CPU {
         // void SHX();
         // void TAS();
         // void LAS();
+
+        // TODO: Add opcodes table.
 };
 
 #endif // H_CPU

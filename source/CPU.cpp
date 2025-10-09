@@ -5,6 +5,31 @@
 using std::uint16_t;
 using std::uint8_t;
 
+void CPU::tick() {
+    // Check if there is cycles remaining for the current instruction.
+    // Consume cycles if there is wait time.
+    if (wait) wait--;
+
+    // Fetch the opcode.
+    uint8_t opcode = read(pc++);
+
+    // TODO: create lookup table for instructions.
+
+    // Fetch addressing mode, operation and the cycles need to perform the opcode.
+    // addrMode = opcodes[opcode].addrMode;
+    // op = opcodes[opcode].op;
+    // wait = opcodes[opcode].cycles;
+
+    // Perform the operation.
+    (this->*op)();
+
+    // Add oops cycle if there was one.
+    if (oops) wait++;
+
+    // The performed tick also consumed a wait cycle.
+    wait--;
+}
+
 void CPU::power() {
     a = 0x00;
     x = 0x00;
