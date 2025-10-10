@@ -169,27 +169,25 @@ class CPU {
          */
         void XXX(); // Unimplemented illegal instruction
 
-        // void SLO();
-        // void RLA();
-        // void SRE();
-        // void RRA();
-        // void SAX();
-        // void LAX();
+        // void AHX();
+        // void ALR();
+        // void ANC();
+        // void ARR();
+        // void AXS();
         // void DCP();
         // void ISC();
-        // void ANC();
-        // void ANC();
-        // void ALR();
-        // void ARR();
-        // void XAA();
-        // void LAX();
-        // void AXS();
-        // void SBC();
-        // void AHX();
-        // void SHY();
-        // void SHX();
-        // void TAS();
+        // void JAM();
         // void LAS();
+        // void LAX();
+        // void RLA();
+        // void RRA();
+        // void SAX();
+        // void SHX();
+        // void SHY();
+        // void SLO();
+        // void SRE();
+        // void TAS();
+        // void XAA();
 
         // TODO: Add opcodes table.
 };
