@@ -167,27 +167,26 @@ class CPU {
          *
          * Reference: https://www.oxyron.de/html/opcodes02.html
          */
-        void XXX(); // Unimplemented illegal instruction
-
-        // void AHX();
-        // void ALR();
-        // void ANC();
-        // void ARR();
-        // void AXS();
-        // void DCP();
-        // void ISC();
-        // void JAM();
-        // void LAS();
-        // void LAX();
-        // void RLA();
-        // void RRA();
-        // void SAX();
-        // void SHX();
-        // void SHY();
-        // void SLO();
-        // void SRE();
-        // void TAS();
-        // void XAA();
+        
+        void AHX();
+        void ALR();
+        void ANC();
+        void ARR();
+        void AXS();
+        void DCP();
+        void ISC();
+        void JAM();
+        void LAS();
+        void LAX();
+        void RLA();
+        void RRA();
+        void SAX();
+        void SHX();
+        void SHY();
+        void SLO();
+        void SRE();
+        void TAS();
+        void XAA();
 
         // TODO: Add opcodes table.
 };

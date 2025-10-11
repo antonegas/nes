@@ -826,6 +826,60 @@ void CPU::TYA() {
     setFlag(N, a & 0x80);
 }
 
-void CPU::XXX() {
-    // Placeholder for illegal instructions.
+void CPU::AHX() {
+    // Unimplemented.
+}
+void CPU::ALR() {
+    // Unimplemented.
+}
+void CPU::ANC() {
+    // Unimplemented.
+}
+void CPU::ARR() {
+    // Unimplemented.
+}
+void CPU::AXS() {
+    // Unimplemented.
+}
+void CPU::DCP() {
+    // Unimplemented.
+}
+void CPU::ISC() {
+    // Unimplemented.
+}
+void CPU::JAM() {
+    // Unimplemented.
+}
+void CPU::LAS() {
+    // Unimplemented.
+}
+void CPU::LAX() {
+    // Unimplemented.
+}
+void CPU::RLA() {
+    // Unimplemented.
+}
+void CPU::RRA() {
+    // Unimplemented.
+}
+void CPU::SAX() {
+    // Unimplemented.
+}
+void CPU::SHX() {
+    // Unimplemented.
+}
+void CPU::SHY() {
+    // Unimplemented.
+}
+void CPU::SLO() {
+    // Unimplemented.
+}
+void CPU::SRE() {
+    // Unimplemented.
+}
+void CPU::TAS() {
+    // Unimplemented.
+}
+void CPU::XAA() {
+    // Unimplemented.
 }
