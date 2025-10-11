@@ -145,7 +145,6 @@ void CPU::setFlag(StatusFlag flag, bool value) {
     }
 }
 
-// TODO: Handle oops cycles for addressing modes.
 uint16_t CPU::ZPX() {
     uint16_t arg = read(pc++);
     uint16_t addr = (arg + x) & 0x00FF;
