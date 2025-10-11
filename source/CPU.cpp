@@ -9,7 +9,10 @@ using std::uint8_t;
 void CPU::tick() {
     // Check if there is cycles remaining for the current instruction.
     // Consume cycles if there is wait time.
-    if (wait) wait--;
+    if (wait) {
+        wait--;
+        return;
+    }
 
     // Fetch the opcode.
     uint8_t opcode = read(pc++);
