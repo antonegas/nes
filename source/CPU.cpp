@@ -64,10 +64,16 @@ void CPU::reset() {
 void CPU::irq() {
     if (getFlag(I)) return; // Ignore interrupt requests if interrupts are disabled.
     interrupt(0xFFFE, 0);
+
+    // Interrupts takes time.
+    wait = 7;
 }
 
 void CPU::nmi() {
     interrupt(0xFFFA, 0);
+
+    // Interrupts takes time.
+    wait = 7;
 }
 
 uint8_t CPU::read(uint16_t addr) {
