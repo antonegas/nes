@@ -20,7 +20,7 @@ void CPU::tick() {
     // TODO: create lookup table for instructions.
 
     // Fetch addressing mode, operation and the cycles need to perform the opcode.
-    // addrMode = opcodes[opcode].addrMode;
+    // addrmode = opcodes[opcode].addrmode;
     // op = opcodes[opcode].op;
     // wait = opcodes[opcode].cycles;
 
@@ -118,7 +118,7 @@ void CPU::interrupt(uint16_t addr, bool brk) {
 void CPU::branch() {
     // PC = PC + 2 + memory (signed)
     // +2 happens in relative addressing mode method.
-    uint16_t mem = (this->*addrMode)();
+    uint16_t mem = (this->*addrmode)();
     uint16_t res = pc + mem;
 
     // There is an extra cycle since the branch was taken.
@@ -265,7 +265,7 @@ uint16_t CPU::IND() {
 
 void CPU::ADC() {
     // A = A + memory + C
-    uint16_t addr = (this->*addrMode)();
+    uint16_t addr = (this->*addrmode)();
     uint8_t mem = read(addr);
     uint16_t res = a + mem + getFlag(C);
 
@@ -280,7 +280,7 @@ void CPU::ADC() {
 
 void CPU::AND() {
     // A = A & memory
-    uint16_t addr = (this->*addrMode)();
+    uint16_t addr = (this->*addrmode)();
     uint8_t mem = read(addr);
     uint8_t res = a & mem;
 
@@ -295,10 +295,10 @@ void CPU::ASL() {
     // value = value << 1
     uint8_t val = 0x00;
     uint16_t addr = 0x0000;
-    if (addrMode == &ACC) {
+    if (addrmode == &ACC) {
         val = a;
     } else {
-        addr = (this->*addrMode)();
+        addr = (this->*addrmode)();
         val = read(addr);
     }
 
@@ -309,7 +309,7 @@ void CPU::ASL() {
     setFlag(Z, res == 0x00);
     setFlag(N, res & 0x80);
 
-    if (addrMode == &ACC) {
+    if (addrmode == &ACC) {
         a = res;
     } else {
         write(addr, res);
@@ -339,7 +339,7 @@ void CPU::BEQ() {
 
 void CPU::BIT() {
     // A & memory
-    uint16_t addr = (this->*addrMode)();
+    uint16_t addr = (this->*addrmode)();
     uint8_t mem = read(addr);
     uint8_t res = a & mem;
 
@@ -406,7 +406,7 @@ void CPU::CLV() {
 
 void CPU::CMP() {
     // A - memory
-    uint16_t addr = (this->*addrMode)();
+    uint16_t addr = (this->*addrmode)();
     uint8_t mem = read(addr);
     uint8_t res = a - mem;
 
@@ -418,7 +418,7 @@ void CPU::CMP() {
 
 void CPU::CPX() {
     // X - memory
-    uint16_t addr = (this->*addrMode)();
+    uint16_t addr = (this->*addrmode)();
     uint8_t mem = read(addr);
     uint8_t res = x - mem;
 
@@ -430,7 +430,7 @@ void CPU::CPX() {
 
 void CPU::CPY() {
     // Y - memory
-    uint16_t addr = (this->*addrMode)();
+    uint16_t addr = (this->*addrmode)();
     uint8_t mem = read(addr);
     uint8_t res = y - mem;
 
@@ -442,7 +442,7 @@ void CPU::CPY() {
 
 void CPU::DEC() {
     // memory = memory - 1
-    uint16_t addr = (this->*addrMode)();
+    uint16_t addr = (this->*addrmode)();
     uint8_t mem = read(addr);
     uint8_t res = mem - 1;
 
@@ -480,7 +480,7 @@ void CPU::DEY() {
 
 void CPU::EOR() {
     // A = A ^ memory
-    uint16_t addr = (this->*addrMode)();
+    uint16_t addr = (this->*addrmode)();
     uint8_t mem = read(addr);
     uint8_t res = a ^ mem;
 
@@ -493,7 +493,7 @@ void CPU::EOR() {
 
 void CPU::INC() {
     // memory = memory + 1
-    uint16_t addr = (this->*addrMode)();
+    uint16_t addr = (this->*addrmode)();
     uint8_t mem = read(addr);
     uint8_t res = mem + 1;
 
@@ -531,7 +531,7 @@ void CPU::INY() {
 
 void CPU::JMP() {
     // PC = memory
-    uint16_t addr = (this->*addrMode)();
+    uint16_t addr = (this->*addrmode)();
     uint8_t mem = read(addr);
 
     pc = mem;
@@ -543,7 +543,7 @@ void CPU::JSR() {
     push(pc & 0x00FF);
 
     // PC = memory
-    uint16_t addr = (this->*addrMode)();
+    uint16_t addr = (this->*addrmode)();
     uint8_t mem = read(addr);
 
     pc = mem;
@@ -551,7 +551,7 @@ void CPU::JSR() {
 
 void CPU::LDA() {
     // A = memory
-    uint16_t addr = (this->*addrMode)();
+    uint16_t addr = (this->*addrmode)();
     uint8_t mem = read(addr);
 
     // Set affected flags.
@@ -563,7 +563,7 @@ void CPU::LDA() {
 
 void CPU::LDX() {
     // X = memory
-    uint16_t addr = (this->*addrMode)();
+    uint16_t addr = (this->*addrmode)();
     uint8_t mem = read(addr);
 
     // Set affected flags.
@@ -575,7 +575,7 @@ void CPU::LDX() {
 
 void CPU::LDY() {
     // Y = memory
-    uint16_t addr = (this->*addrMode)();
+    uint16_t addr = (this->*addrmode)();
     uint8_t mem = read(addr);
 
     // Set affected flags.
@@ -589,10 +589,10 @@ void CPU::LSR() {
     // value = value >> 1
     uint8_t val = 0x00;
     uint16_t addr = 0x0000;
-    if (addrMode == &ACC) {
+    if (addrmode == &ACC) {
         val = a;
     } else {
-        addr = (this->*addrMode)();
+        addr = (this->*addrmode)();
         val = read(addr);
     }
 
@@ -603,7 +603,7 @@ void CPU::LSR() {
     setFlag(Z, res == 0x00);
     setFlag(N, 0);
 
-    if (addrMode == &ACC) {
+    if (addrmode == &ACC) {
         a = res;
     } else {
         write(addr, res);
@@ -619,7 +619,7 @@ void CPU::NOP() {
 
 void CPU::ORA() {
     // A = A | memory
-    uint16_t addr = (this->*addrMode)();
+    uint16_t addr = (this->*addrmode)();
     uint8_t mem = read(addr);
     uint8_t res = a | mem;
 
@@ -661,10 +661,10 @@ void CPU::ROL() {
     // value = value << 1 through C
     uint8_t val = 0x00;
     uint16_t addr = 0x0000;
-    if (addrMode == &ACC) {
+    if (addrmode == &ACC) {
         val = a;
     } else {
-        addr = (this->*addrMode)();
+        addr = (this->*addrmode)();
         val = read(addr);
     }
 
@@ -675,7 +675,7 @@ void CPU::ROL() {
     setFlag(Z, res == 0x00);
     setFlag(N, res & 0x80);
 
-    if (addrMode == &ACC) {
+    if (addrmode == &ACC) {
         a = res;
     } else {
         write(addr, res);
@@ -689,10 +689,10 @@ void CPU::ROR() {
     // value = value >> 1 through C
     uint8_t val = 0x00;
     uint16_t addr = 0x0000;
-    if (addrMode == &ACC) {
+    if (addrmode == &ACC) {
         val = a;
     } else {
-        addr = (this->*addrMode)();
+        addr = (this->*addrmode)();
         val = read(addr);
     }
 
@@ -703,7 +703,7 @@ void CPU::ROR() {
     setFlag(Z, res == 0x00);
     setFlag(N, res & 0x80);
 
-    if (addrMode == &ACC) {
+    if (addrmode == &ACC) {
         a = res;
     } else {
         write(addr, res);
@@ -735,7 +735,7 @@ void CPU::RTS() {
 
 void CPU::SBC() {
     // A = A - memory - ~C
-    uint16_t addr = (this->*addrMode)();
+    uint16_t addr = (this->*addrmode)();
     uint8_t mem = read(addr);
     uint16_t res = a - mem - ~getFlag(C);
 
@@ -765,7 +765,7 @@ void CPU::SEI() {
 
 void CPU::STA() {
     // memory = A
-    uint16_t addr = (this->*addrMode)();
+    uint16_t addr = (this->*addrmode)();
     write(addr, a);
 
     // Should not give an oops cycle.
@@ -774,13 +774,13 @@ void CPU::STA() {
 
 void CPU::STX() {
     // memory = X
-    uint16_t addr = (this->*addrMode)();
+    uint16_t addr = (this->*addrmode)();
     write(addr, x);
 }
 
 void CPU::STY() {
     // memory = Y
-    uint16_t addr = (this->*addrMode)();
+    uint16_t addr = (this->*addrmode)();
     write(addr, y);
 }
 

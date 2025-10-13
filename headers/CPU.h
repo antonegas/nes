@@ -25,7 +25,7 @@ class CPU {
          */
         uint8_t wait = 0x00;
         bool oops = false;
-        uint16_t (CPU::*addrMode)();
+        uint16_t (CPU::*addrmode)();
         void (CPU::*op)();
 
         uint8_t read(uint16_t addr);
