@@ -5,6 +5,28 @@
 using std::uint16_t;
 using std::uint8_t;
 
+void Bus::tick() {
+    // PAL
+    uint8_t ppurate = 5;
+    uint8_t cpurate = 16;
+    uint8_t offset = 0;
+
+    // NTSC
+    // uint8_t ppurate = 4;
+    // uint8_t cpurate = 12;
+    // uint8_t offset = 0;
+
+    // No need to increase master cycle over CPU * PPU master clocks / clock.
+    cycle = cycle % (ppurate * cpurate);
+
+    // Tick CPU and/or PPU if the current master cycle lines up with there clock rate.
+    if ((cycle + offset) % cpurate == 0) cpu.tick();
+    if (cycle % ppurate == 0) ppu.tick();
+
+    // Tick the master clock once.
+    cycle++;
+}
+
 uint8_t Bus::read(uint16_t address) {
     uint16_t masked_address; // Used when addresses are repeated
 
@@ -77,5 +99,3 @@ void Bus::write(uint16_t address, uint8_t data) {
         // TODO: this is probably the cartridge
     }
 }
-
-void Bus::tick();
