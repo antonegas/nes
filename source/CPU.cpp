@@ -617,7 +617,8 @@ void CPU::LSR() {
 }
 
 void CPU::NOP() {
-    // no effect
+    // No effect, but might still add oops cycles.
+    (this->*addrmode)();
 }
 
 void CPU::ORA() {
