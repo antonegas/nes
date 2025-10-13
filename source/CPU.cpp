@@ -49,6 +49,12 @@ void CPU::power() {
 
     s = 0xFD;
     p = I | U;
+
+    // Clean up helper members.
+    wait = 0x00;
+    oops = false;
+    addrmode = nullptr;
+    op = nullptr;
 }
 
 void CPU::reset() {
@@ -63,6 +69,12 @@ void CPU::reset() {
 
     // Disable interrupts
     setFlag(I, 1);
+
+    // Clean up helper members.
+    wait = 0x00;
+    oops = false;
+    addrmode = nullptr;
+    op = nullptr;
 }
 
 void CPU::irq() {
