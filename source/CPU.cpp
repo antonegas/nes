@@ -20,12 +20,10 @@ void CPU::tick() {
     // Fetch the opcode.
     uint8_t opcode = read(pc++);
 
-    // TODO: create lookup table for instructions.
-
     // Fetch addressing mode, operation and the cycles need to perform the opcode.
-    // addrmode = opcodes[opcode].addrmode;
-    // op = opcodes[opcode].op;
-    // wait = opcodes[opcode].cycles;
+    addrmode = opcodes[opcode].addrmode;
+    op = opcodes[opcode].op;
+    wait = opcodes[opcode].cycles;
 
     // Perform the operation.
     (this->*op)();
