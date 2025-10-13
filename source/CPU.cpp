@@ -8,7 +8,7 @@ using std::uint8_t;
 
 void CPU::tick() {
     // If a JAM instruction is called the CPU should halt.
-    if (op == &JAM) return;
+    if (op == &KIL) return;
 
     // Check if there is cycles remaining for the current instruction.
     // Consume cycles if there is wait time.
@@ -849,59 +849,186 @@ void CPU::TYA() {
 }
 
 void CPU::AHX() {
-    // Unimplemented.
+    // memory = A & X & (address >> 8)
+    // NOTE: in real hardware this behavior is not stable.
+    uint16_t addr = (this->*addrmode)();
+    uint16_t res = a & x & (addr >> 8);
+
+    write(addr, res);
+
+    // Should not give an oops cycle.
+    oops = false;
 }
+
 void CPU::ALR() {
-    // Unimplemented.
+    // A = A & memory, then value = value >> 1
+    AND();
+    LSR();
 }
+
 void CPU::ANC() {
-    // Unimplemented.
+    // A = A & memory
+    AND();
+
+    // Set affected flags.
+    setFlag(C, a & 0x80);
 }
+
 void CPU::ARR() {
-    // Unimplemented.
+    // A = A & memory, then value = value >> 1 through C
+    AND();
+    ROR();
+
+    // Set affected flags.
+    setFlag(V, (a ^ (a << 1)) & 0x40);
 }
+
 void CPU::AXS() {
-    // Unimplemented.
+    // X = (A & X) - memory
+    uint16_t addr = (this->*addrmode)();
+    uint8_t mem = read(addr);
+    uint16_t res = (a & x) - mem;
+
+    // Set affected flags.
+    setFlag(C, (a & x) >= mem);
+    setFlag(Z, (a & x) == mem);
+    setFlag(N, res & 0x80);
+    
+    x = res;
 }
+
 void CPU::DCP() {
-    // Unimplemented.
+    // memory = memory - 1, then A - memory
+    DEC();
+    CMP();
+
+    // Should not give an oops cycle.
+    oops = false;
 }
+
 void CPU::ISC() {
-    // Unimplemented.
+    // memory = memory + 1, then A = A - memory - ~C
+    INC();
+    SBC();
+
+    // Should not give an oops cycle.
+    oops = false;
 }
-void CPU::JAM() {
-    // Unimplemented.
+
+void CPU::KIL() {
+    // Freezes the CPU.
 }
+
 void CPU::LAS() {
-    // Unimplemented.
+    // A = S & memory, X = S & memory, S = S & memory
+    uint16_t addr = (this->*addrmode)();
+    uint8_t mem = read(addr);
+    uint8_t res = s & mem;
+
+    // Set affected flags.
+    setFlag(Z, res == 0x00);
+    setFlag(N, res & 0x80);
+
+    a = res;
+    x = res;
+    s = res;
 }
+
 void CPU::LAX() {
-    // Unimplemented.
+    // A = memory, then X = memory or X = A
+    LDA();
+    if (addrmode == &IMM) {
+        TAX();
+    } else {
+        LDX();
+    }
 }
+
 void CPU::RLA() {
-    // Unimplemented.
+    // value = value << 1 through C, then A = A & memory
+    ROL();
+    AND();
+
+    // Should not give an oops cycle.
+    oops = false;
 }
+
 void CPU::RRA() {
-    // Unimplemented.
+    // value = value >> 1 through C, then A = A + memory + C
+    ROR();
+    ADC();
+
+    // Should not give an oops cycle.
+    oops = false;
 }
+
 void CPU::SAX() {
-    // Unimplemented.
+    // memory = A & X
+    uint16_t addr = (this->*addrmode)();
+    write(addr, a & x);
 }
+
 void CPU::SHX() {
-    // Unimplemented.
+    // memory = X & (address >> 8)
+    // NOTE: in real hardware this behavior is not stable.
+    uint16_t addr = (this->*addrmode)();
+    uint16_t res = x & (addr >> 8);
+
+    write(addr, res);
+
+    // Should not give an oops cycle.
+    oops = false;
 }
+
 void CPU::SHY() {
-    // Unimplemented.
+    // memory = Y & (address >> 8)
+    // NOTE: in real hardware this behavior is not stable.
+    uint16_t addr = (this->*addrmode)();
+    uint16_t res = y & (addr >> 8);
+
+    write(addr, res);
+
+    // Should not give an oops cycle.
+    oops = false;
 }
+
 void CPU::SLO() {
-    // Unimplemented.
+    // value = value << 1, then A = A | memory
+    ASL();
+    ORA();
+
+    // Should not give an oops cycle.
+    oops = false;
 }
+
 void CPU::SRE() {
-    // Unimplemented.
+    // value = value >> 1, then A = A ^ memory
+    LSR();
+    EOR();
+
+    // Should not give an oops cycle.
+    oops = false;
 }
+
 void CPU::TAS() {
-    // Unimplemented.
+    // S = A & X, memory = A & X & (address >> 8)
+    // NOTE: in real hardware this behavior is not stable.
+    uint16_t addr = (this->*addrmode)();
+    uint8_t mem = read(addr);
+    uint16_t res = a & x;
+
+    s = res;
+
+    res = res & (addr >> 8);
+
+    write(addr, res);
+
+    // Should not give an oops cycle.
+    oops = false;
 }
+
 void CPU::XAA() {
-    // Unimplemented.
+    // A = X, then A = A & memory
+    TXA();
+    AND();
 }
