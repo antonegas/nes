@@ -7,6 +7,9 @@ using std::uint16_t;
 using std::uint8_t;
 
 void CPU::tick() {
+    // If a JAM instruction is called the CPU should halt.
+    if (op == &JAM) return;
+
     // Check if there is cycles remaining for the current instruction.
     // Consume cycles if there is wait time.
     if (wait) {
