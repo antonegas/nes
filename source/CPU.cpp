@@ -17,6 +17,15 @@ void CPU::tick() {
         return;
     }
 
+    // Trigger delayed interrupts.
+    if (delayed != nullptr) {
+        (this->*delayed)();
+        delayed = nullptr;
+        priority = 0x00;
+        wait--;
+        return;
+    }
+
     // Fetch the opcode.
     uint8_t opcode = read(pc++);
 
@@ -75,6 +84,9 @@ void CPU::reset() {
     oops = false;
     addrmode = nullptr;
     op = nullptr;
+
+    // Reset takes time.
+    wait = 7;
 }
 
 void CPU::irq() {
@@ -82,14 +94,29 @@ void CPU::irq() {
     interrupt(0xFFFE, 0);
 
     // Interrupts takes time.
-    wait += 7;
+    wait = 7;
 }
 
 void CPU::nmi() {
     interrupt(0xFFFA, 0);
 
     // Interrupts takes time.
-    wait += 7;
+    wait = 7;
+}
+
+void CPU::delay(void (CPU::*interrupt)()) {
+    if (priority >= 0x03) return;
+
+    if (interrupt == &reset) {
+        delayed = interrupt;
+        priority = 0x03;
+    } else if (interrupt == &nmi && priority < 0x02) {
+        delayed = interrupt;
+        priority = 0x02;
+    } else if (interrupt == &irq && priority < 0x01 && !getFlag(I)) {
+        delayed = interrupt;
+        priority = 0x01;
+    }
 }
 
 uint8_t CPU::read(uint16_t addr) {

@@ -15,6 +15,7 @@ class CPU {
         void reset();
         void irq();
         void nmi();
+        void delay(void (CPU::*interrupt)()); // Trigger an interrupt after current instruction is done.
     private:
         Bus *bus = nullptr;
 
@@ -25,8 +26,10 @@ class CPU {
          */
         uint8_t wait = 0x00;
         bool oops = false;
-        uint16_t (CPU::*addrmode)();
-        void (CPU::*op)();
+        uint8_t priority = 0x00; // triggered interrupt priority.
+        uint16_t (CPU::*addrmode)() = nullptr;
+        void (CPU::*op)() = nullptr;
+        void (CPU::*delayed)() = nullptr;
 
         uint8_t read(uint16_t addr);
         void write(uint16_t addr, uint8_t data);
