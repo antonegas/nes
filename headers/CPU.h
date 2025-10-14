@@ -27,7 +27,7 @@ class CPU {
         uint8_t wait = 0x00;
         bool oops = false;
         uint8_t priority = 0x00; // triggered interrupt priority.
-        uint16_t (CPU::*addrmode)() = nullptr;
+        uint16_t (CPU::*addrMode)() = nullptr;
         void (CPU::*op)() = nullptr;
         void (CPU::*delayed)() = nullptr;
 
@@ -200,7 +200,7 @@ class CPU {
          */
 
         typedef struct {
-            uint16_t (CPU::*addrmode)() = nullptr;
+            uint16_t (CPU::*addrMode)() = nullptr;
             void (CPU::*op)() = nullptr;
             uint8_t cycles = 0;
         } Lookup;
