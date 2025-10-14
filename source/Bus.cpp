@@ -19,7 +19,7 @@ void Bus::tick() {
     // No need to increase master cycle over CPU * PPU master clocks / clock.
     cycle = cycle % (ppurate * cpurate);
 
-    // Tick CPU and/or PPU if the current master cycle lines up with there clock rate.
+    // Tick CPU and/or PPU if the current master cycle lines up with their clock rate.
     if ((cycle + offset) % cpurate == 0) cpu.tick();
     if (cycle % ppurate == 0) ppu.tick();
 
