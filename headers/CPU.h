@@ -45,7 +45,7 @@ class CPU {
          * The CPU has six different registers: accumulator (A), indexes (X and Y), program counter
          * (PC), stack pointer (S) and status flags (P).
          * 
-         * There are 7 different flags stored in a byte: carry (C), zero (Z), interupt disable (I), 
+         * There are 7 different flags stored in the P byte: carry (C), zero (Z), interupt disable (I), 
          * decimal (D), b flag (B), overflow (V) and negative (N). The 6:th bit of the byte is not  
          * used and is always set to one. The b flag is not set by the ALU.
          *
