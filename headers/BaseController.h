@@ -15,6 +15,8 @@ class BaseController {
          * setting a strobe high, which is done when the CPU writes the 0x4016 address. This state
          * can then be read, for the standard controller this is done serially with each of the 
          * first eight reads giving a corresponding button state.
+         * 
+         * Reference: https://www.nesdev.org/wiki/Standard_controller
          */
 
         virtual uint8_t read() {};
