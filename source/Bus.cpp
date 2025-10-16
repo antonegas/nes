@@ -27,7 +27,7 @@ void Bus::tick() {
     if (cycle % ppurate == 0) ppu.tick();
 
     // If DMA is active move data to PPU.
-    if (dmaActive) dma();
+    if (dmaActive) dmaTransfer();
 
     // Tick the master clock once.
     cycle++;
@@ -75,10 +75,7 @@ void Bus::write(uint16_t address, uint8_t data) {
         apu.write(address, data);
     } else if (address == 0x4014) {
         // PPU OAMDMA.
-        dmaActive = true;
-        dmaRead = true;
-        dmaWait = true;
-        dmaPage = data;
+        dmaInit(data);
     } else if (address == 0x4015) {
         // APU status.
         apu.write(address, data);
@@ -94,7 +91,14 @@ void Bus::write(uint16_t address, uint8_t data) {
     }
 }
 
-void Bus::dma() {
+void Bus::dmaInit(uint8_t page) {
+    dmaActive = true;
+    dmaRead = true;
+    dmaWait = true;
+    dmaPage = page;
+}
+
+void Bus::dmaTransfer() {
     if (!dmaWait) {
         dmaActive = false;
         return;

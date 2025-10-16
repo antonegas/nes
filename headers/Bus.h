@@ -59,7 +59,8 @@ class Bus {
         uint8_t dmaLower = 0x00;
         uint8_t dmaData = 0x00;
 
-        void dma();
+        void dmaInit(uint8_t page);
+        void dmaTransfer();
 };
 
 #endif // H_BUS
