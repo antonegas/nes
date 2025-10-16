@@ -33,7 +33,7 @@ void Bus::tick() {
 uint8_t Bus::read(uint16_t address) {
     if (address <= 0x1FFF) {
         // CPU RAM.
-        return ram[address & 0x7FF];
+        return ram[address & 0x07FF];
     } else if (address <= 0x3FFF) {
         // PPU registers.
         return ppu.read(address & 0x2007);
@@ -57,7 +57,7 @@ uint8_t Bus::read(uint16_t address) {
 void Bus::write(uint16_t address, uint8_t data) {
     if (address <= 0x1FFF) {
         // CPU RAM.
-        ram[address & 0x7FF] = data;
+        ram[address & 0x07FF] = data;
     } else if (address <= 0x3FFF) {
         // PPU registers.
         ppu.write(address & 0x2007, data);
