@@ -43,6 +43,9 @@ void CPU::tick() {
 
     // The performed tick also consumed a wait cycle.
     wait--;
+
+    // CPU switches being allowing DMA to read or write each cycle.
+    dmaRead = !dmaRead;
 }
 
 void CPU::power() {

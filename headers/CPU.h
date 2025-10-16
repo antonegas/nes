@@ -16,6 +16,8 @@ class CPU {
         void irq();
         void nmi();
         void delay(void (CPU::*interrupt)()); // Trigger an interrupt after current instruction is done.
+        
+        bool dmaRead = true; // Is the CPU allowing DMA to read/not write.
     private:
         Bus *bus = nullptr;
 

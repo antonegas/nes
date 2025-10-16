@@ -23,8 +23,11 @@ void Bus::tick() {
     cycle = cycle % (ppurate * cpurate);
 
     // Tick CPU and/or PPU if the current master cycle lines up with their clock rate.
-    if ((cycle + offset) % cpurate == 0) cpu.tick();
+    if ((cycle + offset) % cpurate == 0 && !dmaActive) cpu.tick();
     if (cycle % ppurate == 0) ppu.tick();
+
+    // If DMA is active move data to PPU.
+    if (dmaActive) dma();
 
     // Tick the master clock once.
     cycle++;
@@ -71,7 +74,11 @@ void Bus::write(uint16_t address, uint8_t data) {
         // APU registers.
         apu.write(address, data);
     } else if (address == 0x4014) {
-        // TODO: PPU OAMDMA.
+        // PPU OAMDMA.
+        dmaActive = true;
+        dmaRead = true;
+        dmaWait = true;
+        dmaPage = data;
     } else if (address == 0x4015) {
         // APU status.
         apu.write(address, data);
@@ -85,4 +92,23 @@ void Bus::write(uint16_t address, uint8_t data) {
     } else if (address <= 0xFFFF) {
         // TODO: write to cartridge
     }
+}
+
+void Bus::dma() {
+    if (!dmaWait) {
+        dmaActive = false;
+        return;
+    }
+
+    if (dmaRead && cpu.dmaRead) {
+        dmaData = read((dmaPage << 8) | dmaLower);
+        dmaRead = false;
+    }
+    if (!dmaRead && !cpu.dmaRead) {
+        ppu.dmaWrite(dmaData);
+        dmaRead = true;
+        dmaLower++;
+    }
+
+    if (dmaLower == 0x00) dmaWait = false; // CPU needs to allow DMA read to stop halt.
 }

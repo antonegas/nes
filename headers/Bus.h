@@ -19,8 +19,7 @@ class Bus {
         uint8_t read(uint16_t address);
         void write(uint16_t address, uint8_t data);
     private:
-        // Cycle of the master clock modolo CPU * PPU master clocks / clock.
-        uint8_t cycle = 0x00;
+        uint8_t cycle = 0x00; // Master clock modolo CPU * PPU master clocks / clock.
 
         /**
          * MEMORY MAP
@@ -42,6 +41,25 @@ class Bus {
         PPU ppu;
         APU apu;
         BaseController controllers[2];
+
+        /**
+         * DIRECT MEMORY ACCESS (DMA)
+         * 
+         * Writing directly to the PPU's OAM using OAMADDR and OAMDATA is slow but there is one more
+         * way to transfer sprites to the PPU. DMA or direct memory access allows for halting the 
+         * CPU to then transfer an entire page in RAM to the OAM memory.
+         * 
+         * Reference: https://www.nesdev.org/wiki/PPU_registers#OAMDMA
+         */
+
+        bool dmaActive = false;
+        bool dmaRead = false; // If DMA wants to read or write.
+        bool dmaWait = false;
+        uint8_t dmaPage = 0x00;
+        uint8_t dmaLower = 0x00;
+        uint8_t dmaData = 0x00;
+
+        void dma();
 };
 
 #endif // H_BUS
