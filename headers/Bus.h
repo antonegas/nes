@@ -28,7 +28,7 @@ class Bus {
          * 0x0800-0x1FFF: Mirrors of 0x0000-0x07FF
          * 0x2000-0x2007: PPU registers
          * 0x2008-0x3FFF: Mirrors of 0x2000-0x2007
-         * 0x4000-0x4015: APU registers
+         * 0x4000-0x4015: APU registers (0x4014 is OAM DMA high address)
          * 0x4016-0x4016: Joystick strobe/joystick 1 data
          * 0x4017-0x4017: APU frame counter/joystick 2 data
          * 0x4018-0x401F: Disabled APU and I/O functionality
