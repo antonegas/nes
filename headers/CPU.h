@@ -21,8 +21,6 @@ class CPU {
 
         /**
          * HELPER MEMBER/FUNCTIONS
-         * 
-         * Some helper functions for logic which is used repeatedly.
          */
         uint8_t wait = 0x00;
         bool oops = false;
