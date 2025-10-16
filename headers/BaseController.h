@@ -11,10 +11,10 @@ class BaseController {
         /**
          * READ/RELOAD
          * 
-         * A controller for the NES can be signaled to store the current state of a controller by  
-         * setting a strobe high, which is done when the CPU writes the 0x4016 address. This state
-         * can then be read, for the standard controller this is done serially with each of the 
-         * first eight reads giving a corresponding button state.
+         * A controller can be signaled to store the current state of a controller by setting 
+         * a strobe high, which is done when the CPU writes the 0x4016 address. This state can 
+         * then be read, for the standard controller this is done serially with each of the first 
+         * eight reads giving a corresponding button state.
          * 
          * Reference: https://www.nesdev.org/wiki/Standard_controller
          */
