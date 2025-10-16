@@ -37,20 +37,17 @@ uint8_t Bus::read(uint16_t address) {
     } else if (address <= 0x3FFF) {
         // PPU registers.
         return ppu.read(address & 0x2007);
-    } else if (address <= 0x4015) {
+    } else if (address <= 0x4013) {
         // APU registers.
         return apu.read(address);
+    } else if (address == 0x4014) {
+        // PPU OAM DMA.
+    } else if (address == 0x4015) {
+        // APU status.
+        return apu.read(address);
     } else if (address <= 0x4017) {
-        switch (address) {
-            case 0x4016:
-                return controllers[0].read();
-                break;
-            case 0x4017:
-                return controllers[1].read();
-                break;
-            default:
-                break;
-        }
+        // Joycons.
+        return controllers[address & 0x0001].read();
     } else if (address <= 0xFFFF) {
         // TODO: read from cartridge
         return 0x00;
@@ -64,8 +61,13 @@ void Bus::write(uint16_t address, uint8_t data) {
     } else if (address <= 0x3FFF) {
         // PPU registers.
         ppu.write(address & 0x2007, data);
-    } else if (address <= 0x4015) {
-        // APU and I/O registers.
+    } else if (address <= 0x4013) {
+        // APU registers.
+        apu.write(address, data);
+    } else if (address == 0x4014) {
+        // TODO: PPU OAMDMA.
+    } else if (address == 0x4015) {
+        // APU status.
         apu.write(address, data);
     } else if (address == 0x4016) {
         // Joystick strobe.
