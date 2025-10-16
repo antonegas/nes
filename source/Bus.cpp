@@ -1,6 +1,9 @@
 #include <cstdint>
 
 #include "../headers/Bus.h"
+#include "../headers/CPU.h"
+#include "../headers/APU.h"
+#include "../headers/BaseController.h"
 
 using std::uint16_t;
 using std::uint8_t;
@@ -40,19 +43,14 @@ uint8_t Bus::read(uint16_t address) {
         return apu.read(address);
     } else if (address <= 0x4017) {
         switch (address) {
-        case 0x4016:
-            // Based on standard nes controller.
-            bool data = (controller1 & 0x80) > 0;
-            controller1 = controller1 << 1;
-            return data;
-            break;
-        case 0x4017:
-            bool data = (controller2 & 0x80) > 0;
-            controller2 = controller2 << 1;
-            return data;
-            break;
-        default:
-            break;
+            case 0x4016:
+                return controllers[0].read();
+                break;
+            case 0x4017:
+                return controllers[1].read();
+                break;
+            default:
+                break;
         }
     } else if (address <= 0xFFFF) {
         // TODO: this is probably cartridge
@@ -73,22 +71,10 @@ void Bus::write(uint16_t address, uint8_t data) {
         // TODO: 0x4017 can also be an APU address
         apu.write(address, data);
     } else if (address <= 0x4017) {
-        // This is not joy/controller when writings
-        // switch (address) {
-        // case 0x4016:
-        //     // based on standard nes controller
-        //     bool data = (controller1 & 0x80) > 0;
-        //     controller1 = controller1 << 1;
-        //     return data;
-        //     break;
-        // case 0x4017:
-        //     bool data = (controller2 & 0x80) > 0;
-        //     controller2 = controller2 << 1;
-        //     return data;
-        //     break;
-        // default:
-        //     break;
-        // }
+        if (address == 0x4016) {
+            controllers[0].reload();
+            controllers[1].reload();
+        }
     } else if (address <= 0xFFFF) {
         // TODO: this is probably the cartridge
     }

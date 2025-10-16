@@ -6,6 +6,7 @@
 #include "CPU.h"
 #include "PPU.h"
 #include "APU.h"
+#include "BaseController.h"
 
 using std::uint16_t;
 using std::uint8_t;
@@ -26,14 +27,8 @@ class Bus {
         PPU ppu;
         APU apu;
 
-        // Controllers
-        // TODO: probably change to an abstract "controller" class which can implement more controllers than the normal NES controller.
-        uint8_t controller1;
-        uint8_t controller2;
-
-        // I/O registers
-        uint8_t joy1;
-        uint8_t joy2;
+        // Controllers.
+        BaseController controllers[2];
 };
 
 #endif // H_BUS
