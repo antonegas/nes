@@ -15,6 +15,7 @@ class Bus {
     public:
         // TODO: Bus constructor should set the bus pointer of the cpu to itself
         void tick(); 
+        void reset();
         uint8_t read(uint16_t address);
         void write(uint16_t address, uint8_t data);
     private:

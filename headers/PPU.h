@@ -9,6 +9,7 @@ using std::uint8_t;
 class PPU {
     public:
         void tick();
+        void reset();
         uint8_t read(uint16_t address);
         void write(uint16_t address, uint8_t data);
         void dmaWrite(uint8_t data);

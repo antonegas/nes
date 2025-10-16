@@ -30,6 +30,12 @@ void Bus::tick() {
     cycle++;
 }
 
+void Bus::reset() {
+    cpu.reset();
+    ppu.reset();
+    apu.reset();
+}
+
 uint8_t Bus::read(uint16_t address) {
     if (address <= 0x1FFF) {
         // CPU RAM.
