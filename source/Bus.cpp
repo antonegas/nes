@@ -28,15 +28,12 @@ void Bus::tick() {
 }
 
 uint8_t Bus::read(uint16_t address) {
-    uint16_t masked_address; // Used when addresses are repeated.
-
     if (address <= 0x1FFF) {
         // RAM
         return ram[address & 0x7FF];
     } else if (address <= 0x3FFF) {
         // PPU registers.
-        masked_address = address & 0x2007;
-        return ppu.read(masked_address);
+        return ppu.read(address & 0x2007);
     } else if (address <= 0x4015) {
         // APU and I/O registers.
         // TODO: 0x4017 can also be an APU address
@@ -64,15 +61,12 @@ uint8_t Bus::read(uint16_t address) {
 }
 
 void Bus::write(uint16_t address, uint8_t data) {
-    uint16_t masked_address; // Used when addresses are repeated.
-
     if (address <= 0x1FFF) {
         // RAM
         ram[address & 0x7FF] = data;
     } else if (address <= 0x3FFF) {
-        // PPU registers
-        masked_address = address & 0x2007;
-        ppu.write(masked_address, data);
+        // PPU registers.
+        ppu.write(address & 0x2007, data);
     } else if (address <= 0x4015) {
         // TODO: move to APU and I/O classes
         // APU and I/O registers.
