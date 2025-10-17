@@ -75,7 +75,7 @@ class PPU {
                 uint8_t V : 1;
             };
             uint8_t reg = 0x00;
-        };
+        } ppustatus;
 
         /**
          * OBJECT ATTRIBUTE MEMORY (OAM)
