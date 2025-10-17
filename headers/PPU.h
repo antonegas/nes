@@ -71,9 +71,9 @@ class PPU {
         union PPUSTATUS {
             struct {
                 uint8_t unused : 5;
-                uint8_t O : 1;
-                uint8_t S : 1;
-                uint8_t V : 1;
+                uint8_t O : 1; // Sprite overflow.
+                uint8_t S : 1; // Sprite 0 hit.
+                uint8_t V : 1; // Sprite overflow.
             };
             uint8_t data = 0x00;
         } ppustatus;

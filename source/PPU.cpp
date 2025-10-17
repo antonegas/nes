@@ -8,8 +8,14 @@ using std::uint8_t;
 uint8_t PPU::read(uint16_t address) {
     switch (address) {
         case 0x2002:
-            // TODO: PPUSTATUS
-            return 0x00;
+            // PPUSTATUS
+            uint8_t status = ppustatus.data & 0xE0;
+
+            // Reading PPUSTATUS has side effects.
+            ppustatus.V = 0;
+            // TODO: w register
+
+            return status;
         case 0x2004:
             // TODO: OAMDATA
             return 0x00;
