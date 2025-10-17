@@ -17,8 +17,8 @@ uint8_t PPU::read(uint16_t address) {
 
             return status;
         case 0x2004:
-            // TODO: OAMDATA
-            return 0x00;
+            // OAMDATA
+            return ((uint8_t*)oam)[oamaddr];
         case 0x2007:
             // TODO: PPUDATA
             return 0x00;
@@ -42,6 +42,7 @@ void PPU::write(uint16_t address, uint8_t data) {
         case 0x2004:
             // OAMDATA
             ((uint8_t*)oam)[oamaddr] = data;
+            oamaddr++;
             break;
         case 0x2005:
             // TODO: PPUSCROLL
