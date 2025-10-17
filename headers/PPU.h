@@ -151,7 +151,7 @@ class PPU {
         } oam[64];
 
         // Odd frame indicator.
-        bool oddFrame = false;
+        bool odd = false;
 };
 
 #endif // H_PPU
