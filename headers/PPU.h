@@ -81,11 +81,13 @@ class PPU {
         /**
          * OBJECT ATTRIBUTE MEMORY (OAM)
          * 
-         * There are 7 different flags stored in the P byte: carry (C), zero (Z), interupt disable (I),
          * The OAM contains information about sprites to be displayed. It stores y position sprite tile
          * attributes and x position.
          * 
+         * The attributes (VHB111PP): vertical flip (V), horizontal flip (H), in front/behind background (B)
+         * and sprite palette (P).
          * 
+         * Reference: https://www.nesdev.org/wiki/PPU_OAM
          */
         
         uint8_t oamaddr = 0x00;
