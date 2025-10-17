@@ -135,6 +135,16 @@ class PPU {
             uint8_t y = 0x00;
             uint8_t tile = 0x00;
             uint8_t attr = 0x00;
+            union Attribute {
+                struct {
+                    uint8_t palette : 2;
+                    uint8_t unused : 3;
+                    uint8_t priority : 1;
+                    uint8_t horizontalFlip : 1;
+                    uint8_t verticalFlip : 1;
+                };
+                uint8_t data = 0x00;
+            } attr;
             uint8_t x = 0x00;
         } oam[64];
 
