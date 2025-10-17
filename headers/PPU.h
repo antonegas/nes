@@ -20,12 +20,13 @@ class PPU {
          * The PPU has some registers which can be written to and/or read from by the CPU: PPUCTRL, 
          * PPUMASK, PPUSTATUS, OAMADDR, OAMDATA, PPUSCROLL, PPUADDR, PPUDATA and OAMDMA.
          * 
-         * PPUCTRL (VPHBSINN, write only): NMI enable (V), master slave/unused (P), sprite height 8x8 or 8x16 (H), 
-         * background tile select (B), sprite tile select (S), increment mode going across or down (I)
-         * and nametable select.
+         * PPUCTRL (VPHBSINN, write only): NMI enable (V), master slave/unused (P), sprite height 8x8 
+         * or 8x16 (H), background tile select (B), sprite tile select (S), increment mode going 
+         * across or down (I) and nametable select.
          * 
-         * PPUMASK (BGRsbMmG, write only): enhanced blue/green/red (BGR), enable sprite (s), enable background (b),
-         * sprite enable in left column (M), background enable in left column (m) and grayscale (G).
+         * PPUMASK (BGRsbMmG, write only): enhanced blue/green/red (BGR), enable sprite (s), enable 
+         * background (b), sprite enable in left column (M), background enable in left column (m) 
+         * and grayscale (G).
          * 
          * PPUMASK (VSO-----, read only): vblank (V), sprite 0 hit (S) and sprite overflow (O).
          * 
@@ -79,6 +80,8 @@ class PPU {
 
         /**
          * OBJECT ATTRIBUTE MEMORY (OAM)
+         * 
+         * The OAM contains information about sprites to be displayed
          */
         
         uint8_t oamaddr = 0x00;
