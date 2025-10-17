@@ -89,7 +89,7 @@ class PPU {
          * Reference: https://www.nesdev.org/wiki/PPU_scrolling#PPU_internal_registers
          */
 
-        union loopy {
+        union Loopy {
             struct {
                 uint8_t coarseX : 5;
                 uint8_t coarseY : 5;
@@ -104,8 +104,8 @@ class PPU {
             uint16_t addr = 0x0000;
         };
         
-        loopy v;
-        loopy t;
+        Loopy v;
+        Loopy t;
         uint8_t fineX = 0x00;
         bool w = 0x00;
 
