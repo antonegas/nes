@@ -25,24 +25,31 @@ void PPU::write(uint16_t address, uint8_t data) {
     switch (address) {
         case 0x2000:
             // TODO: PPUCTRL
-            return;
+            break;
         case 0x2001:
             // TODO: PPUMASK
-            return;
+            break;
         case 0x2003:
-            // TODO: OAMAADDR
-            return;
+            // OAMADDR
+            oamaddr = data;
+            break;
         case 0x2004:
-            // TODO: OAMADATA
-            return;
+            // OAMDATA
+            ((uint8_t*)oam)[oamaddr] = data;
+            break;
         case 0x2005:
             // TODO: PPUSCROLL
-            return;
+            break;
         case 0x2006:
             // TODO: PPUADDR
-            return;
+            break;
         case 0x2007:
             // TODO: PPUDATA
-            return;
+            break;
     }
+}
+
+void PPU::dmaWrite(uint8_t data) {
+    ((uint8_t*)oam)[oamaddr] = data;
+    dmaaddr++;
 }

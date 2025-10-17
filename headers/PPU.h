@@ -77,12 +77,23 @@ class PPU {
             uint8_t reg = 0x00;
         };
 
+        /**
+         * OBJECT ATTRIBUTE MEMORY (OAM)
+         */
+        
         uint8_t oamaddr = 0x00;
-        uint8_t oamdata = 0x00;
-        uint16_t ppuscroll = 0x0000;
+        uint8_t dmaaddr = 0x00;
+
+        struct OAM {
+            uint8_t y = 0x00;
+            uint8_t tile = 0x00;
+            uint8_t attr = 0x00;
+            uint8_t x = 0x00;
+        } oam[64];
+
+        // uint16_t ppuscroll = 0x0000;
         uint16_t ppuaddr = 0x0000;
         // uint8_t ppudata; // NOTE: not a real address. Writes to vram at ppuaddr.
-        uint8_t oamdma = 0x00;
 
         // Latches for double write registers.
         bool ppuscrollLatch = false;
@@ -94,10 +105,6 @@ class PPU {
 
         // Odd frame indicator.
         bool oddFrame = false;
-
-        /**
-         * PPU MEMORY MAP
-         */
 };
 
 #endif // H_PPU
