@@ -10,6 +10,11 @@ void CPU::tick() {
     // If a KIL instruction is called the CPU should halt.
     if (op == &KIL) return;
 
+    // CPU switches being allowing DMA to read or write each cycle.
+    dmaRead = !dmaRead;
+
+    if (suspended) return; // If the CPU is suspended only update DMA read/write.
+
     // Check if there is cycles remaining for the current instruction.
     // Consume cycles if there is wait time.
     if (wait) {
@@ -43,9 +48,6 @@ void CPU::tick() {
 
     // The performed tick also consumed a wait cycle.
     wait--;
-
-    // CPU switches being allowing DMA to read or write each cycle.
-    dmaRead = !dmaRead;
 }
 
 void CPU::power() {

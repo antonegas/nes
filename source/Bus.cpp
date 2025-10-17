@@ -23,7 +23,7 @@ void Bus::tick() {
     cycle = cycle % (ppurate * cpurate);
 
     // Tick CPU and/or PPU if the current master cycle lines up with their clock rate.
-    if ((cycle + offset) % cpurate == 0 && !dmaActive) cpu.tick();
+    if ((cycle + offset) % cpurate == 0) cpu.tick();
     if (cycle % ppurate == 0) ppu.tick();
 
     // If DMA is active move data to PPU.
@@ -92,7 +92,7 @@ void Bus::write(uint16_t address, uint8_t data) {
 }
 
 void Bus::dmaInit(uint8_t page) {
-    dmaActive = true;
+    cpu.suspended = true;
     dmaRead = true;
     dmaWait = true;
     dmaPage = page;
@@ -100,7 +100,7 @@ void Bus::dmaInit(uint8_t page) {
 
 void Bus::dmaTransfer() {
     if (!dmaWait) {
-        dmaActive = false;
+        cpu.suspended = false;
         return;
     }
 
@@ -114,5 +114,6 @@ void Bus::dmaTransfer() {
         dmaLower++;
     }
 
-    if (dmaLower == 0x00) dmaWait = false; // CPU needs to allow DMA read to stop halt.
+    // CPU can only be unhalted on DMA read cycles.
+    if (dmaLower == 0x00) dmaWait = false;
 }
