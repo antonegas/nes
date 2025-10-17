@@ -78,6 +78,33 @@ class PPU {
             uint8_t data = 0x00;
         } ppustatus;
 
+        uint8_t ppudataBuffer = 0x00;
+
+        /**
+         * INTERNAL REGISTERS
+         * 
+         * To facilitate scrolling the PPU has some internal registers. Current VRAM address (v), 
+         * temporary VRAM address (t), fine x scroll (x) and write toggle (w).
+         * 
+         * Reference: https://www.nesdev.org/wiki/PPU_scrolling#PPU_internal_registers
+         */
+
+        union loopy {
+            struct {
+                uint8_t coarseX : 5;
+                uint8_t coarseY : 5;
+                uint8_t nametable : 2;
+                uint8_t fineY : 3;
+                uint8_t unused : 1;
+            };
+            uint16_t addr = 0x0000;
+        };
+        
+        loopy v;
+        loopy t;
+        uint8_t fineX = 0x00;
+        bool w = 0x00;
+
         /**
          * OBJECT ATTRIBUTE MEMORY (OAM)
          * 
