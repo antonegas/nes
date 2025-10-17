@@ -51,7 +51,7 @@ class PPU {
                 uint8_t unused : 1;
                 uint8_t nmiEnable : 1;
             };
-            uint8_t reg = 0x00;
+            uint8_t data = 0x00;
         } ppuctrl;
 
         union PPUMASK {
@@ -65,7 +65,7 @@ class PPU {
                 uint8_t emphasizeGreen : 1;
                 uint8_t emphasizeBlue : 1;
             };
-            uint8_t reg = 0x00;
+            uint8_t data = 0x00;
         } ppumask;
 
         union PPUSTATUS {
@@ -75,13 +75,17 @@ class PPU {
                 uint8_t S : 1;
                 uint8_t V : 1;
             };
-            uint8_t reg = 0x00;
+            uint8_t data = 0x00;
         } ppustatus;
 
         /**
          * OBJECT ATTRIBUTE MEMORY (OAM)
          * 
-         * The OAM contains information about sprites to be displayed
+         * There are 7 different flags stored in the P byte: carry (C), zero (Z), interupt disable (I),
+         * The OAM contains information about sprites to be displayed. It stores y position sprite tile
+         * attributes and x position.
+         * 
+         * 
          */
         
         uint8_t oamaddr = 0x00;
