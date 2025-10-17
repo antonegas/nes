@@ -26,6 +26,10 @@ void Bus::tick() {
     if ((cycle + offset) % cpurate == 0) cpu.tick();
     if (cycle % ppurate == 0) ppu.tick();
 
+    // If the PPU has indicated an NMI one should be triggered on the CPU.
+    if (ppu.nmi) cpu.delay(&CPU::nmi);
+    ppu.nmi = false;
+
     // If DMA is active move data to PPU.
     if (dmaActive) dmaTransfer();
 
