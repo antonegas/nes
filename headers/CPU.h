@@ -71,7 +71,6 @@ class CPU {
         uint8_t s = 0xFD; // Stack 
         uint8_t p = I | U; // Status register P: NV1BDIZC
 
-
         uint8_t getFlag(StatusFlag flag);
         void setFlag(StatusFlag flag, bool value);
 
