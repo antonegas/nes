@@ -93,9 +93,13 @@ class PPU {
             struct {
                 uint8_t coarseX : 5;
                 uint8_t coarseY : 5;
-                uint8_t nametable : 2;
+                uint8_t nametableSelect : 2;
                 uint8_t fineY : 3;
                 uint8_t unused : 1;
+            };
+            struct {
+                uint8_t low;
+                uint8_t high;
             };
             uint16_t addr = 0x0000;
         };
@@ -104,6 +108,13 @@ class PPU {
         loopy t;
         uint8_t fineX = 0x00;
         bool w = 0x00;
+
+        /**
+         * MEMORY MAP
+         */
+
+        uint8_t ppuRead(uint16_t addr);
+        void ppuWrite(uint16_t addr, uint8_t data);
 
         /**
          * OBJECT ATTRIBUTE MEMORY (OAM)
@@ -126,18 +137,6 @@ class PPU {
             uint8_t attr = 0x00;
             uint8_t x = 0x00;
         } oam[64];
-
-        // uint16_t ppuscroll = 0x0000;
-        uint16_t ppuaddr = 0x0000;
-        // uint8_t ppudata; // NOTE: not a real address. Writes to vram at ppuaddr.
-
-        // Latches for double write registers.
-        bool ppuscrollLatch = false;
-        bool ppuaddrLatch = false;
-
-        // Last PPUSCROLL/PPUADDR writes.
-        uint8_t ppuscrollLast = 0x00;
-        uint8_t ppuaddrLast = 0x00;
 
         // Odd frame indicator.
         bool oddFrame = false;

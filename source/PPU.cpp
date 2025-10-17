@@ -13,15 +13,24 @@ uint8_t PPU::read(uint16_t address) {
 
             // Reading PPUSTATUS has side effects.
             ppustatus.V = 0;
-            // TODO: w register
+            w = 0;
 
             return status;
         case 0x2004:
             // OAMDATA
             return ((uint8_t*)oam)[oamaddr];
         case 0x2007:
-            // TODO: PPUDATA
-            return 0x00;
+            // PPUDATA
+            uint8_t data = ppudataBuffer;
+            ppudataBuffer = ppuRead(v.addr);
+
+            // On PAL, 2C02G and 2C02H palette reads are immediate.
+            // if (v.addr >= 0x3F00 && v.addr < 0x4000) data = ppudataBuffer;
+
+            // When the CPU reads from the PPU memory PPUADDR is increased by 1 or 32 depending on increment mode.
+            v.addr += 0x01 + 0x19 * ppuctrl.incrementMode;
+
+            return data;
         default:
             return 0x00;
     }
@@ -30,10 +39,13 @@ uint8_t PPU::read(uint16_t address) {
 void PPU::write(uint16_t address, uint8_t data) {
     switch (address) {
         case 0x2000:
-            // TODO: PPUCTRL
+            // PPUCTRL
+            ppuctrl.data = data;
+            t.nametableSelect = ppuctrl.nametableSelect;
             break;
         case 0x2001:
-            // TODO: PPUMASK
+            // PPUMASK
+            ppumask.data = data;
             break;
         case 0x2003:
             // OAMADDR
@@ -45,13 +57,34 @@ void PPU::write(uint16_t address, uint8_t data) {
             oamaddr++;
             break;
         case 0x2005:
-            // TODO: PPUSCROLL
+            // PPUSCROLL
+            if (w == 0) {
+                t.coarseX = data >> 3;
+                fineX = data & 0x07;
+                w = 1;
+            } else {
+                t.coarseY = data >> 3;
+                t.fineY = data & 0x07;
+                w = 0;
+            }
             break;
         case 0x2006:
-            // TODO: PPUADDR
+            // PPUADDR
+            if (w == 0) {
+                t.high = data & 0x3F;
+                w = 1;
+            } else {
+                t.low = data;
+                v = t;
+                w = 0;
+            }
             break;
         case 0x2007:
-            // TODO: PPUDATA
+            // PPUDATA
+            ppuWrite(v.addr, data);
+
+            // When the CPU writing from the PPU memory PPUADDR is increased by 1 or 32 depending on increment mode.
+            v.addr += 0x01 + 0x19 * ppuctrl.incrementMode;
             break;
     }
 }
