@@ -37,6 +37,12 @@ void Bus::tick() {
     cycle++;
 }
 
+void Bus::power() {
+    cpu.power();
+    ppu.power();
+    apu.power();
+}
+
 void Bus::reset() {
     cpu.reset();
     ppu.reset();

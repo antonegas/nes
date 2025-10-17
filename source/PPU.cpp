@@ -5,6 +5,30 @@
 using std::uint16_t;
 using std::uint8_t;
 
+void PPU::power() {
+    ppuctrl.data = 0x0000;
+    ppumask.data = 0x0000;
+    ppustatus.data = 0x0000;
+    oamaddr = 0x0000;
+    w = 0;
+    v.addr = 0x0000;
+    t.addr = 0x0000;
+    odd = false;
+    nmi = false;
+    dmaaddr = 0x00;
+}
+
+void PPU::reset() {
+    ppuctrl.data = 0x0000;
+    ppumask.data = 0x0000;
+    ppudataBuffer = 0x00;
+    w = 0;
+    t.addr = 0x0000;
+    odd = false;
+    nmi = false;
+    dmaaddr = 0x00;
+}
+
 uint8_t PPU::read(uint16_t address) {
     switch (address) {
         case 0x2002:
