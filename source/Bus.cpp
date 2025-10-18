@@ -4,6 +4,7 @@
 #include "../headers/CPU.h"
 #include "../headers/APU.h"
 #include "../headers/BaseController.h"
+#include "../headers/Cartridge.h"
 
 using std::uint16_t;
 using std::uint8_t;
@@ -68,8 +69,8 @@ uint8_t Bus::read(uint16_t addr) {
         // Joycons.
         return controllers[addr & 0x0001].read();
     } else if (addr <= 0xFFFF) {
-        // TODO: read from cartridge
-        return 0x00;
+        // Read from cartridge
+        return cart.cpuRead(addr);
     }
 }
 
@@ -97,7 +98,8 @@ void Bus::write(uint16_t addr, uint8_t data) {
         // APU frame counter.
         apu.write(addr, data);
     } else if (addr <= 0xFFFF) {
-        // TODO: write to cartridge
+        // Write to cartridge.
+        cart.cpuWrite(addr, data);
     }
 }
 

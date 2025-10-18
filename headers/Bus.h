@@ -7,6 +7,7 @@
 #include "PPU.h"
 #include "APU.h"
 #include "BaseController.h"
+#include "Cartridge.h"
 
 using std::uint16_t;
 using std::uint8_t;
@@ -42,6 +43,7 @@ class Bus {
         PPU ppu;
         APU apu;
         BaseController controllers[2];
+        Cartridge cart;
 
         /**
          * DIRECT MEMORY ACCESS (DMA)
