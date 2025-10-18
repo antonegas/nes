@@ -49,54 +49,54 @@ void Bus::reset() {
     apu.reset();
 }
 
-uint8_t Bus::read(uint16_t address) {
-    if (address <= 0x1FFF) {
+uint8_t Bus::read(uint16_t addr) {
+    if (addr <= 0x1FFF) {
         // CPU RAM.
-        return ram[address & 0x07FF];
-    } else if (address <= 0x3FFF) {
+        return ram[addr & 0x07FF];
+    } else if (addr <= 0x3FFF) {
         // PPU registers.
-        return ppu.registerRead(address & 0x2007);
-    } else if (address <= 0x4013) {
+        return ppu.registerRead(addr & 0x2007);
+    } else if (addr <= 0x4013) {
         // APU registers.
-        return apu.read(address);
-    } else if (address == 0x4014) {
+        return apu.read(addr);
+    } else if (addr == 0x4014) {
         // PPU OAM DMA.
-    } else if (address == 0x4015) {
+    } else if (addr == 0x4015) {
         // APU status.
-        return apu.read(address);
-    } else if (address <= 0x4017) {
+        return apu.read(addr);
+    } else if (addr <= 0x4017) {
         // Joycons.
-        return controllers[address & 0x0001].read();
-    } else if (address <= 0xFFFF) {
+        return controllers[addr & 0x0001].read();
+    } else if (addr <= 0xFFFF) {
         // TODO: read from cartridge
         return 0x00;
     }
 }
 
-void Bus::write(uint16_t address, uint8_t data) {
-    if (address <= 0x1FFF) {
+void Bus::write(uint16_t addr, uint8_t data) {
+    if (addr <= 0x1FFF) {
         // CPU RAM.
-        ram[address & 0x07FF] = data;
-    } else if (address <= 0x3FFF) {
+        ram[addr & 0x07FF] = data;
+    } else if (addr <= 0x3FFF) {
         // PPU registers.
-        ppu.registerWrite(address & 0x2007, data);
-    } else if (address <= 0x4013) {
+        ppu.registerWrite(addr & 0x2007, data);
+    } else if (addr <= 0x4013) {
         // APU registers.
-        apu.write(address, data);
-    } else if (address == 0x4014) {
+        apu.write(addr, data);
+    } else if (addr == 0x4014) {
         // PPU OAMDMA.
         dmaInit(data);
-    } else if (address == 0x4015) {
+    } else if (addr == 0x4015) {
         // APU status.
-        apu.write(address, data);
-    } else if (address == 0x4016) {
+        apu.write(addr, data);
+    } else if (addr == 0x4016) {
         // Joystick strobe.
         controllers[0].reload();
         controllers[1].reload();
-    } else if (address == 0x4017) {
+    } else if (addr == 0x4017) {
         // APU frame counter.
-        apu.write(address, data);
-    } else if (address <= 0xFFFF) {
+        apu.write(addr, data);
+    } else if (addr <= 0xFFFF) {
         // TODO: write to cartridge
     }
 }

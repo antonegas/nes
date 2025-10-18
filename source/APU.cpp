@@ -5,9 +5,9 @@
 using std::uint16_t;
 using std::uint8_t;
 
-uint8_t APU::read(uint16_t address)
+uint8_t APU::read(uint16_t addr)
 {
-    switch (address) {
+    switch (addr) {
         case 0x4000:
             return sq1_vol;
             break;

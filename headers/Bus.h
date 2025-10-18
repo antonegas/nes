@@ -17,8 +17,8 @@ class Bus {
         void tick();
         void power();
         void reset();
-        uint8_t read(uint16_t address);
-        void write(uint16_t address, uint8_t data);
+        uint8_t read(uint16_t addr);
+        void write(uint16_t addr, uint8_t data);
     private:
         uint8_t cycle = 0x00; // Master clock modolo CPU * PPU master clocks / clock.
 

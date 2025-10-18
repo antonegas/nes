@@ -11,8 +11,8 @@ class APU {
         void tick();
         void power();
         void reset();
-        uint8_t read(uint16_t address);
-        void write(uint16_t address, uint8_t data);
+        uint8_t read(uint16_t addr);
+        void write(uint16_t addr, uint8_t data);
     private:
         // APU registers
         uint8_t sq1_vol;

@@ -29,8 +29,8 @@ void PPU::reset() {
     dmaaddr = 0x00;
 }
 
-uint8_t PPU::registerRead(uint16_t address) {
-    switch (address) {
+uint8_t PPU::registerRead(uint16_t addr) {
+    switch (addr) {
         case 0x2002:
             // PPUSTATUS
             uint8_t status = ppustatus.data & 0xE0;
@@ -60,8 +60,8 @@ uint8_t PPU::registerRead(uint16_t address) {
     }
 }
 
-void PPU::registerWrite(uint16_t address, uint8_t data) {
-    switch (address) {
+void PPU::registerWrite(uint16_t addr, uint8_t data) {
+    switch (addr) {
         case 0x2000:
             // PPUCTRL
             ppuctrl.data = data;
