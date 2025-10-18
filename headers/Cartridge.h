@@ -15,6 +15,18 @@ class Cartridge {
         void cpuWrite(uint16_t addr, uint8_t data);
         uint8_t ppuRead(uint16_t addr);
         void ppuWrite(uint16_t addr, uint8_t data);
+        uint16_t mirrorAddr(uint16_t addr); 
+
+        /**
+         * IRQ
+         */
+
+        bool irq = false;
+    private:
+        std::vector<uint8_t> prgrom;
+        std::vector<uint8_t> chrrom;
+        std::vector<uint8_t> prgram;
+        std::vector<uint8_t> chrram;
 
         /**
          * Mirroring
@@ -29,18 +41,7 @@ class Cartridge {
             FOUR
         };
 
-        MirrorMode mirror = HORIZONTAL;
-
-        /**
-         * IRQ
-         */
-
-        bool irq = false;
-    private:
-        std::vector<uint8_t> prgrom;
-        std::vector<uint8_t> chrrom;
-        std::vector<uint8_t> prgram;
-        std::vector<uint8_t> chrram;
+        MirrorMode mirrorMode = HORIZONTAL;
 };
 
 #endif // H_CARTRIDGE

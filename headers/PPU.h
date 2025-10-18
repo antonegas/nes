@@ -138,8 +138,8 @@ class PPU {
         uint8_t vram[0x1600]; // NOTE: Only 2kB on actual hardware but 4kb here to allow 4-screen mirroring.
         uint8_t palette[0x20];
 
-        uint8_t ppuRead(uint16_t addr);
-        void ppuWrite(uint16_t addr, uint8_t data);
+        uint8_t read(uint16_t addr);
+        void write(uint16_t addr, uint8_t data);
 
         /**
          * OBJECT ATTRIBUTE MEMORY (OAM)
