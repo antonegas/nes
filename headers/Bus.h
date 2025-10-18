@@ -2,6 +2,7 @@
 #define H_BUS
 
 #include <cstdint>
+#include <memory>
 
 #include "CPU.h"
 #include "PPU.h"
@@ -43,7 +44,7 @@ class Bus {
         PPU ppu;
         APU apu;
         BaseController controllers[2];
-        Cartridge cart;
+        std::shared_ptr<Cartridge> cart;
 
         /**
          * DIRECT MEMORY ACCESS (DMA)

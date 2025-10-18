@@ -2,6 +2,9 @@
 #define H_PPU
 
 #include <cstdint>
+#include <memory>
+
+#include "../headers/Cartridge.h"
 
 using std::uint16_t;
 using std::uint8_t;
@@ -131,7 +134,8 @@ class PPU {
          * Reference: https://www.nesdev.org/wiki/PPU_memory_map
          */
 
-        uint8_t vram[0x0800];
+        std::shared_ptr<Cartridge> cart;
+        uint8_t vram[0x1600]; // NOTE: Only 2kB on actual hardware but 4kb here to allow 4-screen mirroring.
         uint8_t palette[0x20];
 
         uint8_t ppuRead(uint16_t addr);
