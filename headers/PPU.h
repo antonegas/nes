@@ -135,7 +135,7 @@ class PPU {
          */
 
         std::shared_ptr<Cartridge> cart;
-        uint8_t vram[0x1600]; // NOTE: Only 2kB on actual hardware but 4kb here to allow 4-screen mirroring.
+        uint8_t vram[0x1000]; // NOTE: Only 2kB on actual hardware but 4kb here to allow 4-screen mirroring.
         uint8_t palette[0x20];
 
         uint8_t read(uint16_t addr);
