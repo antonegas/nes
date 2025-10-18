@@ -29,7 +29,7 @@ void PPU::reset() {
     dmaaddr = 0x00;
 }
 
-uint8_t PPU::read(uint16_t address) {
+uint8_t PPU::registerRead(uint16_t address) {
     switch (address) {
         case 0x2002:
             // PPUSTATUS
@@ -60,7 +60,7 @@ uint8_t PPU::read(uint16_t address) {
     }
 }
 
-void PPU::write(uint16_t address, uint8_t data) {
+void PPU::registerWrite(uint16_t address, uint8_t data) {
     switch (address) {
         case 0x2000:
             // PPUCTRL

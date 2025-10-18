@@ -55,7 +55,7 @@ uint8_t Bus::read(uint16_t address) {
         return ram[address & 0x07FF];
     } else if (address <= 0x3FFF) {
         // PPU registers.
-        return ppu.read(address & 0x2007);
+        return ppu.registerRead(address & 0x2007);
     } else if (address <= 0x4013) {
         // APU registers.
         return apu.read(address);
@@ -79,7 +79,7 @@ void Bus::write(uint16_t address, uint8_t data) {
         ram[address & 0x07FF] = data;
     } else if (address <= 0x3FFF) {
         // PPU registers.
-        ppu.write(address & 0x2007, data);
+        ppu.registerWrite(address & 0x2007, data);
     } else if (address <= 0x4013) {
         // APU registers.
         apu.write(address, data);

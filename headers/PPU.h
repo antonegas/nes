@@ -11,8 +11,8 @@ class PPU {
         void tick();
         void power();
         void reset();
-        uint8_t read(uint16_t address);
-        void write(uint16_t address, uint8_t data);
+        uint8_t registerRead(uint16_t address);
+        void registerWrite(uint16_t address, uint8_t data);
         void dmaWrite(uint8_t data);
 
         bool nmi = false;
