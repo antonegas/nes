@@ -114,7 +114,25 @@ class PPU {
 
         /**
          * MEMORY MAP
+         * 
+         * 0x0000-0x0FFF: Pattern table 0
+         * 0x1000-0x1FFF: Pattern table 1
+         * 0x2000-0x23BF: Nametable 0
+         * 0x23C0-0x23FF: Attribute table 0
+         * 0x2400-0x27BF: Nametable 1
+         * 0x27C0-0x27FF: Attribute table 1
+         * 0x2800-0x2BBF: Nametable 2
+         * 0x2C00-0x2FBF: Attribute table 2
+         * 0x2FC0-0x2FFF: Name table 3
+         * 0x3000-0x3EFF: Attribute table 3
+         * 0x3F00-0x3F1F: Palette RAM
+         * 0x3F20-0x3FFF: Mirrors of 0x3F00-0x3F1F
+         * 
+         * Reference: https://www.nesdev.org/wiki/PPU_memory_map
          */
+
+        uint8_t vram[0x0800];
+        uint8_t palette[0x20];
 
         uint8_t ppuRead(uint16_t addr);
         void ppuWrite(uint16_t addr, uint8_t data);
