@@ -7,7 +7,6 @@ class StandardController : BaseController {
     public:
         virtual uint8_t read() override;
         virtual void reload() override;
-        virtual void update() override;
     private:
         uint8_t state = 0x00;
         uint8_t buffer = 0x00;

@@ -21,14 +21,6 @@ class BaseController {
 
         virtual uint8_t read() {};
         virtual void reload() {};
-
-        /**
-         * UPDATE STATE
-         * 
-         * Used to signal to the controllers that they should update their states.
-         */
-
-        virtual void update() {};
 };
 
 #endif // H_BASE_CONTROLLER
