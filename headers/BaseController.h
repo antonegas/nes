@@ -20,7 +20,7 @@ class BaseController {
          */
 
         virtual uint8_t read() {};
-        virtual void reload() {}; // BRACKETS:
+        virtual void reload() {};
 
         /**
          * UPDATE STATE
