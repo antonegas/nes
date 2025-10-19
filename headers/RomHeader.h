@@ -8,6 +8,7 @@ NES 2.0: https://www.nesdev.org/wiki/NES_2.0
 
 #include <cstdint>
 
+using std::int32_t;
 using std::uint16_t;
 using std::uint8_t;
 
@@ -18,6 +19,7 @@ class RomHeader {
          * 
          * Extracts the data stored in the 16 byte header.
          */
+
         RomHeader(uint8_t[16]);
 
         /**
@@ -29,6 +31,7 @@ class RomHeader {
          * iNES: https://www.nesdev.org/wiki/INES
          * NES 2.0: https://www.nesdev.org/wiki/NES_2.0
          */
+
         bool unsupported();
         bool isINES(); 
         bool isNES2();
@@ -41,6 +44,7 @@ class RomHeader {
          *
          * Reference: https://www.nesdev.org/wiki/NES_2.0#Nametable_layout
          */
+
         bool horizontallyMirroredNametable();
         bool verticallyMirroredNametable();
         bool mapperControlledNametable();
@@ -52,6 +56,7 @@ class RomHeader {
          *
          * Reference: https://www.nesdev.org/wiki/INES#Flags_6
          */
+
         bool isBatteryPresent();
 
         /**
@@ -62,6 +67,7 @@ class RomHeader {
          *
          * Reference: https://www.nesdev.org/wiki/NES_2.0#Trainer_Area
          */
+
         bool isTrainerPresent();
 
         /**
@@ -80,8 +86,9 @@ class RomHeader {
          * Mapper reference: https://www.nesdev.org/wiki/Mapper
          * Submapper reference: https://www.nesdev.org/wiki/NES_2.0_submappers
          */
-        int getMapperNumber();
-        int getSubmapperNumber();
+
+        uint16_t getMapperNumber();
+        uint8_t getSubmapperNumber();
 
         /**
          * CONSOLE TYPES
@@ -92,6 +99,7 @@ class RomHeader {
          *
          * Reference: https://www.nesdev.org/wiki/NES_2.0#Header
          */
+
         bool isEntertainmentSystem();
         bool isVsSystem();
         bool isPlaychoice();
@@ -105,8 +113,9 @@ class RomHeader {
          * Program ROM size reference: https://www.nesdev.org/wiki/NES_2.0#PRG-ROM_Area
          * Character ROM size reference: https://www.nesdev.org/wiki/NES_2.0#CHR-ROM_Area
          */
-        int programRomSize();
-        int characterRomSize();
+
+        uint32_t programRomSize();
+        uint32_t characterRomSize();
 
         /**
          * PROGRAM AND CHARACTER RAM SIZE
@@ -116,10 +125,11 @@ class RomHeader {
          * Program RAM size reference: https://www.nesdev.org/wiki/NES_2.0#PRG-(NV)RAM/EEPROM
          * Character RAM size reference:
          */
-        int programRamSize(); // saved number is shift count (64 << shift)
-        int programNvramSize(); // saved number is shift count
-        int characterRamSize(); // saved number is shift count
-        int characterNvramSize(); // saved number is shift count
+
+        uint32_t programRamSize();
+        uint32_t programNvramSize();
+        uint32_t characterRamSize();
+        uint32_t characterNvramSize();
 
         /**
          * CPU AND PPU TIMING
@@ -136,6 +146,7 @@ class RomHeader {
          *
          * Reference: https://www.nesdev.org/wiki/NES_2.0#CPU/PPU_Timing
          */
+
         bool isNtscTiming();
         bool isPalTiming();
         bool isMultiregionTiming();
@@ -149,9 +160,10 @@ class RomHeader {
          * Vs. System type reference: https://www.nesdev.org/wiki/NES_2.0#Vs._System_Type
          * Extended type reference: https://www.nesdev.org/wiki/NES_2.0#Extended_Console_Type
          */
-        int getVsPpu();
-        int getVsHardware();
-        int getExtendedConsole();
+
+        uint8_t getVsPpu();
+        uint8_t getVsHardware();
+        uint8_t getExtendedConsole();
 
         /**
          * MISCELLANOUS ROM AREA
@@ -160,7 +172,8 @@ class RomHeader {
          *
          * Reference: https://www.nesdev.org/wiki/NES_2.0#Miscellaneous_ROM_Area
          */
-        int numberOfMiscellanous();
+
+        uint8_t numberOfMiscellanous();
 
         /**
          * DEFAULT EXPANSION DEVICE
@@ -171,30 +184,31 @@ class RomHeader {
          *
          * Reference: https://www.nesdev.org/wiki/NES_2.0#Default_Expansion_Device
          */
-        int getExpansionDevice(); // TODO: change to bools for different devices.
+
+        uint8_t getExpansionDevice(); // TODO: change to enum for different devices.
 
     private:
         char identification[4];
-        int programROMSize : 12;
-        int characterROMSize : 12;
+        uint16_t programROMSize : 12;
+        uint16_t characterROMSize : 12;
         bool hardwiredNametableLayout : 1;
         bool batteryPresent : 1;
         bool trainerPresent : 1;
         bool alternativeNametables : 1;
-        int mapperNumber : 12;
-        int consoleType : 2;
-        int nesTwoIdentifier : 2;
-        int submapperNumber : 4;
-        int programRAMShift : 4;
-        int programNVRAMShift : 4;
-        int characterRAMShift : 4;
-        int characterNVRAMShift : 4;
-        int clockTiming : 2;
-        int VsPPUType : 4;
-        int VsHardwareType : 4;
-        int extendedConsoleType : 4;
-        int miscellaneousROMsPresent : 2;
-        int defaultExpansionDevice : 6;
+        uint16_t mapperNumber : 12;
+        uint8_t consoleType : 2;
+        uint8_t nesTwoIdentifier : 2;
+        uint8_t submapperNumber : 4;
+        uint8_t programRAMShift : 4;
+        uint8_t programNVRAMShift : 4;
+        uint8_t characterRAMShift : 4;
+        uint8_t characterNVRAMShift : 4;
+        uint8_t clockTiming : 2;
+        uint8_t VsPPUType : 4;
+        uint8_t VsHardwareType : 4;
+        uint8_t extendedConsoleType : 4;
+        uint8_t miscellaneousROMsPresent : 2;
+        uint8_t defaultExpansionDevice : 6;
 };
 
 #endif // H_ROM_HEADER
