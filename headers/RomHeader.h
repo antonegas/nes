@@ -3,22 +3,22 @@ iNES: https://www.nesdev.org/wiki/INES
 NES 2.0: https://www.nesdev.org/wiki/NES_2.0
 */
 
-#ifndef H_ROM_METADATA
-#define H_ROM_METADATA
+#ifndef H_ROM_HEADER
+#define H_ROM_HEADER
 
 #include <cstdint>
 
 using std::uint16_t;
 using std::uint8_t;
 
-class RomMetadata {
+class RomHeader {
     public:
         /**
          * CONSTRUCTOR
          * 
          * Extracts the data stored in the 16 byte header.
          */
-        RomMetadata(uint8_t[16]);
+        RomHeader(uint8_t[16]);
 
         /**
          * ROM FILE HEADER FORMATS
@@ -197,4 +197,4 @@ class RomMetadata {
         int defaultExpansionDevice : 6;
 };
 
-#endif // H_ROM_METADATA
+#endif // H_ROM_HEADER
