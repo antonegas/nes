@@ -2,6 +2,7 @@
 #define H_MAPPER
 
 #include <cstdint>
+#include <vector>
 
 using std::uint16_t;
 using std::uint8_t;
@@ -32,6 +33,11 @@ class Mapper {
         };
 
         MirrorMode mirrorMode = HORIZONTAL;
+    protected:
+        std::vector<uint8_t> prgrom{};
+        std::vector<uint8_t> chrrom{};
+        std::vector<uint8_t> prgram{};
+        std::vector<uint8_t> chrram{};
 };
 
 #endif // H_MAPPER

@@ -21,11 +21,6 @@ class Cartridge {
         bool irq = false;
     private:
         Mapper mapper;
-
-        std::vector<uint8_t> prgrom;
-        std::vector<uint8_t> chrrom;
-        std::vector<uint8_t> prgram;
-        std::vector<uint8_t> chrram;
 };
 
 #endif // H_CARTRIDGE
