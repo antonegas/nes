@@ -188,27 +188,91 @@ class RomHeader {
         uint8_t getExpansionDevice(); // TODO: change to enum for different devices.
 
     private:
-        char identification[4];
-        uint16_t programROMSize : 12;
-        uint16_t characterROMSize : 12;
-        bool hardwiredNametableLayout : 1;
-        bool batteryPresent : 1;
-        bool trainerPresent : 1;
-        bool alternativeNametables : 1;
-        uint16_t mapperNumber : 12;
-        uint8_t consoleType : 2;
-        uint8_t nesTwoIdentifier : 2;
-        uint8_t submapperNumber : 4;
-        uint8_t programRAMShift : 4;
-        uint8_t programNVRAMShift : 4;
-        uint8_t characterRAMShift : 4;
-        uint8_t characterNVRAMShift : 4;
-        uint8_t clockTiming : 2;
-        uint8_t VsPPUType : 4;
-        uint8_t VsHardwareType : 4;
-        uint8_t extendedConsoleType : 4;
-        uint8_t miscellaneousROMsPresent : 2;
-        uint8_t defaultExpansionDevice : 6;
+        union HEADER {
+            struct {
+                // byte 0-3
+                uint32_t nes;
+                // byte 4
+                uint8_t prgromBlocks;
+                // byte 5
+                uint8_t chrromBlocks;
+                // byte 6
+                bool isHorizontalArrangement : 1;
+                bool hasBattery : 1;
+                bool hasTrainer : 1;
+                bool hasAlternativeNametable : 1;
+                uint8_t mapperLow : 4;
+                // byte 7
+                bool isVsSystem : 1;
+                bool isPlayChoice : 1;
+                uint8_t nes2 : 2;
+                uint8_t mapperHigh : 4;
+                // byte 8
+                uint8_t prgramBlocks;
+                // byte 9
+                bool isPAL : 1;
+                uint8_t unused1 : 7;
+                // byte 10
+                uint8_t tvSystem : 2;
+                uint8_t unused2 : 2;
+                bool hasPrgRam : 1;
+                bool hasBusConflicts : 1;
+                // byte end of 10-15
+                uint8_t padding : 42;
+            } ines;
+            struct {
+                // byte 0-3
+                uint32_t nes;
+                // byte 4
+                uint8_t prgromBlocksLow;
+                // byte 5
+                uint8_t chrromBlocksLow;
+                // byte 6
+                bool isHorizontalArrangement : 1;
+                bool hasBattery : 1;
+                bool hasTrainer : 1;
+                bool hasAlternativeNametable : 1;
+                uint8_t mapperLow : 4;
+                // byte 7
+                uint8_t consoleType : 2;
+                uint8_t nes2 : 2;
+                uint8_t mapperMid : 4;
+                // byte 8
+                uint8_t mapperHigh : 4;
+                uint8_t subMapper : 4;
+                // byte 9
+                uint8_t prgromBlockHigh : 4;
+                uint8_t chrromBlocksHigh : 4;
+                // byte 10
+                uint8_t prgramShift : 4;
+                uint8_t prgnvramShift : 4;
+                // byte 11
+                uint8_t chrramShift : 4;
+                uint8_t chrnvramShift : 4;
+                // byte 12
+                uint8_t timing : 2;
+                uint8_t unused0 : 6;
+                // byte 13
+                union ConsoleType {
+                    struct {
+                        uint8_t ppu : 4;
+                        uint8_t hardware : 4;
+                    } vsSystem;
+                    struct {
+                        uint8_t type : 4;
+                        uint8_t padding : 4;
+                    } extended;
+                    uint8_t raw;
+                } consoleType;
+                // byte 14
+                uint8_t miscRomsCount : 2;
+                uint8_t unused1 : 6;
+                // byte 15
+                uint8_t expansionDevice : 6;
+                uint8_t padding : 2;
+            } nes2;
+            uint8_t raw[16];
+        } header;
 };
 
 #endif // H_ROM_HEADER
