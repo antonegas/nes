@@ -6,9 +6,9 @@ using std::uint16_t;
 using std::uint8_t;
 
 void PPU::power() {
-    ppuctrl.data = 0x0000;
-    ppumask.data = 0x0000;
-    ppustatus.data = 0x0000;
+    ppuctrl.reg = 0x0000;
+    ppumask.reg = 0x0000;
+    ppustatus.status = 0x0000;
     oamaddr = 0x0000;
     w = 0;
     v.addr = 0x0000;
@@ -19,8 +19,8 @@ void PPU::power() {
 }
 
 void PPU::reset() {
-    ppuctrl.data = 0x0000;
-    ppumask.data = 0x0000;
+    ppuctrl.reg = 0x0000;
+    ppumask.reg = 0x0000;
     ppudataBuffer = 0x00;
     w = 0;
     t.addr = 0x0000;
@@ -33,7 +33,7 @@ uint8_t PPU::registerRead(uint16_t addr) {
     switch (addr) {
         case 0x2002:
             // PPUSTATUS
-            uint8_t status = ppustatus.data & 0xE0;
+            uint8_t status = ppustatus.status & 0xE0;
 
             // Reading PPUSTATUS has side effects.
             ppustatus.V = 0;
@@ -64,12 +64,12 @@ void PPU::registerWrite(uint16_t addr, uint8_t data) {
     switch (addr) {
         case 0x2000:
             // PPUCTRL
-            ppuctrl.data = data;
+            ppuctrl.reg = data;
             t.nametableSelect = ppuctrl.nametableSelect;
             break;
         case 0x2001:
             // PPUMASK
-            ppumask.data = data;
+            ppumask.reg = data;
             break;
         case 0x2003:
             // OAMADDR

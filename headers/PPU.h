@@ -57,7 +57,7 @@ class PPU {
                 uint8_t unused : 1;
                 uint8_t nmiEnable : 1;
             };
-            uint8_t data = 0x00;
+            uint8_t reg = 0x00;
         } ppuctrl;
 
         union PPUMASK {
@@ -71,7 +71,7 @@ class PPU {
                 uint8_t emphasizeGreen : 1;
                 uint8_t emphasizeBlue : 1;
             };
-            uint8_t data = 0x00;
+            uint8_t reg = 0x00;
         } ppumask;
 
         union PPUSTATUS {
@@ -81,7 +81,7 @@ class PPU {
                 uint8_t S : 1; // Sprite 0 hit.
                 uint8_t V : 1; // Sprite overflow.
             };
-            uint8_t data = 0x00;
+            uint8_t status = 0x00;
         } ppustatus;
 
         uint8_t ppudataBuffer = 0x00;
