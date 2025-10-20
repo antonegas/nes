@@ -22,174 +22,67 @@ class RomHeader {
 
         RomHeader(uint8_t[16]);
 
-        /**
-         * ROM FILE HEADER FORMATS
-         * 
-         * There are two supported types of header formats (iNES and NES 2.0). 
-         * There exists other formats only these two are supported.
-         * 
-         * iNES: https://www.nesdev.org/wiki/INES
-         * NES 2.0: https://www.nesdev.org/wiki/NES_2.0
-         */
+        enum Type {
+            INES,
+            NES2,
+            UNSUPPORTED = 0xFF
+        };
 
-        bool unsupported();
-        bool isINES(); 
-        bool isNES2();
+        enum NametableLayout {
+            HORIZONTAL,
+            VERTICAL,
+            ALTERNATIVE
+        };
 
-        /**
-         * NAMETABLE LAYOUT
-         *
-         * The console nametable can be mirrored horizontally or vertically by the console hardware.
-         * Some mappers also implement the ability to switch mirroring mode.
-         *
-         * Reference: https://www.nesdev.org/wiki/NES_2.0#Nametable_layout
-         */
+        enum ConsoleType {
+            NES = 0x00,
+            // VS_SYSTEM = 0x01,
+            // PLAYCHOICE = 0x02,
+            // EXTENDED = 0x03,
+            UNSUPPORTED = 0xFF
+        };
 
-        bool horizontallyMirroredNametable();
-        bool verticallyMirroredNametable();
-        bool mapperControlledNametable();
+        enum ConsoleTiming {
+            NTSC = 0x00,
+            PAL = 0x01,
+            // DENDY = 0x02,
+            MULTIREGION = 0x03,
+            UNSUPPORTED = 0xFF
+        };
 
-        /**
-         * CARTRIDGE BATTERY
-         *
-         * Some cartridges contained battery to save the 0x6000-0x7FFF across console restarts.
-         *
-         * Reference: https://www.nesdev.org/wiki/INES#Flags_6
-         */
+        enum ExpansionDevice {
+            UNSPECIFIED = 0x00,
+            STANDARD = 0x01,
+            // FOURSCORE = 0x02,
+            // FAMICOM_FOUR = 0x03,
+            // VS_4016 = 0x04,
+            // VS_4017 = 0x05,
+            // VS_ZAPPER = 0x07,
+            // ZAPPER_4017 = 0x08,
+            // ZAPPER_4016 = 0x49,
+            // TWO_ZAPPERS = 0x09,
+            // SNES_CONTROLLER = 0x2B,
+            UNSUPPORTED = 0xFF
+        };
 
-        bool isBatteryPresent();
-
-        /**
-         * TRAINER AREA
-         *
-         * There may exist 512 bytes of additionally data before the program ROM.
-         * These bytes should be loaded into 0x7000-0x7200.
-         *
-         * Reference: https://www.nesdev.org/wiki/NES_2.0#Trainer_Area
-         */
-
-        bool isTrainerPresent();
-
-        /**
-         * MAPPERS AND SUBMAPPERS
-         *
-         * NES cartridges contained hardware which may different based on the game.
-         * The different hardware are called mappers as they decide which data is returned when
-         * reading from addresses on the cartridge. These mappers also needs to be emulated.
-         * The NES 2.0 header format supports up to 4096 different mappers.
-         * The iNES header format only supports the first 256 of those mappers.
-         * 
-         * Two ROMs with the same mapper number may still work differently. This can sometimes be 
-         * determined by just looking at the program ROM size, but when this is not enough 
-         * submapper numbers are used.
-         *
-         * Mapper reference: https://www.nesdev.org/wiki/Mapper
-         * Submapper reference: https://www.nesdev.org/wiki/NES_2.0_submappers
-         */
-
-        uint16_t getMapperNumber();
-        uint8_t getSubmapperNumber();
-
-        /**
-         * CONSOLE TYPES
-         *
-         * There were multiple different consoles but similar consoles from the japanese company 
-         * for which the N in NES stand for. Because the console types are similar but not the same 
-         * they require changes to the emulation in order to work correctly.
-         *
-         * Reference: https://www.nesdev.org/wiki/NES_2.0#Header
-         */
-
-        bool isEntertainmentSystem();
-        bool isVsSystem();
-        bool isPlaychoice();
-        bool isExtendedConsole();
-
-        /**
-         * PROGRAM AND CHARACTER ROM SIZE
-         * 
-         * ROMs have different amounts of program and character ROM data.
-         * 
-         * Program ROM size reference: https://www.nesdev.org/wiki/NES_2.0#PRG-ROM_Area
-         * Character ROM size reference: https://www.nesdev.org/wiki/NES_2.0#CHR-ROM_Area
-         */
-
-        uint32_t programRomSize();
-        uint32_t characterRomSize();
-
-        /**
-         * PROGRAM AND CHARACTER RAM SIZE
-         * 
-         * TODO: describe
-         *
-         * Program RAM size reference: https://www.nesdev.org/wiki/NES_2.0#PRG-(NV)RAM/EEPROM
-         * Character RAM size reference:
-         */
-
-        uint32_t programRamSize();
-        uint32_t programNvramSize();
-        uint32_t characterRamSize();
-        uint32_t characterNvramSize();
-
-        /**
-         * CPU AND PPU TIMING
-         * 
-         * Consoles had different hardware depending on region. The only difference between the 
-         * hardware is the clock rates. This difference was due to different television standards 
-         * or more broadly the electrical grid. Mutliregion timing indicates that the ROM is 
-         * identical regardless of region or that the game automatically detects the timing of the 
-         * console. The different regions are listed below.
-         *
-         * NTSC: North America, Japan, South Korea, Taiwan
-         * PAL: Western Europe, Australia
-         * DENDY: Eastern Europe, Russia, Mainland China, India, Africa
-         *
-         * Reference: https://www.nesdev.org/wiki/NES_2.0#CPU/PPU_Timing
-         */
-
-        bool isNtscTiming();
-        bool isPalTiming();
-        bool isMultiregionTiming();
-        bool isDendyTiming();
-
-        /**
-         * VS. SYSTEM AND EXTENDED CONSOLE TYPE
-         * 
-         * The Vs. System and extended consoles have different types of hardware and PPUs.
-         *
-         * Vs. System type reference: https://www.nesdev.org/wiki/NES_2.0#Vs._System_Type
-         * Extended type reference: https://www.nesdev.org/wiki/NES_2.0#Extended_Console_Type
-         */
-
-        uint8_t getVsPpu();
-        uint8_t getVsHardware();
-        uint8_t getExtendedConsole();
-
-        /**
-         * MISCELLANOUS ROM AREA
-         *
-         * TODO: describe
-         *
-         * Reference: https://www.nesdev.org/wiki/NES_2.0#Miscellaneous_ROM_Area
-         */
-
-        uint8_t numberOfMiscellanous();
-
-        /**
-         * DEFAULT EXPANSION DEVICE
-         * 
-         * The NES and other console types supported different types of input devices. If a ROM 
-         * requires a specific type of input device this is indicated by the default expansion 
-         * device.
-         *
-         * Reference: https://www.nesdev.org/wiki/NES_2.0#Default_Expansion_Device
-         */
-
-        uint8_t getExpansionDevice(); // TODO: change to enum for different devices.
+        Type getType();
+        NametableLayout getNametableLayout();
+        uint32_t getMapper();
+        uint8_t getSubmapper();
+        ConsoleType getConsoleType();
+        ConsoleTiming getConsoleTiming();
+        bool hasTrainer();
+        ExpansionDevice getExpansionDevice();
+        uint32_t getPrgromSize();
+        uint16_t getPrgramSize();
+        uint16_t getPrgnvramSize();
+        uint32_t getChrromSize();
+        uint16_t getChrramSize();
+        uint16_t getChrnvramSize();
 
     private:
         union HEADER {
-            struct {
+            struct INES {
                 // byte 0-3
                 uint32_t nes;
                 // byte 4
@@ -220,7 +113,7 @@ class RomHeader {
                 // byte end of 10-15
                 uint8_t padding : 42;
             } ines;
-            struct {
+            struct NES2 {
                 // byte 0-3
                 uint32_t nes;
                 // byte 4
@@ -239,9 +132,9 @@ class RomHeader {
                 uint8_t mapperMid : 4;
                 // byte 8
                 uint8_t mapperHigh : 4;
-                uint8_t subMapper : 4;
+                uint8_t submapper : 4;
                 // byte 9
-                uint8_t prgromBlockHigh : 4;
+                uint8_t prgromBlocksHigh : 4;
                 uint8_t chrromBlocksHigh : 4;
                 // byte 10
                 uint8_t prgramShift : 4;
@@ -263,7 +156,7 @@ class RomHeader {
                         uint8_t padding : 4;
                     } extended;
                     uint8_t raw;
-                } consoleType;
+                } extendedConsoleType;
                 // byte 14
                 uint8_t miscRomsCount : 2;
                 uint8_t unused1 : 6;
