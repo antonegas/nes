@@ -19,7 +19,3 @@ void StandardController::reload() {
     buffer = state;
     remaining = 0x08;
 }
-
-void StandardController::update() {
-    // TODO: implement.
-}

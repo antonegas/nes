@@ -1,6 +1,8 @@
 #ifndef H_STANDARD_CONTROLLER
 #define H_STANDARD_CONTROLLER
 
+#include <cstdint>
+
 #include "BaseController.h"
 
 class StandardController : BaseController {
