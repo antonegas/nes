@@ -148,8 +148,11 @@ void CPU::interrupt(uint16_t addr, bool brk) {
     push(pc & 0x00FF);
 
     // Push the status register with the B flag set.
-    p.B = brk;
-    push(p.status);
+    if (brk) {
+        push(p.status | 0x10);
+    } else {
+        push(p.status);
+    }
 
     // Disable interrupts
     p.I = 1;
@@ -668,11 +671,8 @@ void CPU::PHA() {
 }
 
 void CPU::PHP() {
-    // Set affected flags.
-    p.B = 1;
-
     // Push status register.
-    push(p.status);
+    push(p.status | 0x10);
 }
 
 void CPU::PLA() {
