@@ -53,26 +53,25 @@ class CPU {
          * CPU registers reference: https://www.nesdev.org/wiki/CPU_registers
          * CPU status flags reference: https://www.nesdev.org/wiki/Status_flags
          */
-        enum StatusFlag {
-            C = 1 << 0,
-            Z = 1 << 1,
-            I = 1 << 2,
-            D = 1 << 3,
-            B = 1 << 4,
-            U = 1 << 5,
-            V = 1 << 6,
-            N = 1 << 7
-        };
 
         uint8_t a = 0x00; // Accumulator
         uint8_t x = 0x00; // X index
         uint8_t y = 0x00; // Y index
         uint16_t pc = 0x00; // Program counter (set by power/reset)
         uint8_t s = 0xFD; // Stack 
-        uint8_t p = I | U; // Status register P: NV1BDIZC
-
-        uint8_t getFlag(StatusFlag flag);
-        void setFlag(StatusFlag flag, bool value);
+        union Status {
+            struct {
+                uint8_t C : 1; // Carry
+                uint8_t Z : 1; // Zero
+                uint8_t I : 1; // Interrupt disable
+                uint8_t D : 1; // Decimal mode
+                uint8_t B : 1; //  B-flag
+                uint8_t U : 1; // Unused set to 1
+                uint8_t V : 1; // Overflow
+                uint8_t N : 1; // Negative
+            };
+            uint8_t status = 0b00100100;
+        } p; // Status register P: NV1BDIZC
 
         /**
          * CPU ADDRESSING MODES

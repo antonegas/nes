@@ -62,7 +62,7 @@ void CPU::power() {
     pc = (high << 8) | low;
 
     s = 0xFD;
-    p = I | U;
+    p.status = 0b00100100;
 
     // Clean up helper members.
     wait = 0x00;
@@ -82,7 +82,7 @@ void CPU::reset() {
     s = s - 3;
 
     // Disable interrupts
-    setFlag(I, 1);
+    p.I = 1;
 
     // Clean up helper members.
     wait = 0x00;
@@ -95,7 +95,7 @@ void CPU::reset() {
 }
 
 void CPU::irq() {
-    if (getFlag(I)) return; // Ignore interrupt requests if interrupts are disabled.
+    if (p.I) return; // Ignore interrupt requests if interrupts are disabled.
     interrupt(0xFFFE, 0);
 
     // Interrupts takes time.
@@ -118,7 +118,7 @@ void CPU::delay(void (CPU::*interrupt)()) {
     } else if (interrupt == &nmi && priority < 0x02) {
         delayed = interrupt;
         priority = 0x02;
-    } else if (interrupt == &irq && priority < 0x01 && !getFlag(I)) {
+    } else if (interrupt == &irq && priority < 0x01 && !p.I) {
         delayed = interrupt;
         priority = 0x01;
     }
@@ -148,11 +148,11 @@ void CPU::interrupt(uint16_t addr, bool brk) {
     push(pc & 0x00FF);
 
     // Push the status register with the B flag set.
-    setFlag(B, brk);
-    push(p);
+    p.B = brk;
+    push(p.status);
 
     // Disable interrupts
-    setFlag(I, 1);
+    p.I = 1;
 
     // Set pc to a value defined at addr.
     uint16_t low = read(addr);
@@ -177,20 +177,6 @@ void CPU::branch() {
 
 bool CPU::crossed(uint16_t arg, uint16_t addr) {
     return (arg & 0xFF00) != (addr & 0xFF00);
-}
-
-uint8_t CPU::getFlag(StatusFlag flag) {
-    return (bool)(p & flag);
-}
-
-void CPU::setFlag(StatusFlag flag, bool value) {
-    if (flag == U) return; // Should always be set.
-
-    if (value) {
-        p = p | flag;
-    } else {
-        p = p & ~flag;
-    }
 }
 
 uint16_t CPU::ZPX() {
@@ -312,13 +298,13 @@ void CPU::ADC() {
     // A = A + memory + C
     uint16_t addr = (this->*addrMode)();
     uint8_t mem = read(addr);
-    uint16_t res = a + mem + getFlag(C);
+    uint16_t res = a + mem + p.C;
 
     // Set affected flags.
-    setFlag(C, res > 0x00FF);
-    setFlag(Z, res == 0x0000);
-    setFlag(V, (res ^ a) & (res ^ mem) & 0x0080);
-    setFlag(N, res & 0x0080);
+    p.C = res > 0x00FF;
+    p.Z = res == 0x0000;
+    p.V = (res ^ a) & (res ^ mem) & 0x0080;
+    p.N = res & 0x0080;
 
     a = res & 0xFF;
 }
@@ -330,8 +316,8 @@ void CPU::AND() {
     uint8_t res = a & mem;
 
     // Set affected flags.
-    setFlag(Z, res == 0x00);
-    setFlag(N, res & 0x80);
+    p.Z = res == 0x00;
+    p.N = res & 0x80;
 
     a = res;
 }
@@ -350,9 +336,9 @@ void CPU::ASL() {
     uint8_t res = val << 1;
 
     // Set affected flags.
-    setFlag(C, val & 0x80);
-    setFlag(Z, res == 0x00);
-    setFlag(N, res & 0x80);
+    p.C = val & 0x80;
+    p.Z, res == 0x00;
+    p.N, res & 0x80;
 
     if (addrMode == &ACC) {
         a = res;
@@ -366,19 +352,19 @@ void CPU::ASL() {
 
 void CPU::BCC() {
     // Branch if C is clear.
-    if (getFlag(C)) return;
+    if (p.C) return;
     branch();
 }
 
 void CPU::BCS() {
     // Branch if C is set.
-    if (!getFlag(C)) return;
+    if (!p.C) return;
     branch();
 }
 
 void CPU::BEQ() {
     // Branch if Z is set.
-    if (!getFlag(Z)) return;
+    if (!p.Z) return;
     branch();
 }
 
@@ -389,26 +375,26 @@ void CPU::BIT() {
     uint8_t res = a & mem;
 
     // Set affected flags.
-    setFlag(Z, res == 0x00);
-    setFlag(V, res & 0x40);
-    setFlag(N, res & 0x80);
+    p.Z = res == 0x00;
+    p.V = res & 0x40;
+    p.N = res & 0x80;
 }
 
 void CPU::BMI() {
     // Branch if N is set.
-    if (!getFlag(N)) return;
+    if (!p.N) return;
     branch();
 }
 
 void CPU::BNE() {
     // Branch if Z is clear.
-    if (getFlag(Z)) return;
+    if (p.Z) return;
     branch();
 }
 
 void CPU::BPL() {
     // Branch if N is clear.
-    if (getFlag(N)) return;
+    if (p.N) return;
     branch();
 }
 
@@ -419,34 +405,34 @@ void CPU::BRK() {
 
 void CPU::BVC() {
     // Branch if V is clear.
-    if (getFlag(V)) return;
+    if (p.V) return;
     branch();
 }
 
 void CPU::BVS() {
     // Branch if V is set.
-    if (!getFlag(V)) return;
+    if (!p.V) return;
     branch();
 }
 
 void CPU::CLC() {
     // C = 0
-    setFlag(C, 0);
+    p.C = 0;
 }
 
 void CPU::CLD() {
     // D = 0
-    setFlag(D, 0);
+    p.D = 0;
 }
 
 void CPU::CLI() {
     // I = 0
-    setFlag(I, 0);
+    p.I = 0;
 }
 
 void CPU::CLV() {
     // V = 0
-    setFlag(V, 0);
+    p.V = 0;
 }
 
 void CPU::CMP() {
@@ -456,9 +442,9 @@ void CPU::CMP() {
     uint8_t res = a - mem;
 
     // Set affected flags.
-    setFlag(C, a >= mem);
-    setFlag(Z, a == mem);
-    setFlag(N, res & 0x80);
+    p.C = a >= mem;
+    p.Z = a == mem;
+    p.N = res & 0x80;
 }
 
 void CPU::CPX() {
@@ -468,9 +454,9 @@ void CPU::CPX() {
     uint8_t res = x - mem;
 
     // Set affected flags.
-    setFlag(C, x >= mem);
-    setFlag(Z, x == mem);
-    setFlag(N, res & 0x80);
+    p.C = x >= mem;
+    p.Z = x == mem;
+    p.N = res & 0x80;
 }
 
 void CPU::CPY() {
@@ -480,9 +466,9 @@ void CPU::CPY() {
     uint8_t res = y - mem;
 
     // Set affected flags.
-    setFlag(C, y >= mem);
-    setFlag(Z, y == mem);
-    setFlag(N, res & 0x80);
+    p.C = y >= mem;
+    p.Z = y == mem;
+    p.N = res & 0x80;
 }
 
 void CPU::DEC() {
@@ -492,8 +478,8 @@ void CPU::DEC() {
     uint8_t res = mem - 1;
 
     // Set affected flags.
-    setFlag(Z, res == 0x00);
-    setFlag(N, res & 0x80);
+    p.Z = res == 0x00;
+    p.N = res & 0x80;
 
     write(addr, res);
 
@@ -506,8 +492,8 @@ void CPU::DEX() {
     uint8_t res = x - 1;
 
     // Set affected flags.
-    setFlag(Z, res == 0x00);
-    setFlag(N, res & 0x80);
+    p.Z = res == 0x00;
+    p.N = res & 0x80;
 
     x = res;
 }
@@ -517,8 +503,8 @@ void CPU::DEY() {
     uint8_t res = y - 1;
 
     // Set affected flags.
-    setFlag(Z, res == 0x00);
-    setFlag(N, res & 0x80);
+    p.Z = res == 0x00;
+    p.N = res & 0x80;
 
     y = res;
 }
@@ -530,8 +516,8 @@ void CPU::EOR() {
     uint8_t res = a ^ mem;
 
     // Set affected flags.
-    setFlag(Z, res == 0x00);
-    setFlag(N, res & 0x80);
+    p.Z = res == 0x00;
+    p.N = res & 0x80;
 
     a = res;
 }
@@ -543,8 +529,8 @@ void CPU::INC() {
     uint8_t res = mem + 1;
 
     // Set affected flags.
-    setFlag(Z, res == 0x00);
-    setFlag(N, res & 0x80);
+    p.Z = res == 0x00;
+    p.N = res & 0x80;
 
     write(addr, res);
 
@@ -557,8 +543,8 @@ void CPU::INX() {
     uint8_t res = x + 1;
 
     // Set affected flags.
-    setFlag(Z, res == 0x00);
-    setFlag(N, res & 0x80);
+    p.Z = res == 0x00;
+    p.N = res & 0x80;
 
     x = res;
 }
@@ -568,8 +554,8 @@ void CPU::INY() {
     uint8_t res = y + 1;
 
     // Set affected flags.
-    setFlag(Z, res == 0x00);
-    setFlag(N, res & 0x80);
+    p.Z = res == 0x00;
+    p.N = res & 0x80;
 
     y = res;
 }
@@ -600,8 +586,8 @@ void CPU::LDA() {
     uint8_t mem = read(addr);
 
     // Set affected flags.
-    setFlag(Z, mem == 0x00);
-    setFlag(N, mem & 0x80);
+    p.Z = mem == 0x00;
+    p.N = mem & 0x80;
 
     a = mem;
 }
@@ -612,8 +598,8 @@ void CPU::LDX() {
     uint8_t mem = read(addr);
 
     // Set affected flags.
-    setFlag(Z, mem == 0x00);
-    setFlag(N, mem & 0x80);
+    p.Z = mem == 0x00;
+    p.N = mem & 0x80;
 
     x = mem;
 }
@@ -624,8 +610,8 @@ void CPU::LDY() {
     uint8_t mem = read(addr);
 
     // Set affected flags.
-    setFlag(Z, mem == 0x00);
-    setFlag(N, mem & 0x80);
+    p.Z = mem == 0x00;
+    p.N = mem & 0x80;
 
     x = mem;
 }
@@ -644,9 +630,9 @@ void CPU::LSR() {
     uint8_t res = val >> 1;
 
     // Set affected flags.
-    setFlag(C, val & 0x01);
-    setFlag(Z, res == 0x00);
-    setFlag(N, 0);
+    p.C = val & 0x01;
+    p.Z = res == 0x00;
+    p.N = 0;
 
     if (addrMode == &ACC) {
         a = res;
@@ -670,8 +656,8 @@ void CPU::ORA() {
     uint8_t res = a | mem;
 
     // Set affected flags.
-    setFlag(Z, res == 0x00);
-    setFlag(N, res & 0x80);
+    p.Z = res == 0x00;
+    p.N = res & 0x80;
 
     a = res;
 }
@@ -683,10 +669,10 @@ void CPU::PHA() {
 
 void CPU::PHP() {
     // Set affected flags.
-    setFlag(B, 1);
+    p.B = 1;
 
     // Push status register.
-    push(p);
+    push(p.status);
 }
 
 void CPU::PLA() {
@@ -694,13 +680,13 @@ void CPU::PLA() {
     a = pop();
 
     // Set affected flags.
-    setFlag(Z, a == 0x00);
-    setFlag(N, a & 0x80);
+    p.Z = a == 0x00;
+    p.N = a & 0x80;
 }
 
 void CPU::PLP() {
     // Pop into status register.
-    p = pop();
+    p.status = pop();
 }
 
 void CPU::ROL() {
@@ -714,12 +700,12 @@ void CPU::ROL() {
         val = read(addr);
     }
 
-    uint8_t res = (val << 1) | getFlag(C);
+    uint8_t res = (val << 1) | p.C;
 
     // Set affected flags.
-    setFlag(C, val & 0x80);
-    setFlag(Z, res == 0x00);
-    setFlag(N, res & 0x80);
+    p.C = val & 0x80;
+    p.Z = res == 0x00;
+    p.N = res & 0x80;
 
     if (addrMode == &ACC) {
         a = res;
@@ -742,12 +728,12 @@ void CPU::ROR() {
         val = read(addr);
     }
 
-    uint8_t res = (getFlag(C) << 7) | (val >> 1);
+    uint8_t res = (p.C << 7) | (val >> 1);
 
     // Set affected flags.
-    setFlag(C, val & 0x01);
-    setFlag(Z, res == 0x00);
-    setFlag(N, res & 0x80);
+    p.C = val & 0x01;
+    p.Z = res == 0x00;
+    p.N = res & 0x80;
 
     if (addrMode == &ACC) {
         a = res;
@@ -761,7 +747,7 @@ void CPU::ROR() {
 
 void CPU::RTI() {
     // Pop status register.
-    p = pop();
+    p.status = pop();
 
     // Pop program counter.
     uint16_t low = pop();
@@ -783,30 +769,30 @@ void CPU::SBC() {
     // A = A - memory - ~C
     uint16_t addr = (this->*addrMode)();
     uint8_t mem = read(addr);
-    uint16_t res = a - mem - ~getFlag(C);
+    uint16_t res = a - mem - ~p.C;
 
     // Set affected flags.
-    setFlag(C, res & 0xFF00);
-    setFlag(Z, res == 0x0000);
-    setFlag(V, (res ^ a) & (res ^ ~mem) & 0x0080);
-    setFlag(N, res & 0x0080);
+    p.C = res & 0xFF00;
+    p.Z = res == 0x0000;
+    p.V = (res ^ a) & (res ^ ~mem) & 0x0080;
+    p.N = res & 0x0080;
 
     a = res;
 }
 
 void CPU::SEC() {
     // C = 1
-    setFlag(C, 1);
+    p.C = 1;
 }
 
 void CPU::SED() {
     // D = 1
-    setFlag(D, 1);
+    p.D = 1;
 }
 
 void CPU::SEI() {
     // I = 1
-    setFlag(I, 1);
+    p.I = 1;
 }
 
 void CPU::STA() {
@@ -835,8 +821,8 @@ void CPU::TAX() {
     x = a;
 
     // Set affected flags.
-    setFlag(Z, x == 0x00);
-    setFlag(N, x & 0x80);
+    p.Z = x == 0x00;
+    p.N = x & 0x80;
 }
 
 void CPU::TAY() {
@@ -844,8 +830,8 @@ void CPU::TAY() {
     y = a;
 
     // Set affected flags.
-    setFlag(Z, y == 0x00);
-    setFlag(N, y & 0x80);
+    p.Z = y == 0x00;
+    p.N = y & 0x80;
 }
 
 void CPU::TSX() {
@@ -853,8 +839,8 @@ void CPU::TSX() {
     x = s;
 
     // Set affected flags.
-    setFlag(Z, x == 0x00);
-    setFlag(N, x & 0x80);
+    p.Z = x == 0x00;
+    p.N = x & 0x80;
 }
 
 void CPU::TXA() {
@@ -862,8 +848,8 @@ void CPU::TXA() {
     a = x;
 
     // Set affected flags.
-    setFlag(Z, a == 0x00);
-    setFlag(N, a & 0x80);
+    p.Z = a == 0x00;
+    p.N = a & 0x80;
 }
 
 void CPU::TXS() {
@@ -876,8 +862,8 @@ void CPU::TYA() {
     a = y;
 
     // Set affected flags.
-    setFlag(Z, a == 0x00);
-    setFlag(N, a & 0x80);
+    p.Z = a == 0x00;
+    p.N = a & 0x80;
 }
 
 void CPU::AHX() {
@@ -903,7 +889,7 @@ void CPU::ANC() {
     AND();
 
     // Set affected flags.
-    setFlag(C, a & 0x80);
+    p.C = a & 0x80;
 }
 
 void CPU::ARR() {
@@ -912,7 +898,7 @@ void CPU::ARR() {
     ROR();
 
     // Set affected flags.
-    setFlag(V, (a ^ (a << 1)) & 0x40);
+    p.V = (a ^ (a << 1)) & 0x40;
 }
 
 void CPU::AXS() {
@@ -922,9 +908,9 @@ void CPU::AXS() {
     uint16_t res = (a & x) - mem;
 
     // Set affected flags.
-    setFlag(C, (a & x) >= mem);
-    setFlag(Z, (a & x) == mem);
-    setFlag(N, res & 0x80);
+    p.C = (a & x) >= mem;
+    p.Z = (a & x) == mem;
+    p.N = res & 0x80;
     
     x = res;
 }
@@ -958,8 +944,8 @@ void CPU::LAS() {
     uint8_t res = s & mem;
 
     // Set affected flags.
-    setFlag(Z, res == 0x00);
-    setFlag(N, res & 0x80);
+    p.Z = res == 0x00;
+    p.N = res & 0x80;
 
     a = res;
     x = res;
