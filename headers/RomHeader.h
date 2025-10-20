@@ -7,6 +7,9 @@ NES 2.0: https://www.nesdev.org/wiki/NES_2.0
 #define H_ROM_HEADER
 
 #include <cstdint>
+#include <array>
+#include <algorithm>
+#include <iterator>
 
 using std::int32_t;
 using std::uint16_t;
@@ -14,13 +17,7 @@ using std::uint8_t;
 
 class RomHeader {
     public:
-        /**
-         * CONSTRUCTOR
-         * 
-         * Extracts the data stored in the 16 byte header.
-         */
-
-        RomHeader(uint8_t[16]);
+        RomHeader(std::array<uint8_t, 16> header);
 
         enum Type {
             INES,
@@ -164,7 +161,7 @@ class RomHeader {
                 uint8_t expansionDevice : 6;
                 uint8_t padding : 2;
             } nes2;
-            uint8_t raw[16];
+            std::array<uint8_t, 16> raw;
         } header;
 };
 
