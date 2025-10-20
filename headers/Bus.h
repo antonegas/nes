@@ -39,6 +39,7 @@ class Bus {
          * 
          * Reference: https://www.nesdev.org/wiki/CPU_memory_map
          */
+        
         uint8_t ram[2048];
         CPU cpu;
         PPU ppu;

@@ -25,6 +25,7 @@ class CPU {
         /**
          * HELPER MEMBER/FUNCTIONS
          */
+        
         uint8_t wait = 0x00;
         bool oops = false;
         uint8_t priority = 0x00; // triggered interrupt priority.
@@ -80,6 +81,7 @@ class CPU {
          *
          * Reference: https://www.nesdev.org/wiki/CPU_addressing_modes
          */
+
         uint16_t ZPX(); // Zero page indexed by X
         uint16_t ZPY(); // Zero page indexed by Y
         uint16_t ABX(); // Absolute indexed by X
