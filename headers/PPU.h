@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <array>
 
 #include "../headers/Cartridge.h"
 
@@ -135,8 +136,9 @@ class PPU {
          */
 
         std::shared_ptr<Cartridge> cart;
-        uint8_t vram[0x1000]; // NOTE: Only 2kB on actual hardware but 4kb here to allow 4-screen mirroring.
-        uint8_t palette[0x20];
+        // NOTE: Only 2kB on actual hardware but 4kb here to allow 4-screen mirroring.
+        std::array<uint8_t, 0x1000> vram;
+        std::array<uint8_t, 0x20> palette;
 
         uint8_t read(uint16_t addr);
         void write(uint16_t addr, uint8_t data);
@@ -156,7 +158,7 @@ class PPU {
         uint8_t oamaddr = 0x00;
         uint8_t dmaaddr = 0x00;
 
-        struct OAM {
+        typedef struct {
             uint8_t y = 0x00;
             uint8_t tile = 0x00;
             uint8_t attr = 0x00;
@@ -171,7 +173,9 @@ class PPU {
                 uint8_t data = 0x00;
             } attr;
             uint8_t x = 0x00;
-        } oam[64];
+        } OAM;
+
+        std::array<OAM, 64> oam;
 
         // Odd frame indicator.
         bool odd = false;

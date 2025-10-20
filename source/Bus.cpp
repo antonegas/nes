@@ -1,4 +1,6 @@
 #include <cstdint>
+#include <memory>
+#include <array>
 
 #include "../headers/Bus.h"
 #include "../headers/CPU.h"

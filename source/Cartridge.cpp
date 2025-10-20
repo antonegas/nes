@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <vector>
 
 #include "../headers/Cartridge.h"
 #include "../headers/Mapper.h"

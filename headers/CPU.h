@@ -2,6 +2,7 @@
 #define H_CPU
 
 #include <cstdint>
+#include <array>
 
 using std::uint16_t;
 using std::uint8_t;
@@ -206,7 +207,7 @@ class CPU {
             uint8_t cycles = 0;
         } Lookup;
 
-        Lookup opcodes[256] = {
+        std::array<Lookup, 256> opcodes = {{
         //                    X0               X1               X2               X3               X4               X5               X6               X7               X8               X9               XA               XB               XC               XD               XE               XF
         /* 0X */ {&IMP, &BRK, 7}, {&IDX, &ORA, 6}, {&IMP, &KIL, 0}, {&IDX, &SLO, 8}, {&ZP0, &NOP, 3}, {&ZP0, &ORA, 3}, {&ZP0, &ASL, 5}, {&ZP0, &SLO, 5}, {&IMP, &PHP, 3}, {&IMM, &ORA, 2}, {&ACC, &ASL, 2}, {&IMM, &ANC, 2}, {&ABS, &NOP, 4}, {&ABS, &ORA, 4}, {&ABS, &ASL, 6}, {&ABS, &SLO, 6},
         /* 1X */ {&REL, &BPL, 2}, {&IDY, &ORA, 5}, {&IMP, &KIL, 0}, {&IDY, &SLO, 8}, {&ZPX, &NOP, 4}, {&ZPX, &ORA, 4}, {&ZPX, &ASL, 6}, {&ZPX, &SLO, 6}, {&IMP, &CLC, 2}, {&ABY, &ORA, 4}, {&ACC, &NOP, 2}, {&ABY, &SLO, 7}, {&ABX, &NOP, 4}, {&ABX, &ORA, 4}, {&ABX, &ASL, 7}, {&ABX, &SLO, 7},
@@ -224,7 +225,7 @@ class CPU {
         /* DX */ {&REL, &BNE, 2}, {&IDY, &CMP, 5}, {&IMP, &KIL, 0}, {&IDY, &DCP, 8}, {&ZPX, &NOP, 4}, {&ZPX, &CMP, 4}, {&ZPX, &DEC, 6}, {&ZPX, &DCP, 6}, {&IMP, &CLD, 2}, {&ABY, &CMP, 4}, {&IMP, &NOP, 2}, {&ABY, &DCP, 7}, {&ABX, &NOP, 4}, {&ABX, &CMP, 4}, {&ABX, &DEC, 7}, {&ABX, &DCP, 7},
         /* EX */ {&IMM, &CPX, 2}, {&IDX, &SBC, 6}, {&IMM, &NOP, 2}, {&IDX, &ISC, 8}, {&ZP0, &CPX, 3}, {&ZP0, &SBC, 3}, {&ZP0, &INC, 5}, {&ZP0, &ISC, 5}, {&IMP, &INX, 2}, {&IMM, &SBC, 2}, {&IMP, &NOP, 2}, {&IMM, &SBC, 2}, {&ABS, &CPX, 4}, {&ABS, &SBC, 4}, {&ABS, &INC, 6}, {&ABS, &ISC, 6},
         /* FX */ {&REL, &BEQ, 2}, {&IDY, &SBC, 5}, {&IMP, &KIL, 0}, {&IDY, &ISC, 8}, {&ZPX, &NOP, 4}, {&ZPX, &SBC, 4}, {&ZPX, &INC, 6}, {&ZPX, &ISC, 6}, {&IMP, &SED, 2}, {&ABY, &SBC, 4}, {&IMP, &NOP, 2}, {&ABY, &ISC, 7}, {&ABX, &NOP, 4}, {&ABX, &SBC, 4}, {&ABX, &INC, 7}, {&ABX, &ISC, 7}
-        };
+        }};
 };
 
 #endif // H_CPU

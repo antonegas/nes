@@ -1,4 +1,6 @@
 #include <cstdint>
+#include <memory>
+#include <array>
 
 #include "../headers/PPU.h"
 
@@ -42,7 +44,7 @@ uint8_t PPU::registerRead(uint16_t addr) {
             return status;
         case 0x2004:
             // OAMDATA
-            return ((uint8_t*)oam)[oamaddr];
+            return ((uint8_t*)oam.data())[oamaddr];
         case 0x2007:
             // PPUDATA
             uint8_t data = ppudataBuffer;
@@ -77,7 +79,7 @@ void PPU::registerWrite(uint16_t addr, uint8_t data) {
             break;
         case 0x2004:
             // OAMDATA
-            ((uint8_t*)oam)[oamaddr] = data;
+            ((uint8_t*)oam.data())[oamaddr] = data;
             oamaddr++;
             break;
         case 0x2005:
@@ -114,7 +116,7 @@ void PPU::registerWrite(uint16_t addr, uint8_t data) {
 }
 
 void PPU::dmaWrite(uint8_t data) {
-    ((uint8_t*)oam)[oamaddr] = data;
+    ((uint8_t*)oam.data())[oamaddr] = data;
     dmaaddr++;
 }
 

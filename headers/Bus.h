@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <array>
 
 #include "CPU.h"
 #include "PPU.h"
@@ -40,11 +41,11 @@ class Bus {
          * Reference: https://www.nesdev.org/wiki/CPU_memory_map
          */
         
-        uint8_t ram[2048];
+        std::array<uint8_t, 0x0800> ram;
         CPU cpu;
         PPU ppu;
         APU apu;
-        BaseController controllers[2];
+        std::array<BaseController, 2> controllers;
         std::shared_ptr<Cartridge> cart;
 
         /**
