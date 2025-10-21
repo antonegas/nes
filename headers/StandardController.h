@@ -5,6 +5,8 @@
 
 #include "BaseController.h"
 
+using std::uint8_t;
+
 class StandardController : BaseController {
     public:
         virtual uint8_t read() override;
