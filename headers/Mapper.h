@@ -15,6 +15,8 @@ class Mapper {
             FOUR
         };
 
+        static uint16_t number;
+
         Mapper(
             std::vector<uint8_t> prgrom, 
             std::vector<uint8_t> chrrom

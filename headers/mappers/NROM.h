@@ -17,6 +17,8 @@ class NROM : Mapper {
             MirrorMode mirrorMode
         ) : Mapper(prgrom, chrrom, mirrorMode) {};
 
+        static uint16_t const number = 0x0000;
+
         virtual uint8_t cpuRead(uint16_t addr);
         virtual uint8_t ppuRead(uint16_t addr);
     private:
