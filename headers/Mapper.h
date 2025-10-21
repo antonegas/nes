@@ -9,18 +9,28 @@ using std::uint8_t;
 
 class Mapper {
     public:
+        enum MirrorMode {
+            HORIZONTAL,
+            VERTICAL,
+            FOUR
+        };
+
+        Mapper(
+            std::vector<uint8_t> prgrom, 
+            std::vector<uint8_t> chrrom
+        ) : prgrom{prgrom}, chrrom{chrrom} {};
+        Mapper(
+            std::vector<uint8_t> prgrom, 
+            std::vector<uint8_t> chrrom, 
+            MirrorMode mirrorMode
+        ) : prgrom{prgrom}, chrrom{chrrom}, mirrorMode{mirrorMode} {};
+
         virtual void reset() {};
         virtual uint8_t cpuRead(uint16_t addr) { return 0x00; };
         virtual void cpuWrite(uint16_t addr, uint8_t data) {};
         virtual uint8_t ppuRead(uint16_t addr) { return 0x00; };
         virtual void ppuWrite(uint16_t addr, uint8_t data) {};
         virtual uint16_t mirrorAddr(uint16_t addr);
-
-        enum MirrorMode {
-            HORIZONTAL,
-            VERTICAL,
-            FOUR
-        };
     protected:
         /**
          * NAMETABLE MIRRORING
