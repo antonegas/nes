@@ -48,6 +48,22 @@ RomHeader::ConsoleType RomHeader::getConsoleType() {
 
 RomHeader::ConsoleTiming RomHeader::getConsoleTiming() {
     if (getType() == RomHeader::Type::UNSUPPORTED) return RomHeader::ConsoleTiming::UNSUPPORTED;
+    if (getType() == RomHeader::Type::INES) {
+        if (header.ines.isPAL) return RomHeader::ConsoleTiming::PAL;
+        return RomHeader::ConsoleTiming::NTSC;
+    }
+
+    switch (header.nes2.timing) {
+        case RomHeader::ConsoleTiming::NTSC:
+            return RomHeader::ConsoleTiming::NTSC;
+        case RomHeader::ConsoleTiming::PAL:
+            return RomHeader::ConsoleTiming::PAL;
+        // NOTE: Multiregion is forced to NTSC timing.
+        case RomHeader::ConsoleTiming::MULTIREGION:
+            return RomHeader::ConsoleTiming::NTSC;
+        default:
+            RomHeader::ConsoleTiming::UNSUPPORTED
+    }
 }
 
 bool RomHeader::hasTrainer() {
