@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <vector>
 
+using std::uint32_t;
 using std::uint16_t;
 using std::uint8_t;
 
@@ -14,7 +15,14 @@ class Mapper {
         virtual void cpuWrite(uint16_t addr, uint8_t data) {};
         virtual uint8_t ppuRead(uint16_t addr) { return 0x00; };
         virtual void ppuWrite(uint16_t addr, uint8_t data) {};
+        virtual uint16_t mirrorAddr(uint16_t addr);
 
+        enum MirrorMode {
+            HORIZONTAL,
+            VERTICAL,
+            FOUR
+        };
+    protected:
         /**
          * NAMETABLE MIRRORING
          * 
@@ -26,14 +34,8 @@ class Mapper {
          * Reference: https://www.nesdev.org/wiki/Mirroring
          */
 
-        enum MirrorMode {
-            HORIZONTAL,
-            VERTICAL,
-            FOUR
-        };
-
         MirrorMode mirrorMode = HORIZONTAL;
-    protected:
+
         std::vector<uint8_t> prgrom;
         std::vector<uint8_t> chrrom;
         std::vector<uint8_t> prgram;

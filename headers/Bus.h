@@ -9,7 +9,7 @@
 #include "PPU.h"
 #include "APU.h"
 #include "BaseController.h"
-#include "Cartridge.h"
+#include "Mapper.h"
 
 using std::uint16_t;
 using std::uint8_t;
@@ -46,7 +46,7 @@ class Bus {
         PPU ppu;
         APU apu;
         std::array<BaseController, 2> controllers;
-        std::shared_ptr<Cartridge> cart;
+        std::shared_ptr<Mapper> cart;
 
         /**
          * DIRECT MEMORY ACCESS (DMA)

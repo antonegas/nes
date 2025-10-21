@@ -5,7 +5,7 @@
 #include <memory>
 #include <array>
 
-#include "../headers/Cartridge.h"
+#include "Mapper.h"
 
 using std::uint16_t;
 using std::uint8_t;
@@ -135,7 +135,7 @@ class PPU {
          * Reference: https://www.nesdev.org/wiki/PPU_memory_map
          */
 
-        std::shared_ptr<Cartridge> cart;
+        std::shared_ptr<Mapper> cart;
         // NOTE: Only 2kB on actual hardware but 4kb here to allow 4-screen mirroring.
         std::array<uint8_t, 0x1000> vram;
         std::array<uint8_t, 0x20> palette;
