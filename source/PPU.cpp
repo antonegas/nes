@@ -1,6 +1,4 @@
 #include <cstdint>
-#include <memory>
-#include <array>
 
 #include "../headers/PPU.h"
 

@@ -1,5 +1,4 @@
 #include <cstdint>
-#include <array>
 
 #include "../headers/CPU.h"
 #include "../headers/Bus.h"

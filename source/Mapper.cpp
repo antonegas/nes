@@ -1,4 +1,8 @@
+#include <cstdint>
+
 #include "../headers/Mapper.h"
+
+using std::uint16_t;
 
 uint16_t Mapper::mirrorAddr(uint16_t addr) {
     switch (mirrorMode) {
