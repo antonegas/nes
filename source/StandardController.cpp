@@ -2,7 +2,6 @@
 
 #include "../headers/StandardController.h"
 
-using std::uint16_t;
 using std::uint8_t;
 
 uint8_t StandardController::read() {
