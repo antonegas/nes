@@ -1,4 +1,9 @@
+#include <cstdint>
+
 #include "../../headers/mappers/NROM.h"
+
+using std::uint16_t;
+using std::uint8_t;
 
 uint8_t NROM::cpuRead(uint16_t addr) {
     return prgrom[prgAddr(addr)];
