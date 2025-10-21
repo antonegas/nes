@@ -13,6 +13,17 @@ using std::int32_t;
 using std::uint16_t;
 using std::uint8_t;
 
+/**
+ * ROM HEADERS
+ * 
+ * Since each cartridge had an associated mapper ROM files has to describe information
+ * about these mappers among other things. There are two standards for describing this
+ * in a ROM header, iNES and NES 2.0 (which is backwards compatible with iNES).
+ * 
+ * iNES Reference: https://www.nesdev.org/wiki/INES
+ * NES 2.0 Reference: https://www.nesdev.org/wiki/NES_2.0
+ */
+
 class RomHeader {
     public:
         RomHeader(std::array<uint8_t, 16> header);
@@ -23,11 +34,78 @@ class RomHeader {
             UNSUPPORTED = 0xFF
         };
 
+        Type getType();
+
+        /**
+         * MAPPERS
+         * 
+         * Each mapper is identified with a number iNES supports 256 mappers and NES 2.0
+         * up to 4096. Due to some mappers having some differences there are also
+         * submappers which describe different submappers within a mapper.
+         * 
+         * Reference: https://www.nesdev.org/wiki/Mapper
+         */
+
+        uint32_t getMapper();
+        uint8_t getSubmapper();
+
+        /**
+         * TRAINER
+         * 
+         * Some ROM files has 512 bytes of trainer area following the header which should
+         * be placed into CPU memory at 0x7000.
+         * 
+         * Reference: https://www.nesdev.org/wiki/NES_2.0#Trainer_Area
+         */
+
+        bool hasTrainer();
+
+        /**
+         * ROM SIZE AND AVAILABLE RAM
+         * 
+         * Cartridges have different amount of PRG-ROM and CHR-ROM. There might also exist
+         * extra PRG-RAM and CHR-RAM for some mappers.
+         * 
+         * PRG-ROM Reference: https://www.nesdev.org/wiki/NES_2.0#PRG-ROM_Area
+         * CHR-ROM Reference: https://www.nesdev.org/wiki/NES_2.0#CHR-ROM_Area
+         * PRG-RAM Reference: https://www.nesdev.org/wiki/NES_2.0#PRG-(NV)RAM/EEPROM
+         * CHR-RAM Reference: https://www.nesdev.org/wiki/NES_2.0#CHR-(NV)RAM
+         */
+
+        uint32_t getPrgromSize();
+        uint16_t getPrgramSize();
+        uint16_t getPrgnvramSize();
+        uint32_t getChrromSize();
+        uint16_t getChrramSize();
+        uint16_t getChrnvramSize();
+
+        /**
+         * NAMETABLE LAYOUT
+         * 
+         * The nametables can be mapped in different ways to allow scrolling. A mapper can
+         * hardwire this layout, switch between layouts or support an entirely different layout.
+         * 
+         * Reference: https://www.nesdev.org/wiki/NES_2.0#Nametable_layout
+         */
+
         enum NametableLayout {
             HORIZONTAL,
             VERTICAL,
             ALTERNATIVE
         };
+
+        NametableLayout getNametableLayout();
+
+        /**
+         * CONSOLE TYPE
+         * 
+         * The header also supports different kinds of console hardware, NES, Vs. System, 
+         * Playchoice and extended console types. The Vs. System inturn also requires different 
+         * hardware depending on the ROM.
+         * 
+         * Reference: https://www.nesdev.org/wiki/NES_2.0#File_Structure
+         * Vs. System Reference: https://www.nesdev.org/wiki/NES_2.0#Vs._System_Type
+         */
 
         enum ConsoleType {
             NES = 0x00,
@@ -37,6 +115,17 @@ class RomHeader {
             UNSUPPORTED = 0xFF
         };
 
+        ConsoleType getConsoleType();
+
+        /**
+         * CONSOLE TIMING
+         * 
+         * Since the console was released in regions with different TV standards. This resulted
+         * in the CPU and PPU having to run at different clock speeds depending on region.
+         * 
+         * Reference: https://www.nesdev.org/wiki/NES_2.0#CPU/PPU_Timing
+         */
+
         enum ConsoleTiming {
             NTSC = 0x00,
             PAL = 0x01,
@@ -44,6 +133,17 @@ class RomHeader {
             MULTIREGION = 0x03,
             UNSUPPORTED = 0xFF
         };
+
+        ConsoleTiming getConsoleTiming();
+
+        /**
+         * EXPANSION DEVICE
+         * 
+         * The console supported differnent types of input devices. The header can specify 
+         * which one of these should be used when playing the game.
+         * 
+         * Reference: www.nesdev.org/wiki/NES_2.0#Default_Expansion_Device
+         */
 
         enum ExpansionDevice {
             UNSPECIFIED = 0x00,
@@ -60,20 +160,7 @@ class RomHeader {
             UNSUPPORTED = 0xFF
         };
 
-        Type getType();
-        NametableLayout getNametableLayout();
-        uint32_t getMapper();
-        uint8_t getSubmapper();
-        ConsoleType getConsoleType();
-        ConsoleTiming getConsoleTiming();
-        bool hasTrainer();
         ExpansionDevice getExpansionDevice();
-        uint32_t getPrgromSize();
-        uint16_t getPrgramSize();
-        uint16_t getPrgnvramSize();
-        uint32_t getChrromSize();
-        uint16_t getChrramSize();
-        uint16_t getChrnvramSize();
 
     private:
         union HEADER {
