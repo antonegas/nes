@@ -9,6 +9,15 @@
 using std::uint16_t;
 using std::uint8_t;
 
+/**
+ * NROM (Mapper 0)
+ * 
+ * A simple mapper with 16 or 32 KiB PRG-ROM, 8 KiB CHR-ROM and hardwired nametable
+ * mirroring. If the PRG-ROM is 16 KiB it is mirrored across 0xC000-0xFFFF.
+ * 
+ * Reference: https://www.nesdev.org/wiki/NROM
+ */
+
 class NROM : Mapper {
     public:
         NROM(
