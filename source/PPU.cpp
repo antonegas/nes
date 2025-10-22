@@ -180,3 +180,21 @@ void PPU::write(uint16_t addr, uint8_t data) {
         palette[addr] = data;
     }
 }
+
+void PPU::Loopy::incrementX() {
+    coarseX++;
+    // If wrapped around switch horizontal nametable.
+    if (coarseX == 0) nametableSelect = nametableSelect ^ 0x01;
+};
+void PPU::Loopy::incrementY() {
+    fineY++;
+    if (fineY != 0) return;
+    if (coarseY == 29) {
+        coarseY = 0;
+        nametableSelect = nametableSelect ^ 0x02;
+    } else if (coarseY == 31) {
+        coarseY = 0;
+    } else {
+        coarseY++;
+    }
+};
