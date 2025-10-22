@@ -109,6 +109,24 @@ class PPU {
                 uint8_t high;
             };
             uint16_t addr = 0x0000;
+            // TODO: These should only ever be called when rendering is enabled.
+            void incrementX() {
+                coarseX++;
+                // If wrapped around switch horizontal nametable.
+                if (coarseX == 0) nametableSelect = nametableSelect ^ 0x01;
+            };
+            void incrementY() {
+                fineY++;
+                if (fineY != 0) return;
+                if (coarseY == 29) {
+                    coarseY = 0;
+                    nametableSelect = nametableSelect ^ 0x02;
+                } else if (coarseY == 31) {
+                    coarseY = 0;
+                } else {
+                    coarseY++;
+                }
+            };
         };
         
         Loopy v;
