@@ -198,3 +198,11 @@ void PPU::Loopy::incrementY() {
         coarseY++;
     }
 };
+
+uint16_t PPU::tileAddr() {
+    return 0x2000 | (v.addr & 0x0FFF);
+}
+
+uint16_t PPU::attrAddr() {
+    return 0x23C0 | (v.addr & 0x0C00) | (v.coarseY & 0x1C << 1) | (v.coarseX & 0x1C >> 2);
+}

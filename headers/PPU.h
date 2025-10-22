@@ -119,6 +119,9 @@ class PPU {
         uint8_t fineX = 0x00;
         bool w = 0x00;
 
+        uint16_t tileAddr();
+        uint16_t attrAddr();
+
         /**
          * MEMORY MAP
          * 
