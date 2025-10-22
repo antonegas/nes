@@ -234,4 +234,11 @@ void PPU::tickPreRender() {
         ppustatus.S = false;
         ppustatus.O = false;
     }
+
+    if (280 <= dot && dot <= 304) {
+        // Set v.Y = t.Y
+        v.coarseY = t.coarseY;
+        v.nametableSelect = (v.nametableSelect & 0x01) | (t.nametableSelect & 0x02);
+        v.fineY = t.fineY;
+    }
 }
