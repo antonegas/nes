@@ -5,6 +5,34 @@
 using std::uint16_t;
 using std::uint8_t;
 
+void PPU::tick() {
+    if (scanline <= 239) {
+        // Visible frame.
+        tickVisibleFrame();
+    } else if (scanline <= 241 && dot == 1) {
+        // Set vblank.
+        // NOTE: Scanline 291 on Dendy
+        ppustatus.V = true;
+        nmi = ppuctrl.nmiEnable;
+    } else if (scanline <= 260) {
+        // VBlank.
+        // NOTE: Scanline 311 on PAL/Dendy
+    } else {
+        // Pre-render scanline.
+        // Scanline 261 on NTCS
+        // NOTE: Scanline 311 on PAL/Dendy
+        tickPreRender();
+    }
+
+    dot++;
+
+    if (dot == 341) {
+        dot = 0;
+        scanline++;
+    }
+    // TODO: handle scanline reset and odd frame skip in tickPreRender
+}
+
 void PPU::power() {
     ppuctrl.reg = 0x0000;
     ppumask.reg = 0x0000;

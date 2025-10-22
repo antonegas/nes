@@ -177,8 +177,21 @@ class PPU {
 
         std::array<OAM, 64> oam;
 
-        // Odd frame indicator.
+        /**
+         * RENDERING
+         * 
+         * TODO: Describe
+         * 
+         * Reference: https://www.nesdev.org/wiki/PPU_rendering
+         */
+
+        uint16_t scanline = 0x00;
+        uint16_t dot = 0x00;
         bool odd = false;
+
+        void tickVisibleFrame();
+        void tickPreRender();
+
 };
 
 #endif // H_PPU
