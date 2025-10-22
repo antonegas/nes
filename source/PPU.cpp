@@ -238,7 +238,60 @@ void PPU::tickPreRender() {
     if (280 <= dot && dot <= 304) {
         // Set v.Y = t.Y
         v.coarseY = t.coarseY;
-        v.nametableSelect = (v.nametableSelect & 0x01) | (t.nametableSelect & 0x02);
+        v.nametableSelect = (t.nametableSelect & 0x02) | (v.nametableSelect & 0x01);
         v.fineY = t.fineY;
+    }
+}
+
+void PPU::fetchBackground() {
+    if (dot == 0) return;
+
+    if (dot == 257) {
+        // Set v.X = t.X
+        v.coarseX = t.coarseX;
+        v.nametableSelect = (v.nametableSelect & 0x02) | (t.nametableSelect & 0x01);
+    }
+    
+    if ((257 <= dot && dot <= 320) || (337 <= dot && dot <= 340)) {
+        // Unused/ignored fetches (needed for some mappers).
+        switch (dot & 0x0007) {
+            case 0x0001:
+                // Unused fetch.
+                nextTile = read(tileAddr());
+            return;
+            case 0x0003:
+                // Ignored fetch.
+                read(tileAddr());
+            return;
+                default:
+            return;
+        }
+    }
+
+    switch (dot & 0x0007) {
+        case 0x0000:
+            v.incrementX();
+            return;
+        case 0x0001:
+            nextTile = read(tileAddr());
+            return;
+        case 0x0003:
+            nextAttr = read(attrAddr());
+            return;
+        case 0x0005:
+            nextBgLow = read(
+                (ppuctrl.backgroundTileSelect << 12) |
+                (nextTile << 4) |
+                v.fineY
+            );
+            return;
+        case 0x0007:
+            nextBgHigh = read((ppuctrl.backgroundTileSelect << 12) |
+                (nextTile << 4) |
+                (v.fineY + 8)
+            );
+            return;
+        default:
+            return;
     }
 }

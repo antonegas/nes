@@ -52,8 +52,8 @@ class PPU {
             struct {
                 uint8_t nametableSelect : 2;
                 uint8_t incrementMode : 1;
-                uint8_t spriteTileSelect : 1;
-                uint8_t backgroundTileSelect : 1;
+                uint16_t spriteTileSelect : 1;
+                uint16_t backgroundTileSelect : 1;
                 uint8_t spriteHeight : 1;
                 uint8_t unused : 1;
                 bool nmiEnable : 1;
@@ -194,6 +194,11 @@ class PPU {
         uint16_t scanline = 0x00;
         uint16_t dot = 0x00;
         bool odd = false;
+
+        uint8_t nextTile = 0x00;
+        uint8_t nextAttr = 0x00;
+        uint8_t nextBgLow = 0x00;
+        uint8_t nextBgHigh = 0x00;
 
         void tickVisibleFrame();
         void tickPreRender();
