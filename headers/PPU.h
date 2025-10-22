@@ -56,21 +56,21 @@ class PPU {
                 uint8_t backgroundTileSelect : 1;
                 uint8_t spriteHeight : 1;
                 uint8_t unused : 1;
-                uint8_t nmiEnable : 1;
+                bool nmiEnable : 1;
             };
             uint8_t reg = 0x00;
         } ppuctrl;
 
         union PPUMASK {
             struct {
-                uint8_t grayscale : 1;
-                uint8_t backgroundLeft : 1;
-                uint8_t spriteLeft : 1;
-                uint8_t enableBackground : 1;
-                uint8_t enableSprite : 1;
-                uint8_t emphasizeRed : 1;
-                uint8_t emphasizeGreen : 1;
-                uint8_t emphasizeBlue : 1;
+                bool grayscale : 1;
+                bool backgroundLeft : 1;
+                bool spriteLeft : 1;
+                bool enableBackground : 1;
+                bool enableSprite : 1;
+                bool emphasizeRed : 1;
+                bool emphasizeGreen : 1;
+                bool emphasizeBlue : 1;
             };
             uint8_t reg = 0x00;
         } ppumask;
@@ -78,9 +78,9 @@ class PPU {
         union PPUSTATUS {
             struct {
                 uint8_t unused : 5;
-                uint8_t O : 1; // Sprite overflow.
-                uint8_t S : 1; // Sprite 0 hit.
-                uint8_t V : 1; // Sprite overflow.
+                bool O : 1; // Sprite overflow.
+                bool S : 1; // Sprite 0 hit.
+                bool V : 1; // Sprite overflow.
             };
             uint8_t status = 0x00;
         } ppustatus;
