@@ -197,6 +197,9 @@ class PPU {
 
         void tickVisibleFrame();
         void tickPreRender();
+        void drawDot();
+        void fetchBackground();
+        void fetchForeground();
 
 };
 

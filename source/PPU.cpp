@@ -85,7 +85,8 @@ uint8_t PPU::registerRead(uint16_t addr) {
             // On PAL, 2C02G and 2C02H palette reads are immediate.
             // if (v.addr >= 0x3F00 && v.addr < 0x4000) data = ppudataBuffer;
 
-            // When the CPU reads from the PPU memory PPUADDR is increased by 1 or 32 depending on increment mode.
+            // When the CPU reads from the PPU memory PPUADDR is increased by 1 or 32 depending on 
+            // increment mode.
             v.addr += 0x01 + 0x19 * ppuctrl.incrementMode;
 
             return data;
@@ -141,7 +142,8 @@ void PPU::registerWrite(uint16_t addr, uint8_t data) {
             // PPUDATA
             write(v.addr, data);
 
-            // When the CPU writing from the PPU memory PPUADDR is increased by 1 or 32 depending on increment mode.
+            // When the CPU writing from the PPU memory PPUADDR is increased by 1 or 32 depending 
+            // on increment mode.
             v.addr += 0x01 + 0x19 * ppuctrl.incrementMode;
             break;
     }
@@ -152,7 +154,8 @@ void PPU::dmaWrite(uint8_t data) {
     dmaaddr++;
 }
 
-// NOTE: Current implementation of read and write assumes that only pattern tables are mapped entirely by mapper.
+// NOTE: Current implementation of read and write assumes that only pattern tables are mapped 
+// entirely by mapper.
 uint8_t PPU::read(uint16_t addr) {
     addr = addr & 0x3FFF; // PPU addresses are 14 bits.
 
@@ -211,4 +214,24 @@ uint16_t PPU::tileAddr() {
 
 uint16_t PPU::attrAddr() {
     return 0x23C0 | (v.addr & 0x0C00) | (v.coarseY & 0x1C << 1) | (v.coarseX & 0x1C >> 2);
+}
+
+void PPU::tickVisibleFrame() {
+    fetchBackground();
+    drawDot();
+
+    // NOTE: On real hardware foreground fetches are spread out between dot 261-320
+    // NOTE: Since foreground is fetched at the end of the scanline sprites are drawn one pixel 
+    // lower than what is specified in the OAM.
+    if (dot == 320) fetchForeground();
+}
+
+void PPU::tickPreRender() {
+    fetchBackground();
+    
+    if (dot == 1) {
+        ppustatus.V = false;
+        ppustatus.S = false;
+        ppustatus.O = false;
+    }
 }
