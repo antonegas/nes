@@ -52,8 +52,8 @@ class PPU {
             struct {
                 uint8_t nametableSelect : 2;
                 uint8_t incrementMode : 1;
-                uint8_t spriteTileSelect : 1;
-                uint8_t backgroundTileSelect : 1;
+                uint16_t spriteTileSelect : 1;
+                uint16_t backgroundTileSelect : 1;
                 uint8_t spriteHeight : 1;
                 uint8_t unused : 1;
                 bool nmiEnable : 1;
@@ -195,12 +195,21 @@ class PPU {
         uint16_t dot = 0x00;
         bool odd = false;
 
+        uint8_t nextTile = 0x00;
+        uint8_t nextAttr = 0x00;
+        uint8_t nextPatternLow = 0x00;
+        uint8_t nextPatternHigh = 0x00;
+
+        uint16_t shifterPatternLow = 0x0000;
+        uint16_t shifterPatternHigh = 0x0000;
+        uint16_t shifterAttrLow = 0x0000;
+        uint16_t shifterAttrHigh = 0x0000;
+
         void tickVisibleFrame();
         void tickPreRender();
         void drawDot();
         void fetchBackground();
         void fetchForeground();
-
 };
 
 #endif // H_PPU
