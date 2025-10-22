@@ -6,15 +6,19 @@ using std::uint16_t;
 using std::uint8_t;
 
 void Bus::tick() {
-    // PAL
-    uint8_t ppurate = 5;
-    uint8_t cpurate = 16;
-    uint8_t offset = 0;
+    // NTSC (3 dots / CPU cycle)
+    uint8_t ppurate = 4;
+    uint8_t cpurate = 12;
 
-    // NTSC
-    // uint8_t ppurate = 4;
-    // uint8_t cpurate = 12;
-    // uint8_t offset = 0;
+    // PAL (3.2 dots / CPU cycle)
+    // uint8_t ppurate = 5;
+    // uint8_t cpurate = 16;
+
+    // Dendy (3 dots / CPU cycle)
+    // uint8_t ppurate = 5;
+    // uint8_t cpurate = 15;
+
+    uint8_t offset = 0;
 
     // No need to increase master cycle over CPU * PPU master clocks / clock.
     cycle = cycle % (ppurate * cpurate);
