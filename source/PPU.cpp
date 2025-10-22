@@ -30,7 +30,13 @@ void PPU::tick() {
         dot = 0;
         scanline++;
     }
-    // TODO: handle scanline reset and odd frame skip in tickPreRender
+
+    // NOTE: Scanline 312 on PAL/Dendy
+    if (scanline < 262) return;
+
+    // First dot is skipped on even frames.
+    if (odd) dot = 1;
+    odd = !odd;
 }
 
 void PPU::power() {
