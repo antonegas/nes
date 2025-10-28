@@ -77,7 +77,7 @@ uint8_t PPU::registerRead(uint16_t addr) {
             return status;
         case 0x2004:
             // OAMDATA
-            return ((uint8_t*)oam.data())[oamaddr];
+            return ((uint8_t*)primaryOam.data())[oamaddr];
         case 0x2007:
             // PPUDATA
             uint8_t data = ppudataBuffer;
@@ -113,7 +113,7 @@ void PPU::registerWrite(uint16_t addr, uint8_t data) {
             break;
         case 0x2004:
             // OAMDATA
-            ((uint8_t*)oam.data())[oamaddr] = data;
+            ((uint8_t*)primaryOam.data())[oamaddr] = data;
             oamaddr++;
             break;
         case 0x2005:
@@ -151,7 +151,7 @@ void PPU::registerWrite(uint16_t addr, uint8_t data) {
 }
 
 void PPU::dmaWrite(uint8_t data) {
-    ((uint8_t*)oam.data())[oamaddr] = data;
+    ((uint8_t*)primaryOam.data())[oamaddr] = data;
     dmaaddr++;
 }
 
@@ -221,10 +221,9 @@ void PPU::tickVisibleFrame() {
     fetchBackground();
     drawDot();
 
-    // NOTE: On real hardware foreground fetches are spread out between dot 261-320
     // NOTE: Since foreground is fetched at the end of the scanline sprites are drawn one pixel 
     // lower than what is specified in the OAM.
-    if (dot == 320) fetchForeground();
+    fetchForeground();
 }
 
 void PPU::tickPreRender() {

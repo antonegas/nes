@@ -181,7 +181,8 @@ class PPU {
             uint8_t x = 0x00;
         } OAM;
 
-        std::array<OAM, 64> oam;
+        std::array<OAM, 64> primaryOam;
+        std::array<OAM, 8> secondaryOam;
 
         /**
          * RENDERING
@@ -189,6 +190,7 @@ class PPU {
          * TODO: Describe
          * 
          * Reference: https://www.nesdev.org/wiki/PPU_rendering
+         * Sprite evaluation reference: https://www.nesdev.org/wiki/PPU_sprite_evaluation
          */
 
         uint16_t scanline = 0x00;
