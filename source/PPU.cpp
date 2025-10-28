@@ -32,7 +32,8 @@ void PPU::tick() {
     }
 
     // NOTE: Scanline 312 on PAL/Dendy
-    if (scanline < 262) return;
+    if (scanline == 262) return;
+    scanline = 0;
 
     // First dot is skipped on even frames.
     if (odd) dot = 1;
