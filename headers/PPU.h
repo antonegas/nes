@@ -243,6 +243,7 @@ class PPU {
         void drawDot();
         void fetchBackground();
         void fetchForeground();
+        uint16_t spriteAddr(uint8_t tile);
 };
 
 #endif // H_PPU

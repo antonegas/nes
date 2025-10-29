@@ -323,7 +323,6 @@ void PPU::fetchForeground() {
     if (dot <= 64) {
         if (dot & 0x0001 == 0x0000) ((uint8_t*)secondaryOam.data())[(dot - 2) >> 1] = 0xFF;
     } else if (dot <= 256) {
-        // TODO: Verify there are no out of range checks.
         // Read on odd cycles.
         if (dot & 0x0001) return;
 
@@ -360,7 +359,6 @@ void PPU::fetchForeground() {
         // If the y coordinate is in range copy the other fields to secondary OAM.
         if (inRange) {
             // If it is the first entry in the primary OAM it is sprite 0.
-            // TODO: This is overwriten fix.
             if (primaryPtr == 0x00) sprite0NextScanline = true;
 
             // Move to next field in both OAMs.
@@ -374,12 +372,12 @@ void PPU::fetchForeground() {
         return;
     } else if (dot <= 320) {
         // NOTE: Skips some reads of the secondary OAM.
-        // TODO: Handle flip V/H, 8x8/8x16.
         uint8_t entry = (dot - 257) >> 3;
 
         switch (dot & 0x0007) {
             case 0x0000:
-                // TODO: Implement
+                uint8_t addr = spriteAddr(secondaryOam[entry].tile);
+                mpbm[entry].high = read(addr + 0x0008);
                 return;
             case 0x0003:
                 // Attribute data.
@@ -392,12 +390,13 @@ void PPU::fetchForeground() {
                 mpbm[entry].x = secondaryOam[entry].x;
                 return;
             case 0x0006:
-                // TODO: Implement
+                uint8_t addr = spriteAddr(secondaryOam[entry].tile);
+                mpbm[entry].low = read(addr);
                 return;
         }
     } else if (dot <= 340) {
         // Busy reading first byte of secondary OAM.
-
+        
         if (dot == 340) {
             // Reset helpers.
             primaryPtr = 0x00;
