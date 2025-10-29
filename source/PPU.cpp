@@ -377,8 +377,16 @@ void PPU::fetchForeground() {
 
         switch (dot & 0x0007) {
             case 0x0000:
-                uint8_t addr = spriteAddr(secondaryOam[entry].tile);
-                mpbm[entry].high = read(addr + 0x0008);
+                uint16_t addr = spriteAddr(secondaryOam[entry]);
+                uint8_t high = read(addr + 0x0008);
+
+                if (secondaryOam[entry].attr.horizontalFlip) {
+                    high = (high & 0xF0) >> 4 | (high & 0x0F) << 4;
+                    high = (high & 0xCC) >> 2 | (high & 0x33) << 2;
+                    high = (high & 0xAA) >> 1 | (high & 0x55) << 1;
+                }
+
+                mpbm[entry].high = high;
                 return;
             case 0x0003:
                 // Attribute data.
@@ -391,8 +399,16 @@ void PPU::fetchForeground() {
                 mpbm[entry].x = secondaryOam[entry].x;
                 return;
             case 0x0006:
-                uint8_t addr = spriteAddr(secondaryOam[entry].tile);
-                mpbm[entry].low = read(addr);
+                uint16_t addr = spriteAddr(secondaryOam[entry]);
+                uint8_t low = read(addr);
+
+                if (secondaryOam[entry].attr.horizontalFlip) {
+                    low = (low & 0xF0) >> 4 | (low & 0x0F) << 4;
+                    low = (low & 0xCC) >> 2 | (low & 0x33) << 2;
+                    low = (low & 0xAA) >> 1 | (low & 0x55) << 1;
+                }
+
+                mpbm[entry].low = low;
                 return;
         }
     } else if (dot <= 340) {
@@ -404,4 +420,33 @@ void PPU::fetchForeground() {
             secondaryPtr = 0x00;
         }
     }
+}
+
+uint16_t PPU::spriteAddr(OAM sprite) {
+    uint16_t addr = 0x0000;
+    uint8_t relativeY = scanline - sprite.y;
+
+    if (ppuctrl.spriteHeight) {
+        // 8x16 sprites.
+        addr = addr | ((sprite.tile & 0x01) << 12);
+        addr = addr | ((sprite.tile & 0xFE) << 4);
+
+        if (sprite.attr.verticalFlip) {
+            addr = addr | ((relativeY < 8) << 4);
+        } else {
+            addr = addr | ((relativeY >= 8) << 4);
+        }
+    } else {
+        // 8x8 sprites.
+        addr = addr | ((ppuctrl.spriteTileSelect) << 12);
+        addr = addr | (sprite.tile << 4);
+    }
+
+    if (sprite.attr.verticalFlip) {
+        addr = addr | (7 - (relativeY & 0x07));
+    } else {
+        addr = addr | (relativeY & 0x07);
+    }
+
+    return addr;
 }
