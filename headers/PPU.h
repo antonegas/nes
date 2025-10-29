@@ -185,6 +185,32 @@ class PPU {
         std::array<OAM, 8> secondaryOam;
 
         /**
+         * MOTION PICTURE BUFFER MEMORY (MPBM)
+         * 
+         * The MPBM contains information about the sprites to render on the current line. It stores the
+         * low and high bits of the sprites pixel on the scanline, palette and priority attribute data and 
+         * the x position of the sprite.
+         * 
+         * The x position is decremented each dot until it reaches zero, when rendering of the sprite can
+         * start. After the x position reaches zero the low and high bits of the sprite line are shifted 
+         * each dot. 
+         * 
+         * Reference: https://github.com/emu-russia/breaks/blob/master/BreakingNESWiki_DeepL/PPU/fifo.md
+         * NesDev reference: https://forums.nesdev.org/viewtopic.php?t=26291
+         */
+
+        typedef struct {
+            uint8_t lineLow;
+            uint8_t lineHigh;
+            uint8_t palette : 2;
+            uint8_t priority : 1;
+            uint8_t unused : 5;
+            uint8_t x;
+        } MPBM;
+
+        std::array<MPBM, 8> mpbm;
+
+        /**
          * RENDERING
          * 
          * TODO: Describe
