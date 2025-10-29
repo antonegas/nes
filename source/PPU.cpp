@@ -16,7 +16,7 @@ void PPU::tick() {
         nmi = ppuctrl.nmiEnable;
     } else if (scanline <= 260) {
         // VBlank.
-        // NOTE: Scanline 311 on PAL/Dendy
+        // NOTE: Scanline 310 on PAL/Dendy
     } else {
         // Pre-render scanline.
         // Scanline 261 on NTCS
