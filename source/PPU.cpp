@@ -268,6 +268,7 @@ void PPU::fetchBackground() {
         }
     }
 
+    // Dot 1-256 and 321-236
     switch (dot & 0x0007) {
         case 0x0000:
             v.incrementX();
