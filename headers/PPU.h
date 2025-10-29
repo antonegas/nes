@@ -61,6 +61,7 @@ class PPU {
             uint8_t reg = 0x00;
         } ppuctrl;
 
+        // TODO: Implement
         union PPUMASK {
             struct {
                 bool grayscale : 1;
