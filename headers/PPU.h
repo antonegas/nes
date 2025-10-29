@@ -80,7 +80,7 @@ class PPU {
                 uint8_t unused : 5;
                 bool O : 1; // Sprite overflow.
                 bool S : 1; // Sprite 0 hit.
-                bool V : 1; // Sprite overflow.
+                bool V : 1; // VBlank.
             };
             uint8_t status = 0x00;
         } ppustatus;
