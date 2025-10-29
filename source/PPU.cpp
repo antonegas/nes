@@ -304,7 +304,8 @@ void PPU::fetchBackground() {
             );
             return;
         case 0x0007:
-            nextPatternHigh = read((ppuctrl.backgroundTileSelect << 12) |
+            nextPatternHigh = read(
+                (ppuctrl.backgroundTileSelect << 12) |
                 (nextTile << 4) |
                 (v.fineY + 8)
             );
