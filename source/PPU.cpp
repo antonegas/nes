@@ -376,18 +376,6 @@ void PPU::fetchForeground() {
         uint8_t entry = (dot - 257) >> 3;
 
         switch (dot & 0x0007) {
-            case 0x0000:
-                uint16_t addr = spriteAddr(secondaryOam[entry]);
-                uint8_t high = read(addr + 0x0008);
-
-                if (secondaryOam[entry].attr.horizontalFlip) {
-                    high = (high & 0xF0) >> 4 | (high & 0x0F) << 4;
-                    high = (high & 0xCC) >> 2 | (high & 0x33) << 2;
-                    high = (high & 0xAA) >> 1 | (high & 0x55) << 1;
-                }
-
-                mpbm[entry].high = high;
-                return;
             case 0x0003:
                 // Attribute data.
                 mpbm[entry].palette = secondaryOam[entry].attr.palette;
@@ -398,7 +386,7 @@ void PPU::fetchForeground() {
                 // X coordinate.
                 mpbm[entry].x = secondaryOam[entry].x;
                 return;
-            case 0x0006:
+            case 0x0005:
                 uint16_t addr = spriteAddr(secondaryOam[entry]);
                 uint8_t low = read(addr);
 
@@ -409,6 +397,18 @@ void PPU::fetchForeground() {
                 }
 
                 mpbm[entry].low = low;
+                return;
+            case 0x0007:
+                uint16_t addr = spriteAddr(secondaryOam[entry]);
+                uint8_t high = read(addr + 0x0008);
+
+                if (secondaryOam[entry].attr.horizontalFlip) {
+                    high = (high & 0xF0) >> 4 | (high & 0x0F) << 4;
+                    high = (high & 0xCC) >> 2 | (high & 0x33) << 2;
+                    high = (high & 0xAA) >> 1 | (high & 0x55) << 1;
+                }
+
+                mpbm[entry].high = high;
                 return;
         }
     } else if (dot <= 340) {
