@@ -232,6 +232,12 @@ class PPU {
         uint16_t shifterAttrLow = 0x0000;
         uint16_t shifterAttrHigh = 0x0000;
 
+        uint8_t primaryPtr = 0x00;
+        uint8_t secondaryPtr = 0x00;
+
+        bool sprite0NextScanline = false;
+        bool sprite0CurrentScanline = false;
+
         void tickVisibleFrame();
         void tickPreRender();
         void drawDot();

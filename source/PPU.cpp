@@ -77,6 +77,11 @@ uint8_t PPU::registerRead(uint16_t addr) {
             return status;
         case 0x2004:
             // OAMDATA
+            if (scanline <= 239 && 1 <= dot && dot <= 64) {
+                // Secondary OAM clear.
+                return 0xFF;
+            }
+
             return ((uint8_t*)primaryOam.data())[oamaddr];
         case 0x2007:
             // PPUDATA
@@ -306,5 +311,97 @@ void PPU::fetchBackground() {
             return;
         default:
             return;
+    }
+}
+
+void PPU::fetchForeground() {
+    if (dot == 0) {
+        sprite0CurrentScanline = sprite0NextScanline;
+        sprite0NextScanline = false;
+    };
+    
+    if (dot <= 64) {
+        if (dot & 0x0001 == 0x0000) ((uint8_t*)secondaryOam.data())[(dot - 2) >> 1] = 0xFF;
+    } else if (dot <= 256) {
+        // TODO: Verify there are no out of range checks.
+        // Read on odd cycles.
+        if (dot & 0x0001) return;
+
+        // All sprites searched or all sprites found and overflow set.
+        // NOTE: Some behavior where primary and secondary pointers should increment has been left out by this.
+        if (primaryPtr >= 0x0100 || ppustatus.O) return; 
+
+        // If current sprite was in range copy it to secondary OAM.
+        if (secondaryPtr & 0x03 != 0x00) {
+            ((uint8_t*)secondaryOam.data())[secondaryPtr] = ((uint8_t*)primaryOam.data())[primaryPtr];
+
+            // Move to next field in both OAMs.
+            secondaryPtr += 0x01;
+            primaryPtr += 0x01;
+            return;
+        }
+
+        // Check if current primary OAM pointer is in range if interpreted as a y coordinate.
+        uint8_t y = ((uint8_t*)primaryOam.data())[primaryPtr];
+        bool inRange = y <= scanline && scanline <= y + 0x07 + 0x08 * ppuctrl.spriteHeight;
+
+        // If all sprites has been found check for sprite overflow.
+        if (secondaryPtr >= 0x20) {
+            ppustatus.O = inRange;
+
+            // Sprite overflow bug. Increment both entry pointer and field pointer.
+            primaryPtr += 0x05;
+            return;
+        }
+        
+        // Copy y coordinate of current primary OAM sprite into secondary OAM.
+        ((uint8_t*)secondaryOam.data())[secondaryPtr] = ((uint8_t*)primaryOam.data())[primaryPtr];
+
+        // If the y coordinate is in range copy the other fields to secondary OAM.
+        if (inRange) {
+            // If it is the first entry in the primary OAM it is sprite 0.
+            // TODO: This is overwriten fix.
+            if (primaryPtr == 0x00) sprite0NextScanline = true;
+
+            // Move to next field in both OAMs.
+            secondaryPtr += 0x01;
+            primaryPtr += 0x01;
+            return;
+        } 
+
+        // Move to next primary OAM entry.
+        primaryPtr += 0x04;
+        return;
+    } else if (dot <= 320) {
+        // NOTE: Skips some reads of the secondary OAM.
+        // TODO: Handle flip V/H, 8x8/8x16.
+        uint8_t entry = (dot - 257) >> 3;
+
+        switch (dot & 0x0007) {
+            case 0x0000:
+                // TODO: Implement
+                return;
+            case 0x0003:
+                // Attribute data.
+                mpbm[entry].palette = secondaryOam[entry].attr.palette;
+                mpbm[entry].priority = secondaryOam[entry].attr.priority;
+                mpbm[entry].unused = 0x00;
+                return;
+            case 0x0004:
+                // X coordinate.
+                mpbm[entry].x = secondaryOam[entry].x;
+                return;
+            case 0x0006:
+                // TODO: Implement
+                return;
+        }
+    } else if (dot <= 340) {
+        // Busy reading first byte of secondary OAM.
+
+        if (dot == 340) {
+            // Reset helpers.
+            primaryPtr = 0x00;
+            secondaryPtr = 0x00;
+        }
     }
 }
