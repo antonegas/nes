@@ -167,7 +167,6 @@ class PPU {
         typedef struct {
             uint8_t y = 0x00;
             uint8_t tile = 0x00;
-            uint8_t attr = 0x00;
             union Attribute {
                 struct {
                     uint8_t palette : 2;
