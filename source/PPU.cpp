@@ -9,7 +9,7 @@ void PPU::tick() {
     if (scanline <= 239) {
         // Visible frame.
         tickVisibleFrame();
-    } else if (scanline <= 241 && dot == 1) {
+    } else if (scanline == 241 && dot == 1) {
         // Set vblank.
         // NOTE: Scanline 291 on Dendy
         ppustatus.V = true;
