@@ -199,12 +199,12 @@ class PPU {
          */
 
         typedef struct {
-            uint8_t lineLow;
-            uint8_t lineHigh;
-            uint8_t palette : 2;
-            uint8_t priority : 1;
-            uint8_t unused : 5;
-            uint8_t x;
+            uint8_t low = 0x00;
+            uint8_t high = 0x00;
+            uint8_t palette : 2 = 0x00;
+            uint8_t priority : 1 = 0x00;
+            uint8_t unused : 5 = 0x00;
+            uint8_t x = 0x00;
         } MPBM;
 
         std::array<MPBM, 8> mpbm;
