@@ -318,11 +318,6 @@ void PPU::fetchBackground() {
 }
 
 void PPU::fetchForeground() {
-    if (dot == 0) {
-        hasSprite0Current = hasSprite0Next;
-        hasSprite0Next = false;
-    };
-    
     if (dot <= 64) {
         if (dot & 0x0001 == 0x0000) ((uint8_t*)secondaryOam.data())[(dot - 2) >> 1] = 0xFF;
     } else if (dot <= 256) {
@@ -420,6 +415,10 @@ void PPU::fetchForeground() {
             // Reset helpers.
             primaryPtr = 0x00;
             secondaryPtr = 0x00;
+
+            // Set sprite 0 hit flags.
+            hasSprite0Current = hasSprite0Next;
+            hasSprite0Next = false;
         }
     }
 
