@@ -111,6 +111,11 @@ void PPU::registerWrite(uint16_t addr, uint8_t data) {
         case 0x2001:
             // PPUMASK
             ppumask.reg = data;
+            palette.setEmphasis(
+                ppumask.emphasizeRed,
+                ppumask.emphasizeGreen,
+                ppumask.emphasizeBlue
+            );
             break;
         case 0x2003:
             // OAMADDR
@@ -179,7 +184,7 @@ uint8_t PPU::read(uint16_t addr) {
         // Every 4:th byte is mapped to 0x00 of the palette RAM.
         if (addr & 0x000F == 0x0000) addr = 0x0000; 
 
-        return palette[addr];
+        return paletteRam[addr];
     }
 }
 
@@ -196,7 +201,7 @@ void PPU::write(uint16_t addr, uint8_t data) {
         // Every 4:th byte is mapped to 0x00 of the palette RAM.
         if (addr & 0x000F == 0x0000) addr = 0x0000; 
 
-        palette[addr] = data;
+        paletteRam[addr] = data;
     }
 }
 

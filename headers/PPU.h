@@ -6,6 +6,7 @@
 #include <array>
 
 #include "Mapper.h"
+#include "Palette.h"
 
 using std::uint16_t;
 using std::uint8_t;
@@ -21,6 +22,8 @@ class PPU {
 
         bool nmi = false;
     private:
+        Palette palette;
+
         bool fblank();
 
         /**
@@ -148,7 +151,7 @@ class PPU {
         std::shared_ptr<Mapper> cart;
         // NOTE: Only 2kB on actual hardware but 4kb here to allow 4-screen mirroring.
         std::array<uint8_t, 0x1000> vram;
-        std::array<uint8_t, 0x20> palette;
+        std::array<uint8_t, 0x20> paletteRam;
 
         uint8_t read(uint16_t addr);
         void write(uint16_t addr, uint8_t data);
