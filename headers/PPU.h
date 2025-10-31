@@ -7,6 +7,7 @@
 
 #include "Mapper.h"
 #include "Palette.h"
+#include "Screen.h"
 
 using std::uint16_t;
 using std::uint8_t;
@@ -22,6 +23,7 @@ class PPU {
 
         bool nmi = false;
     private:
+        Screen<256, 240> screen;
         Palette palette;
 
         bool fblank();
