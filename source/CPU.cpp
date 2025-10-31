@@ -125,10 +125,12 @@ void CPU::delay(void (CPU::*interrupt)()) {
 }
 
 uint8_t CPU::read(uint16_t addr) {
+    if (!bus) return 0x00;
     return bus->read(addr);
 }
 
 void CPU::write(uint16_t addr, uint8_t data) {
+    if (!bus) return;
     bus->write(addr, data);
 }
 
