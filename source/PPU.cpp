@@ -250,6 +250,64 @@ void PPU::tickPreRender() {
     }
 }
 
+void PPU::drawDot() {
+    uint8_t background = 0x00;
+    uint8_t foreground = 0x00;
+    uint8_t output = 0x00;
+    bool isForegroundSprite0 = false;
+    bool priority;
+
+    // Get background pixel value.
+    uint16_t selected = 0x8000 >> fineX;
+    uint8_t backgroundLow = selected & shifterPatternLow != 0x0000;
+    uint8_t backgroundHigh = selected & shifterPatternHigh != 0x0000;
+    uint8_t backgroundPalLow = selected & shifterPalLow != 0x0000;
+    uint8_t backgroundPalHigh = selected & shifterPalHigh != 0x0000;
+    uint8_t backgroundPal = (backgroundPalHigh << 1) | backgroundPalLow;
+    
+    background = (backgroundHigh << 1) | backgroundLow;
+
+    // Get foreground pixel value.
+    uint8_t foregroundLow = 0x00;
+    uint8_t foregroundHigh = 0x00;
+    uint8_t foregroundPal = 0x00;
+
+    for (size_t i = 0; i < 8; i++) {
+        if (mpbm[i].x > 0) continue;
+        
+        foregroundLow = mpbm[i].low & 0x80 != 0x00;
+        foregroundHigh = mpbm[i].high & 0x80 != 0x00;
+
+        foreground = (foregroundHigh << 1) | foregroundLow;
+
+        if (foreground != 0x00) {
+            foregroundPal = mpbm[i].pal;
+            isForegroundSprite0 = i == 0;
+            priority = mpbm[i].prio;
+            break;
+        }; 
+    }
+    
+    // Get which palette index to output.
+    if (background != 0x00 && foreground != 0x00) {
+        // Set sprite 0 hit flag.
+        ppustatus.S = ppustatus.S | (hasSprite0Current & isForegroundSprite0);
+
+        if (priority) {
+            output = background | (backgroundPal << 2);
+        } else {
+            output = foreground | 0x10 | (foregroundPal << 2);
+        }
+    } else if (background != 0x00) {
+        output = background | (backgroundPal << 2);
+    } else if (foreground != 0x00) {
+        output = foreground | 0x10 | (foregroundPal << 2);
+    }
+
+    // Output dot to screen.
+    // TODO: Implement
+}
+
 void PPU::fetchBackground() {
     if (dot == 0) return;
 
