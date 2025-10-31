@@ -21,6 +21,8 @@ class PPU {
 
         bool nmi = false;
     private:
+        bool fblank();
+
         /**
          * PPU REGISTERS
          * 
@@ -76,6 +78,7 @@ class PPU {
             uint8_t reg = 0x00;
         } ppumask;
 
+
         union PPUSTATUS {
             struct {
                 uint8_t unused : 5;
@@ -110,7 +113,7 @@ class PPU {
                 uint8_t high;
             };
             uint16_t addr = 0x0000;
-            // TODO: These should only ever be called when rendering is enabled.
+
             void incrementX();
             void incrementY();
         };

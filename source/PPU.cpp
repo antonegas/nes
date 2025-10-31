@@ -77,7 +77,7 @@ uint8_t PPU::registerRead(uint16_t addr) {
             return status;
         case 0x2004:
             // OAMDATA
-            if (scanline <= 239 && 1 <= dot && dot <= 64) {
+            if (scanline <= 239 && 1 <= dot && dot <= 64 && !fblank()) {
                 // Secondary OAM clear.
                 return 0xFF;
             }
@@ -160,6 +160,10 @@ void PPU::dmaWrite(uint8_t data) {
     dmaaddr++;
 }
 
+bool PPU::fblank() {
+    return !ppumask.enableBackground && !ppumask.enableSprite;
+}
+
 // NOTE: Current implementation of read and write assumes that only pattern tables are mapped 
 // entirely by mapper.
 uint8_t PPU::read(uint16_t addr) {
@@ -223,6 +227,11 @@ uint16_t PPU::attrAddr() {
 }
 
 void PPU::tickVisibleFrame() {
+    if (fblank()) {
+        drawDot();
+        return;
+    }
+
     updateShifters();
     fetchBackground();
     drawDot();
@@ -233,6 +242,8 @@ void PPU::tickVisibleFrame() {
 }
 
 void PPU::tickPreRender() {
+    if (fblank()) return;
+
     updateShifters();
     fetchBackground();
     
@@ -257,51 +268,57 @@ void PPU::drawDot() {
     bool isForegroundSprite0 = false;
     bool priority;
 
+    bool isBackgroundEnabled = ppumask.enableBackground && (dot >= 8 || ppumask.backgroundLeft);
+    bool isForegroundEnabled = ppumask.enableSprite && (dot >= 8 || ppumask.spriteLeft);
+
     // Get background pixel value.
-    uint16_t selected = 0x8000 >> fineX;
-    uint8_t backgroundLow = selected & shifterPatternLow != 0x0000;
-    uint8_t backgroundHigh = selected & shifterPatternHigh != 0x0000;
-    uint8_t backgroundPalLow = selected & shifterPalLow != 0x0000;
-    uint8_t backgroundPalHigh = selected & shifterPalHigh != 0x0000;
-    uint8_t backgroundPal = (backgroundPalHigh << 1) | backgroundPalLow;
-    
-    background = (backgroundHigh << 1) | backgroundLow;
+    if (isBackgroundEnabled) {
+        uint16_t selected = 0x8000 >> fineX;
+        uint8_t backgroundLow = selected & shifterPatternLow != 0x0000;
+        uint8_t backgroundHigh = selected & shifterPatternHigh != 0x0000;
+        uint8_t backgroundPalLow = selected & shifterPalLow != 0x0000;
+        uint8_t backgroundPalHigh = selected & shifterPalHigh != 0x0000;
+        uint8_t backgroundPal = (backgroundPalHigh << 1) | backgroundPalLow;
+        
+        background = (backgroundPal << 2) | (backgroundHigh << 1) | backgroundLow;
+    }
 
     // Get foreground pixel value.
-    uint8_t foregroundLow = 0x00;
-    uint8_t foregroundHigh = 0x00;
-    uint8_t foregroundPal = 0x00;
+    if (isForegroundEnabled) {
+        uint8_t foregroundLow = 0x00;
+        uint8_t foregroundHigh = 0x00;
 
-    for (size_t i = 0; i < 8; i++) {
-        if (mpbm[i].x > 0) continue;
-        
-        foregroundLow = mpbm[i].low & 0x80 != 0x00;
-        foregroundHigh = mpbm[i].high & 0x80 != 0x00;
+        for (size_t i = 0; i < 8; i++) {
+            if (mpbm[i].x > 0) continue;
 
-        foreground = (foregroundHigh << 1) | foregroundLow;
+            foregroundLow = mpbm[i].low & 0x80 != 0x00;
+            foregroundHigh = mpbm[i].high & 0x80 != 0x00;
 
-        if (foreground != 0x00) {
-            foregroundPal = mpbm[i].pal;
-            isForegroundSprite0 = i == 0;
-            priority = mpbm[i].prio;
-            break;
-        }; 
+            foreground = (foregroundHigh << 1) | foregroundLow;
+
+            if (foreground != 0x00) {
+                foreground = 0x10 | (mpbm[i].pal << 2) | foreground;
+                isForegroundSprite0 = i == 0;
+                priority = mpbm[i].prio;
+                break;
+            }; 
+        }
     }
     
     // Get which palette index to output.
-    if (background != 0x00 && foreground != 0x00) {
+    if (background & 0x03 != 0x00 && foreground & 0x03 != 0x00) {
         // Set sprite 0 hit flag.
         ppustatus.S = ppustatus.S | (hasSprite0Current & isForegroundSprite0);
 
         if (priority) {
-            output = background | (backgroundPal << 2);
+            output = background;
         } else {
-            output = foreground | 0x10 | (foregroundPal << 2);
+            output = foreground;
         }
-    } else if (background != 0x00) {
-        output = background | (backgroundPal << 2);
-    } else if (foreground != 0x00) {
-        output = foreground | 0x10 | (foregroundPal << 2);
+    } else if (background & 0x03 != 0x00) {
+        output = background;
+    } else if (foreground & 0x03 != 0x00) {
+        output = foreground;
     }
 
     // Output dot to screen.
