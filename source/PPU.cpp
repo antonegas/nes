@@ -469,7 +469,7 @@ void PPU::updateShifters() {
 
     // Foreground shifters.
     if (dot <= 257) {
-        for (size_t i = 0; i < 8; i++) {
+        for (size_t i = 0; i < mpbm.size(); i++) {
             if (mpbm[i].x > 0) {
                 mpbm[i].x--;
             } else {
