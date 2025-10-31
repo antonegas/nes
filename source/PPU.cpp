@@ -106,7 +106,7 @@ void PPU::registerWrite(uint16_t addr, uint8_t data) {
         case 0x2000:
             // PPUCTRL
             ppuctrl.reg = data;
-            t.nametableSelect = ppuctrl.nametableSelect;
+            t.nametable = ppuctrl.nametable;
             break;
         case 0x2001:
             // PPUMASK
@@ -199,14 +199,14 @@ void PPU::write(uint16_t addr, uint8_t data) {
 void PPU::Loopy::incrementX() {
     coarseX++;
     // If wrapped around switch horizontal nametable.
-    if (coarseX == 0) nametableSelect = nametableSelect ^ 0x01;
+    if (coarseX == 0) nametable = nametable ^ 0x01;
 };
 void PPU::Loopy::incrementY() {
     fineY++;
     if (fineY != 0) return;
     if (coarseY == 29) {
         coarseY = 0;
-        nametableSelect = nametableSelect ^ 0x02;
+        nametable = nametable ^ 0x02;
     } else if (coarseY == 31) {
         coarseY = 0;
     } else {
@@ -245,7 +245,7 @@ void PPU::tickPreRender() {
     if (280 <= dot && dot <= 304) {
         // Set v.Y = t.Y
         v.coarseY = t.coarseY;
-        v.nametableSelect = (t.nametableSelect & 0x02) | (v.nametableSelect & 0x01);
+        v.nametable = (t.nametable & 0x02) | (v.nametable & 0x01);
         v.fineY = t.fineY;
     }
 }
@@ -256,7 +256,7 @@ void PPU::fetchBackground() {
     if (dot == 257) {
         // Set v.X = t.X
         v.coarseX = t.coarseX;
-        v.nametableSelect = (v.nametableSelect & 0x02) | (t.nametableSelect & 0x01);
+        v.nametable = (v.nametable & 0x02) | (t.nametable & 0x01);
     }
     
     if ((257 <= dot && dot <= 320) || (337 <= dot && dot <= 340)) {
@@ -283,13 +283,13 @@ void PPU::fetchBackground() {
             // Load shifters.
             // TODO: Verify that assumption that lower 8 bits are already zero.
             shifterPatternLow = shifterPatternLow | nextPatternLow;
-            shifterPatternHigh = shifterAttrHigh | nextPatternHigh;
+            shifterPatternHigh = shifterPalHigh | nextPatternHigh;
 
             if (nextAttr & 0x01) {
-                shifterAttrLow = shifterAttrLow | 0x00FF;
+                shifterPalLow = shifterPalLow | 0x00FF;
             }
             if (nextAttr & 0x02) {
-                shifterAttrHigh = shifterAttrHigh | 0x00FF;
+                shifterPalHigh = shifterPalHigh | 0x00FF;
             }
             return;
         case 0x0001:
@@ -300,14 +300,14 @@ void PPU::fetchBackground() {
             return;
         case 0x0005:
             nextPatternLow = read(
-                (ppuctrl.backgroundTileSelect << 12) |
+                (ppuctrl.backgroundTable << 12) |
                 (nextTile << 4) |
                 v.fineY
             );
             return;
         case 0x0007:
             nextPatternHigh = read(
-                (ppuctrl.backgroundTileSelect << 12) |
+                (ppuctrl.backgroundTable << 12) |
                 (nextTile << 4) |
                 (v.fineY + 8)
             );
@@ -319,8 +319,8 @@ void PPU::fetchBackground() {
 
 void PPU::fetchForeground() {
     if (dot == 0) {
-        sprite0CurrentScanline = sprite0NextScanline;
-        sprite0NextScanline = false;
+        hasSprite0Current = hasSprite0Next;
+        hasSprite0Next = false;
     };
     
     if (dot <= 64) {
@@ -362,7 +362,7 @@ void PPU::fetchForeground() {
         // If the y coordinate is in range copy the other fields to secondary OAM.
         if (inRange) {
             // If it is the first entry in the primary OAM it is sprite 0.
-            if (primaryPtr == 0x00) sprite0NextScanline = true;
+            if (primaryPtr == 0x00) hasSprite0Next = true;
 
             // Move to next field in both OAMs.
             secondaryPtr += 0x01;
@@ -380,8 +380,8 @@ void PPU::fetchForeground() {
         switch (dot & 0x0007) {
             case 0x0003:
                 // Attribute data.
-                mpbm[entry].palette = secondaryOam[entry].attr.palette;
-                mpbm[entry].priority = secondaryOam[entry].attr.priority;
+                mpbm[entry].pal = secondaryOam[entry].attr.pal;
+                mpbm[entry].prio = secondaryOam[entry].attr.prio;
                 mpbm[entry].unused = 0x00;
                 return;
             case 0x0004:
@@ -392,7 +392,7 @@ void PPU::fetchForeground() {
                 uint16_t addr = spriteAddr(secondaryOam[entry]);
                 uint8_t low = read(addr);
 
-                if (secondaryOam[entry].attr.horizontalFlip) {
+                if (secondaryOam[entry].attr.flipH) {
                     low = (low & 0xF0) >> 4 | (low & 0x0F) << 4;
                     low = (low & 0xCC) >> 2 | (low & 0x33) << 2;
                     low = (low & 0xAA) >> 1 | (low & 0x55) << 1;
@@ -404,7 +404,7 @@ void PPU::fetchForeground() {
                 uint16_t addr = spriteAddr(secondaryOam[entry]);
                 uint8_t high = read(addr + 0x0008);
 
-                if (secondaryOam[entry].attr.horizontalFlip) {
+                if (secondaryOam[entry].attr.flipH) {
                     high = (high & 0xF0) >> 4 | (high & 0x0F) << 4;
                     high = (high & 0xCC) >> 2 | (high & 0x33) << 2;
                     high = (high & 0xAA) >> 1 | (high & 0x55) << 1;
@@ -433,18 +433,18 @@ uint16_t PPU::spriteAddr(OAM sprite) {
         addr = addr | ((sprite.tile & 0x01) << 12);
         addr = addr | ((sprite.tile & 0xFE) << 4);
 
-        if (sprite.attr.verticalFlip) {
+        if (sprite.attr.flipV) {
             addr = addr | ((relativeY < 8) << 4);
         } else {
             addr = addr | ((relativeY >= 8) << 4);
         }
     } else {
         // 8x8 sprites.
-        addr = addr | ((ppuctrl.spriteTileSelect) << 12);
+        addr = addr | ((ppuctrl.spriteTable) << 12);
         addr = addr | (sprite.tile << 4);
     }
 
-    if (sprite.attr.verticalFlip) {
+    if (sprite.attr.flipV) {
         addr = addr | (7 - (relativeY & 0x07));
     } else {
         addr = addr | (relativeY & 0x07);
@@ -461,8 +461,8 @@ void PPU::updateShifters() {
     if (dot <= 337) {
         shifterPatternLow = shifterPatternLow << 1;
         shifterPatternHigh = shifterPatternHigh << 1;
-        shifterAttrLow = shifterAttrLow << 1;
-        shifterAttrHigh = shifterAttrHigh << 1;
+        shifterPalLow = shifterPalLow << 1;
+        shifterPalHigh = shifterPalHigh << 1;
     }
 
     // Foreground shifters.

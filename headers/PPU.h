@@ -50,10 +50,10 @@ class PPU {
 
         union PPUCTRL {
             struct {
-                uint8_t nametableSelect : 2;
+                uint8_t nametable : 2;
                 uint8_t incrementMode : 1;
-                uint16_t spriteTileSelect : 1;
-                uint16_t backgroundTileSelect : 1;
+                uint16_t spriteTable : 1;
+                uint16_t backgroundTable : 1;
                 uint8_t spriteHeight : 1;
                 uint8_t unused : 1;
                 bool nmiEnable : 1;
@@ -101,7 +101,7 @@ class PPU {
             struct {
                 uint8_t coarseX : 5;
                 uint8_t coarseY : 5;
-                uint8_t nametableSelect : 2;
+                uint8_t nametable : 2;
                 uint8_t fineY : 3;
                 uint8_t unused : 1;
             };
@@ -170,11 +170,11 @@ class PPU {
             uint8_t tile = 0x00;
             union Attribute {
                 struct {
-                    uint8_t palette : 2;
+                    uint8_t pal : 2;
                     uint8_t unused : 3;
-                    uint8_t priority : 1;
-                    uint8_t horizontalFlip : 1;
-                    uint8_t verticalFlip : 1;
+                    uint8_t prio : 1;
+                    uint8_t flipH : 1;
+                    uint8_t flipV : 1;
                 };
                 uint8_t data = 0x00;
             } attr;
@@ -202,8 +202,8 @@ class PPU {
         typedef struct {
             uint8_t low = 0x00;
             uint8_t high = 0x00;
-            uint8_t palette : 2 = 0x00;
-            uint8_t priority : 1 = 0x00;
+            uint8_t pal : 2 = 0x00;
+            bool prio : 1 = false;
             uint8_t unused : 5 = 0x00;
             uint8_t x = 0x00;
         } MPBM;
@@ -230,14 +230,14 @@ class PPU {
 
         uint16_t shifterPatternLow = 0x0000;
         uint16_t shifterPatternHigh = 0x0000;
-        uint16_t shifterAttrLow = 0x0000;
-        uint16_t shifterAttrHigh = 0x0000;
+        uint16_t shifterPalLow = 0x0000;
+        uint16_t shifterPalHigh = 0x0000;
 
         uint8_t primaryPtr = 0x00;
         uint8_t secondaryPtr = 0x00;
 
-        bool sprite0NextScanline = false;
-        bool sprite0CurrentScanline = false;
+        bool hasSprite0Next = false;
+        bool hasSprite0Current = false;
 
         void tickVisibleFrame();
         void tickPreRender();
