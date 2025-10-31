@@ -40,7 +40,7 @@ void PPU::tick() {
     odd = !odd;
 
     // Display result on screen.
-    screen.swap();
+    screen->swap();
 }
 
 void PPU::power() {
@@ -341,7 +341,7 @@ void PPU::drawDot() {
         b = b & 0x30;
     }
 
-    screen.put(dot, scanline, r, g, b);
+    screen->put(dot, scanline, r, g, b);
 }
 
 void PPU::fetchBackground() {

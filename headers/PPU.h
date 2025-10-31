@@ -23,7 +23,7 @@ class PPU {
 
         bool nmi = false;
     private:
-        Screen<256, 240> screen;
+        std::shared_ptr<Screen<256, 240>> screen;
         Palette palette;
 
         bool fblank();
