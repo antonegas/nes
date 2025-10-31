@@ -12,6 +12,7 @@ class Bus;
 class CPU {
     public:
         void tick();
+        // TODO: move to private and update delay to use enum
         void power();
         void reset();
         void irq();

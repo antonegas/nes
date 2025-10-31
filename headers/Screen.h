@@ -4,7 +4,6 @@
 #include <cstdint>
 #include <array>
 
-
 using std::uint8_t;
 
 template <std::size_t W, std::size_t H>

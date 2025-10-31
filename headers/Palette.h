@@ -1,7 +1,6 @@
 #ifndef H_PALETTE
 #define H_PALETTE
 
-
 #include <cstdint>
 #include <vector>
 

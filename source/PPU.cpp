@@ -213,6 +213,7 @@ void PPU::Loopy::incrementX() {
     // If wrapped around switch horizontal nametable.
     if (coarseX == 0) nametable = nametable ^ 0x01;
 };
+
 void PPU::Loopy::incrementY() {
     fineY++;
     if (fineY != 0) return;
@@ -375,7 +376,6 @@ void PPU::fetchBackground() {
             v.incrementX();
             
             // Load shifters.
-            // TODO: Verify that assumption that lower 8 bits are already zero.
             shifterPatternLow = shifterPatternLow | nextPatternLow;
             shifterPatternHigh = shifterPalHigh | nextPatternHigh;
 
