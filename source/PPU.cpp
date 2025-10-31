@@ -223,6 +223,7 @@ uint16_t PPU::attrAddr() {
 }
 
 void PPU::tickVisibleFrame() {
+    updateShifters();
     fetchBackground();
     drawDot();
 
@@ -232,6 +233,7 @@ void PPU::tickVisibleFrame() {
 }
 
 void PPU::tickPreRender() {
+    updateShifters();
     fetchBackground();
     
     if (dot == 1) {
@@ -449,4 +451,29 @@ uint16_t PPU::spriteAddr(OAM sprite) {
     }
 
     return addr;
+}
+
+void PPU::updateShifters() {
+    if (dot <= 1) return;
+    if (258 <= dot && dot <= 320) return;
+
+    // Background shifters.
+    if (dot <= 337) {
+        shifterPatternLow = shifterPatternLow << 1;
+        shifterPatternHigh = shifterPatternHigh << 1;
+        shifterAttrLow = shifterAttrLow << 1;
+        shifterAttrHigh = shifterAttrHigh << 1;
+    }
+
+    // Foreground shifters.
+    if (dot <= 257) {
+        for (size_t i = 0; i < 8; i++) {
+            if (mpbm[i].x > 0) {
+                mpbm[i].x--;
+            } else {
+                mpbm[i].high = mpbm[i].high << 1;
+                mpbm[i].low = mpbm[i].low << 1;
+            }
+        }
+    }
 }
