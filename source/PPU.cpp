@@ -422,6 +422,9 @@ void PPU::fetchForeground() {
             secondaryPtr = 0x00;
         }
     }
+
+    // Sprite 0 hits can't happen on dot 255.
+    if (dot == 254) hasSprite0Current = false;
 }
 
 uint16_t PPU::spriteAddr(OAM sprite) {
