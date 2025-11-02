@@ -15,6 +15,6 @@ uint8_t StandardController::read() {
 }
 
 void StandardController::reload() {
-    buffer = state;
+    buffer = state.data;
     remaining = 0x08;
 }
