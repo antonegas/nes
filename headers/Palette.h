@@ -9,6 +9,7 @@ using std::uint8_t;
 
 class Palette {
     public:
+        // TODO: Document
         Palette() = default;
         Palette(std::vector<uint8_t> data) : data{data} {};
 

@@ -26,7 +26,7 @@ class PPU {
         std::shared_ptr<Screen<256, 240>> screen;
         Palette palette;
 
-        bool fblank();
+        bool fblank(); // Forced blank.
 
         /**
          * PPU REGISTERS
@@ -68,7 +68,6 @@ class PPU {
             uint8_t reg = 0x00;
         } ppuctrl;
 
-        // TODO: Implement
         union PPUMASK {
             struct {
                 bool grayscale : 1;
@@ -82,7 +81,6 @@ class PPU {
             };
             uint8_t reg = 0x00;
         } ppumask;
-
 
         union PPUSTATUS {
             struct {
@@ -221,7 +219,7 @@ class PPU {
         /**
          * RENDERING
          * 
-         * TODO: Describe
+         * TODO: Document
          * 
          * Reference: https://www.nesdev.org/wiki/PPU_rendering
          * Sprite evaluation reference: https://www.nesdev.org/wiki/PPU_sprite_evaluation

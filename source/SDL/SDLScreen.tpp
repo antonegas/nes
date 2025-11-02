@@ -45,7 +45,6 @@ void SDLScreen<W, H>::draw(SDL_Renderer *renderer) {
 
             // Draw pixel.
             color = buffer[x][y];
-            // SDL_RenderFillRect
             SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, SDL_ALPHA_OPAQUE);
             SDL_RenderFillRect(renderer, &pixel);
         }

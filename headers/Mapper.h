@@ -14,9 +14,7 @@ class Mapper {
             VERTICAL,
             FOUR
         };
-
-        static uint16_t number;
-
+        
         Mapper(
             std::vector<uint8_t> prgrom, 
             std::vector<uint8_t> chrrom
@@ -26,6 +24,8 @@ class Mapper {
             std::vector<uint8_t> chrrom, 
             MirrorMode mirrorMode
         ) : prgrom{prgrom}, chrrom{chrrom}, mirrorMode{mirrorMode} {};
+        
+        static uint16_t const number;
 
         virtual void reset() {};
         virtual uint8_t cpuRead(uint16_t addr) { return 0x00; };

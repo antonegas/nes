@@ -14,7 +14,7 @@ void SDLStandardController::update(SDL_Event *event) {
     
     SDL_GamepadButtonEvent *buttonEvent = (SDL_GamepadButtonEvent*)event;
 
-    // Don't use wrong gamepad to get state.
+    // Don't use the wrong gamepad to get state.
     if (buttonEvent->which != id) return;
 
     // Update correct state bit.
