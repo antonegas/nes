@@ -38,9 +38,6 @@ void PPU::tick() {
     // First dot is skipped on even frames.
     if (odd) dot = 1;
     odd = !odd;
-
-    // Display result on screen.
-    screen->swap();
 }
 
 void PPU::power() {
@@ -252,6 +249,9 @@ void PPU::tickVisibleFrame() {
     updateShifters();
     fetchBackground();
     drawDot();
+
+    // Display a finished frame on the screen.
+    if (scanline == 239 && dot == 255) screen->swap();
 
     // NOTE: Since foreground is fetched at the end of the scanline sprites are drawn one pixel 
     // lower than what is specified in the OAM.

@@ -1,7 +1,5 @@
 #include <cstdint>
 #include <array>
-#include <algorithm>
-#include <iterator>
 
 #include "../headers/RomHeader.h"
 
@@ -9,14 +7,14 @@ using std::uint16_t;
 using std::uint8_t;
 
 RomHeader::RomHeader(std::array<uint8_t, 16> header) {
-    std::copy(std::begin(header), std::end(header), std::begin(this->header.raw));
+    this->header.raw = header;
 }
 
 RomHeader::Type RomHeader::getType() {
     if (header.ines.nes != 0x4E45531A) return RomHeader::Type::UNSUPPORTED;
     if (header.ines.nes2 == 0x00) return RomHeader::Type::INES;
     if (header.nes2.nes2 == 0x10) return RomHeader::Type::NES2;
-    
+
     return RomHeader::Type::UNSUPPORTED; 
 }
 
