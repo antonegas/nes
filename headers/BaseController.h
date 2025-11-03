@@ -18,7 +18,7 @@ class BaseController {
          * Reference: https://www.nesdev.org/wiki/Standard_controller
          */
 
-        virtual uint8_t read() {};
+        virtual uint8_t read() { return 0x00; };
         virtual void reload() {};
 };
 
