@@ -8,11 +8,11 @@ using std::uint8_t;
 
 class APU {
     public:
-        void tick();
-        void power();
-        void reset();
-        uint8_t read(uint16_t addr);
-        void write(uint16_t addr, uint8_t data);
+        void tick() {};
+        void power() {};
+        void reset() {};
+        uint8_t read(uint16_t addr) { return 0x00; };
+        void write(uint16_t addr, uint8_t data) {};
     private:
         // APU registers
         uint8_t sq1_vol;
