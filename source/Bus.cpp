@@ -6,6 +6,10 @@ using std::uint64_t;
 using std::uint16_t;
 using std::uint8_t;
 
+Bus::Bus() {
+    this->cpu.bus = this;
+}
+
 void Bus::update(uint64_t time) {
     if (previousTime = 0x0000000000000000) {
         previousTime = time;

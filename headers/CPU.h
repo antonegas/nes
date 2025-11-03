@@ -21,8 +21,8 @@ class CPU {
         
         bool suspended = false;
         bool dmaRead = true; // Is the CPU allowing DMA to read/not write.
-    private:
         Bus *bus = nullptr;
+    private:
 
         /**
          * HELPER MEMBER/FUNCTIONS
