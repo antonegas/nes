@@ -18,6 +18,10 @@ using std::uint8_t;
 class Bus {
     public:
         // TODO: Bus constructor should set the bus pointer of the cpu to itself
+        // TODO: Add ability to pause updates.
+        // TODO: Add ability to step one CPU.
+        // TODO: Add ability to step one CPU instruction.
+        // TODO: Add ability to step one PPU dot.
         void update(uint64_t time);
         void tick();
         void power();
