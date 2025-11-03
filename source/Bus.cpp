@@ -81,6 +81,15 @@ void Bus::reset() {
     apu.reset();
 }
 
+void Bus::insertCart(std::shared_ptr<Mapper> cart) {
+    this->cart = cart;
+    ppu.insertCart(cart);
+}
+
+void Bus::connectScreen(std::shared_ptr<Screen<256, 240>> screen) {
+    ppu.connectScreen(screen);
+}
+
 uint8_t Bus::read(uint16_t addr) {
     if (addr <= 0x1FFF) {
         // CPU RAM.

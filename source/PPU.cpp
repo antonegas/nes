@@ -67,6 +67,14 @@ void PPU::reset() {
     dmaaddr = 0x00;
 }
 
+void PPU::insertCart(std::shared_ptr<Mapper> cart) {
+    this->cart = cart;
+}
+
+void PPU::connectScreen(std::shared_ptr<Screen<256, 240>> screen) {
+    this->screen = screen;
+}
+
 uint8_t PPU::registerRead(uint16_t addr) {
     switch (addr) {
         case 0x2002:

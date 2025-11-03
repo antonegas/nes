@@ -17,6 +17,8 @@ class PPU {
         void tick();
         void power();
         void reset();
+        void insertCart(std::shared_ptr<Mapper> cart);
+        void connectScreen(std::shared_ptr<Screen<256, 240>> screen);
         uint8_t registerRead(uint16_t addr);
         void registerWrite(uint16_t addr, uint8_t data);
         void dmaWrite(uint8_t data);

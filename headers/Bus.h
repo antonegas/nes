@@ -26,6 +26,8 @@ class Bus {
         void tick();
         void power();
         void reset();
+        void insertCart(std::shared_ptr<Mapper> cart);
+        void connectScreen(std::shared_ptr<Screen<256, 240>> screen);
         uint8_t read(uint16_t addr);
         void write(uint16_t addr, uint8_t data);
     private:
