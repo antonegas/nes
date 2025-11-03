@@ -51,10 +51,10 @@ void Bus::tick() {
 
     uint8_t offset = 0;
 
-    // No need to increase master cycle over CPU * PPU master clocks / clock.
+    // No need to increase main cycle over CPU * PPU main clocks / clock.
     cycle = cycle % (ppurate * cpurate);
 
-    // Tick CPU and/or PPU if the current master cycle lines up with their clock rate.
+    // Tick CPU and/or PPU if the current main cycle lines up with their clock rate.
     if ((cycle + offset) % cpurate == 0) cpu.tick();
     if (cycle % ppurate == 0) ppu.tick();
 
@@ -65,7 +65,7 @@ void Bus::tick() {
     // If DMA is active move data to PPU.
     if (dmaActive) dmaTransfer();
 
-    // Tick the master clock once.
+    // Tick the main clock once.
     cycle++;
 }
 
