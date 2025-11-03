@@ -11,18 +11,23 @@
 #include "BaseController.h"
 #include "Mapper.h"
 
+using std::uint64_t;
 using std::uint16_t;
 using std::uint8_t;
 
 class Bus {
     public:
         // TODO: Bus constructor should set the bus pointer of the cpu to itself
+        void update(uint64_t time);
         void tick();
         void power();
         void reset();
         uint8_t read(uint16_t addr);
         void write(uint16_t addr, uint8_t data);
     private:
+        // TODO: Document under https://www.nesdev.org/wiki/Cycle_reference_chart
+        uint64_t previousTime = 0x0000000000000000;
+        uint64_t remainingCycles = 0x0000000000000000; // Nano cycles left after update.
         uint8_t cycle = 0x00; // Master clock modolo CPU * PPU master clocks / clock.
 
         /**

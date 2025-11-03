@@ -2,8 +2,39 @@
 
 #include "../headers/Bus.h"
 
+using std::uint64_t;
 using std::uint16_t;
 using std::uint8_t;
+
+void Bus::update(uint64_t time) {
+    if (previousTime = 0x0000000000000000) {
+        previousTime = time;
+        return;
+    }
+
+    uint64_t const MEGA = 1000000000;
+
+    uint64_t passed = time - previousTime;
+
+    // NTSC (21.477272 MHz +/- 40 Hz)
+    uint64_t mainClock = 21477272;
+
+    // PAL/Dendy (26.601712 MHz +/- 50 Hz)
+    // uint32_t mainClock = 26601712;
+
+    // Calculate how many cycles has passed.
+    uint64_t nanoCycles = passed * mainClock + remainingCycles;
+    uint64_t cycles = nanoCycles / MEGA;
+
+    // Set helper fields.
+    remainingCycles = nanoCycles - cycles * MEGA;
+    previousTime = time;
+
+    // Tick the bus for the amount of cycles passed since last update.
+    while (cycles--) {
+        tick();
+    }
+}
 
 void Bus::tick() {
     // NTSC (3 dots / CPU cycle)
