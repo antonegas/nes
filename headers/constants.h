@@ -16,7 +16,8 @@ using std::uint8_t;
 enum NametableLayout : uint8_t {
     HORIZONTAL = 0x00,
     VERTICAL = 0x01,
-    ALTERNATIVE = 0x02
+    ALTERNATIVE = 0x02,
+    FOUR = 0x03
 };
 
 /**

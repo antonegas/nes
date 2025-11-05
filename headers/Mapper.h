@@ -4,17 +4,13 @@
 #include <cstdint>
 #include <vector>
 
+#include "constants.h"
+
 using std::uint16_t;
 using std::uint8_t;
 
 class Mapper {
     public:
-        enum MirrorMode {
-            HORIZONTAL,
-            VERTICAL,
-            FOUR
-        };
-        
         Mapper(
             std::vector<uint8_t> prgrom, 
             std::vector<uint8_t> chrrom
@@ -22,7 +18,7 @@ class Mapper {
         Mapper(
             std::vector<uint8_t> prgrom, 
             std::vector<uint8_t> chrrom, 
-            MirrorMode mirrorMode
+            NametableLayout mirrorMode
         ) : prgrom{prgrom}, chrrom{chrrom}, mirrorMode{mirrorMode} {};
         
         static uint16_t const number;
@@ -45,7 +41,7 @@ class Mapper {
          * Reference: https://www.nesdev.org/wiki/Mirroring
          */
 
-        MirrorMode mirrorMode = HORIZONTAL;
+        NametableLayout mirrorMode = NametableLayout::VERTICAL;
 
         std::vector<uint8_t> prgrom;
         std::vector<uint8_t> chrrom;

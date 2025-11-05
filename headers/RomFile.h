@@ -3,12 +3,14 @@ iNES: https://www.nesdev.org/wiki/INES
 NES 2.0: https://www.nesdev.org/wiki/NES_2.0
 */
 
-#ifndef H_ROM_HEADER
-#define H_ROM_HEADER
+#ifndef H_ROM_FILE
+#define H_ROM_FILE
 
 #include <cstdint>
+#include <vector>
 #include <array>
 
+#include "Mapper.h"
 #include "constants.h"
 
 using std::int32_t;
@@ -26,9 +28,18 @@ using std::uint8_t;
  * NES 2.0 Reference: https://www.nesdev.org/wiki/NES_2.0
  */
 
-class RomHeader {
+class RomFile {
     public:
-        RomHeader(std::array<uint8_t, 16> header);
+        RomFile(std::vector<uint8_t> data);
+
+        Mapper getMapper();
+        ConsoleType getConsoleType();
+        ConsoleTiming getConsoleTiming();
+        ExpansionDevice getExpansionDevice();
+    private:
+        std::array<uint8_t, 0x200> trainer;
+        std::vector<uint8_t> prgrom;
+        std::vector<uint8_t> chrrom;
 
         enum Type {
             INES,
@@ -83,13 +94,6 @@ class RomHeader {
 
         NametableLayout getNametableLayout();
 
-        ConsoleType getConsoleType();
-
-        ConsoleTiming getConsoleTiming();
-
-        ExpansionDevice getExpansionDevice();
-
-    private:
         union HEADER {
             struct INES {
                 // byte 0-3
@@ -177,4 +181,4 @@ class RomHeader {
         } header;
 };
 
-#endif // H_ROM_HEADER
+#endif // H_ROM_FILE

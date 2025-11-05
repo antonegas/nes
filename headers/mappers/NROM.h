@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "../Mapper.h"
+#include "../constants.h"
 
 using std::uint16_t;
 using std::uint8_t;
@@ -23,7 +24,7 @@ class NROM : Mapper {
         NROM(
             std::vector<uint8_t> prgrom, 
             std::vector<uint8_t> chrrom, 
-            MirrorMode mirrorMode
+            NametableLayout mirrorMode
         ) : Mapper(prgrom, chrrom, mirrorMode) {};
 
         static uint16_t const number = 0x0000;

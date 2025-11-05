@@ -1,17 +1,18 @@
 #include <cstdint>
 
 #include "../headers/Mapper.h"
+#include "../headers/constants.h"
 
 using std::uint16_t;
 
 uint16_t Mapper::mirrorAddr(uint16_t addr) {
     switch (mirrorMode) {
-        case Mapper::HORIZONTAL:
+        case NametableLayout::VERTICAL:
             if (addr & 0x0800) return addr & 0x03FF;
             else return (addr & 0x03FF) | 0x0400;
-        case Mapper::VERTICAL:
+        case NametableLayout::HORIZONTAL:
             return addr & 0x07FF;
-        case Mapper::FOUR:
+        case NametableLayout::FOUR:
             return addr & 0x0FFF;
     };
 }
