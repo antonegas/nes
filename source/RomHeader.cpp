@@ -2,6 +2,7 @@
 #include <array>
 
 #include "../headers/RomHeader.h"
+#include "../headers/constants.h"
 
 using std::uint16_t;
 using std::uint8_t;
@@ -18,14 +19,14 @@ RomHeader::Type RomHeader::getType() {
     return RomHeader::Type::UNSUPPORTED; 
 }
 
-RomHeader::NametableLayout RomHeader::getNametableLayout() {
-    if (header.ines.hasAlternativeNametable) RomHeader::NametableLayout::ALTERNATIVE;
-    if (header.ines.isHorizontalArrangement) RomHeader::NametableLayout::HORIZONTAL;
+NametableLayout RomHeader::getNametableLayout() {
+    if (header.ines.hasAlternativeNametable) NametableLayout::ALTERNATIVE;
+    if (header.ines.isHorizontalArrangement) NametableLayout::HORIZONTAL;
 
-    return RomHeader::NametableLayout::VERTICAL;
+    return NametableLayout::VERTICAL;
 }
 
-uint32_t RomHeader::getMapper() {
+uint32_t RomHeader::getMapperNumber() {
     if (getType() == RomHeader::Type::UNSUPPORTED) return 0xFFFFFFFF;
 
     uint32_t mapper = (header.ines.mapperHigh << 8) | header.ines.mapperLow;
@@ -35,36 +36,36 @@ uint32_t RomHeader::getMapper() {
     return mapper;
 }
 
-uint8_t RomHeader::getSubmapper() {
+uint8_t RomHeader::getSubmapperNumber() {
     if (getType() != RomHeader::Type::NES2) return 0xFF;
 
     return header.nes2.submapper;
 }
 
-RomHeader::ConsoleType RomHeader::getConsoleType() {
-    if (getType() == RomHeader::Type::UNSUPPORTED) return RomHeader::ConsoleType::UNSUPPORTED;
-    if (header.nes2.consoleType != 0x00) return RomHeader::ConsoleType::UNSUPPORTED;
+ConsoleType RomHeader::getConsoleType() {
+    if (getType() == RomHeader::Type::UNSUPPORTED) return ConsoleType::UNSUPPORTED;
+    if (header.nes2.consoleType != 0x00) return ConsoleType::UNSUPPORTED;
 
-    return RomHeader::ConsoleType::NES;
+    return ConsoleType::NES;
 }
 
-RomHeader::ConsoleTiming RomHeader::getConsoleTiming() {
-    if (getType() == RomHeader::Type::UNSUPPORTED) return RomHeader::ConsoleTiming::UNSUPPORTED;
+ConsoleTiming RomHeader::getConsoleTiming() {
+    if (getType() == RomHeader::Type::UNSUPPORTED) return ConsoleTiming::UNSUPPORTED;
     if (getType() == RomHeader::Type::INES) {
-        if (header.ines.isPAL) return RomHeader::ConsoleTiming::PAL;
-        return RomHeader::ConsoleTiming::NTSC;
+        if (header.ines.isPAL) return ConsoleTiming::PAL;
+        return ConsoleTiming::NTSC;
     }
 
     switch (header.nes2.timing) {
-        case RomHeader::ConsoleTiming::NTSC:
-            return RomHeader::ConsoleTiming::NTSC;
-        case RomHeader::ConsoleTiming::PAL:
-            return RomHeader::ConsoleTiming::PAL;
+        case ConsoleTiming::NTSC:
+            return ConsoleTiming::NTSC;
+        case ConsoleTiming::PAL:
+            return ConsoleTiming::PAL;
         // NOTE: Multiregion is forced to NTSC timing.
-        case RomHeader::ConsoleTiming::MULTIREGION:
-            return RomHeader::ConsoleTiming::NTSC;
+        case ConsoleTiming::MULTIREGION:
+            return ConsoleTiming::NTSC;
         default:
-            RomHeader::ConsoleTiming::UNSUPPORTED;
+            ConsoleTiming::UNSUPPORTED;
     }
 }
 
@@ -73,13 +74,13 @@ bool RomHeader::hasTrainer() {
     return header.ines.hasTrainer;
 }
 
-RomHeader::ExpansionDevice RomHeader::getExpansionDevice() {
-    if (getType() == RomHeader::Type::UNSUPPORTED) return RomHeader::ExpansionDevice::UNSUPPORTED;
-    if (getType() == RomHeader::Type::INES) return RomHeader::ExpansionDevice::UNSPECIFIED;
-    if (header.nes2.expansionDevice == RomHeader::ExpansionDevice::UNSPECIFIED) return RomHeader::ExpansionDevice::UNSPECIFIED;
-    if (header.nes2.expansionDevice == RomHeader::ExpansionDevice::STANDARD) return RomHeader::ExpansionDevice::STANDARD;
+ExpansionDevice RomHeader::getExpansionDevice() {
+    if (getType() == RomHeader::Type::UNSUPPORTED) return ExpansionDevice::UNSUPPORTED;
+    if (getType() == RomHeader::Type::INES) return ExpansionDevice::UNSPECIFIED;
+    if (header.nes2.expansionDevice == ExpansionDevice::UNSPECIFIED) return ExpansionDevice::UNSPECIFIED;
+    if (header.nes2.expansionDevice == ExpansionDevice::STANDARD) return ExpansionDevice::STANDARD;
 
-    return RomHeader::ExpansionDevice::UNSUPPORTED;
+    return ExpansionDevice::UNSUPPORTED;
 }
 
 uint32_t RomHeader::getPrgromSize() {

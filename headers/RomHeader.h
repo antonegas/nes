@@ -9,6 +9,8 @@ NES 2.0: https://www.nesdev.org/wiki/NES_2.0
 #include <cstdint>
 #include <array>
 
+#include "constants.h"
+
 using std::int32_t;
 using std::uint16_t;
 using std::uint8_t;
@@ -46,8 +48,8 @@ class RomHeader {
          * Reference: https://www.nesdev.org/wiki/Mapper
          */
 
-        uint32_t getMapper();
-        uint8_t getSubmapper();
+        uint32_t getMapperNumber();
+        uint8_t getSubmapperNumber();
 
         /**
          * TRAINER
@@ -79,86 +81,11 @@ class RomHeader {
         uint16_t getChrramSize();
         uint16_t getChrnvramSize();
 
-        /**
-         * NAMETABLE LAYOUT
-         * 
-         * The nametables can be mapped in different ways to allow scrolling. A mapper can
-         * hardwire this layout, switch between layouts or support an entirely different layout.
-         * 
-         * Reference: https://www.nesdev.org/wiki/NES_2.0#Nametable_layout
-         */
-
-        enum NametableLayout {
-            HORIZONTAL,
-            VERTICAL,
-            ALTERNATIVE
-        };
-
         NametableLayout getNametableLayout();
-
-        /**
-         * CONSOLE TYPE
-         * 
-         * The header also supports different kinds of console hardware, NES, Vs. System, 
-         * Playchoice and extended console types. The Vs. System inturn also requires different 
-         * hardware depending on the ROM.
-         * 
-         * Reference: https://www.nesdev.org/wiki/NES_2.0#File_Structure
-         * Vs. System Reference: https://www.nesdev.org/wiki/NES_2.0#Vs._System_Type
-         */
-
-        enum ConsoleType {
-            NES = 0x00,
-            // VS_SYSTEM = 0x01,
-            // PLAYCHOICE = 0x02,
-            // EXTENDED = 0x03,
-            UNSUPPORTED = 0xFF
-        };
 
         ConsoleType getConsoleType();
 
-        /**
-         * CONSOLE TIMING
-         * 
-         * Since the console was released in regions with different TV standards. This resulted
-         * in the CPU and PPU having to run at different clock speeds depending on region.
-         * 
-         * Reference: https://www.nesdev.org/wiki/NES_2.0#CPU/PPU_Timing
-         */
-
-        enum ConsoleTiming {
-            NTSC = 0x00,
-            PAL = 0x01,
-            // DENDY = 0x02,
-            MULTIREGION = 0x03,
-            UNSUPPORTED = 0xFF
-        };
-
         ConsoleTiming getConsoleTiming();
-
-        /**
-         * EXPANSION DEVICE
-         * 
-         * The console supported differnent types of input devices. The header can specify 
-         * which one of these should be used when playing the game.
-         * 
-         * Reference: www.nesdev.org/wiki/NES_2.0#Default_Expansion_Device
-         */
-
-        enum ExpansionDevice {
-            UNSPECIFIED = 0x00,
-            STANDARD = 0x01,
-            // FOURSCORE = 0x02,
-            // FAMICOM_FOUR = 0x03,
-            // VS_4016 = 0x04,
-            // VS_4017 = 0x05,
-            // VS_ZAPPER = 0x07,
-            // ZAPPER_4017 = 0x08,
-            // ZAPPER_4016 = 0x49,
-            // TWO_ZAPPERS = 0x09,
-            // SNES_CONTROLLER = 0x2B,
-            UNSUPPORTED = 0xFF
-        };
 
         ExpansionDevice getExpansionDevice();
 
@@ -225,7 +152,7 @@ class RomHeader {
                 uint8_t chrramShift : 4;
                 uint8_t chrnvramShift : 4;
                 // byte 12
-                uint8_t timing : 2;
+                ConsoleTiming timing : 2;
                 uint8_t unused0 : 6;
                 // byte 13
                 union ConsoleType {
@@ -243,7 +170,7 @@ class RomHeader {
                 uint8_t miscRomsCount : 2;
                 uint8_t unused1 : 6;
                 // byte 15
-                uint8_t expansionDevice : 6;
+                ExpansionDevice expansionDevice : 6;
                 uint8_t padding : 2;
             } nes2;
             std::array<uint8_t, 16> raw;
