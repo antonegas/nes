@@ -1,7 +1,7 @@
 #include <cstdint>
 
-#include "../headers/Mapper.h"
-#include "../headers/constants.h"
+#include "Mapper.h"
+#include "constants.h"
 
 using std::uint16_t;
 

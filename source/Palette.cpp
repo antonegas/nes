@@ -1,6 +1,6 @@
 #include <cstdint>
 
-#include "../headers/Palette.h"
+#include "Palette.h"
 
 using std::uint16_t;
 using std::uint8_t;

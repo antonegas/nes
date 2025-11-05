@@ -1,7 +1,7 @@
 #include <cstdint>
 
-#include "../headers/CPU.h"
-#include "../headers/Bus.h"
+#include "CPU.h"
+#include "Bus.h"
 
 using std::uint16_t;
 using std::uint8_t;

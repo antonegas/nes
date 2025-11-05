@@ -8,7 +8,7 @@
 #include <utility>
 #include <algorithm>
 
-#include "../headers/Screen.h"
+#include "Screen.h"
 
 template <std::size_t W, std::size_t H>
 void Screen<W, H>::put(std::size_t x, std::size_t y, uint8_t r, uint8_t g, uint8_t b) {

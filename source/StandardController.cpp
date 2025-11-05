@@ -1,6 +1,6 @@
 #include <cstdint>
 
-#include "../headers/StandardController.h"
+#include "StandardController.h"
 
 using std::uint8_t;
 

@@ -1,6 +1,6 @@
 #include <cstdint>
 
-#include "../headers/PPU.h"
+#include "PPU.h"
 
 using std::uint16_t;
 using std::uint8_t;

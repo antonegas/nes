@@ -3,10 +3,10 @@
 #include <array>
 #include <algorithm>
 
-#include "../headers/RomFile.h"
-#include "../headers/Mapper.h"
-#include "../headers/Mappers.h"
-#include "../headers/constants.h"
+#include "RomFile.h"
+#include "Mapper.h"
+#include "Mappers.h"
+#include "constants.h"
 
 using std::uint16_t;
 using std::uint8_t;
@@ -38,6 +38,7 @@ RomFile::RomFile(std::vector<uint8_t> data) {
 }
 
 Mapper RomFile::getMapper() {
+    // Add check to verify correct amount of prgrom and chrrom
     switch (getMapperNumber()) {
         case NROM::number:
             NROM(prgrom, chrrom, getNametableLayout());

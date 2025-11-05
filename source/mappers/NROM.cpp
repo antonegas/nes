@@ -1,6 +1,6 @@
 #include <cstdint>
 
-#include "../../headers/mappers/NROM.h"
+#include "mappers/NROM.h"
 
 using std::uint16_t;
 using std::uint8_t;

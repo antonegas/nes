@@ -2,7 +2,7 @@
 #include <SDL3/SDL_gamepad.h>
 #include <SDL3/SDL_events.h>
 
-#include "../../headers/SDL/SDLStandardController.h"
+#include "SDL/SDLStandardController.h"
 
 void SDLStandardController::update(SDL_Event *event) {
     // TODO: Maybe support joystick.

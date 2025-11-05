@@ -1,6 +1,6 @@
 #include <cstdint>
 
-#include "../headers/Bus.h"
+#include "Bus.h"
 
 using std::uint64_t;
 using std::uint16_t;

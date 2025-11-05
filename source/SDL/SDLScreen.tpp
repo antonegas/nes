@@ -7,8 +7,8 @@
 
 #include <SDL3/SDL_render.h>
 
-#include "../../headers/Screen.h"
-#include "../../headers/SDL/SDLScreen.h"
+#include "Screen.h"
+#include "SDL/SDLScreen.h"
 
 template <std::size_t W, std::size_t H>
 void SDLScreen<W, H>::draw(SDL_Renderer *renderer) {
