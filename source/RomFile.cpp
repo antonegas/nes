@@ -49,9 +49,9 @@ Mapper RomFile::getMapper() {
 }
 
 RomFile::Type RomFile::getType() {
-    if (header.ines.nes != 0x4E45531A) return RomFile::Type::UNSUPPORTED;
-    if (header.ines.nes2 == 0x00) return RomFile::Type::INES;
-    if (header.nes2.nes2 == 0x10) return RomFile::Type::NES2;
+    if (header.ines.nes != 0x1A53454E) return RomFile::Type::UNSUPPORTED;
+    if (header.ines.nes2 == 0b00) return RomFile::Type::INES;
+    if (header.nes2.nes2 == 0b10) return RomFile::Type::NES2;
 
     return RomFile::Type::UNSUPPORTED; 
 }
