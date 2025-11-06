@@ -1,3 +1,6 @@
+#ifndef H_CONSTANTS
+#define H_CONSTANTS
+
 #include <cstdint>
 
 using std::int32_t;
@@ -13,7 +16,7 @@ using std::uint8_t;
  * Reference: https://www.nesdev.org/wiki/NES_2.0#Nametable_layout
  */
 
-enum NametableLayout : uint8_t {
+enum class NametableLayout : uint8_t {
     HORIZONTAL = 0x00,
     VERTICAL = 0x01,
     ALTERNATIVE = 0x02,
@@ -31,7 +34,7 @@ enum NametableLayout : uint8_t {
  * Vs. System Reference: https://www.nesdev.org/wiki/NES_2.0#Vs._System_Type
  */
 
-enum ConsoleType : uint8_t {
+enum class ConsoleType : uint8_t {
     NES = 0x00,
     VS_SYSTEM = 0x01,
     PLAYCHOICE = 0x02,
@@ -48,7 +51,7 @@ enum ConsoleType : uint8_t {
  * Reference: https://www.nesdev.org/wiki/NES_2.0#CPU/PPU_Timing
  */
 
-enum ConsoleTiming : uint8_t {
+enum class ConsoleTiming : uint8_t {
     NTSC = 0x00,
     PAL = 0x01,
     DENDY = 0x02,
@@ -66,7 +69,7 @@ enum ConsoleTiming : uint8_t {
  */
 
  // TODO: Add missing expansion devices.
-enum ExpansionDevice : uint8_t {
+enum class ExpansionDevice : uint8_t {
     UNSPECIFIED = 0x00,
     STANDARD = 0x01,
     FOURSCORE = 0x02,
@@ -80,3 +83,5 @@ enum ExpansionDevice : uint8_t {
     SNES_CONTROLLER = 0x2B,
     UNSUPPORTED = 0xFF
 };
+
+#endif // H_CONSTANTS
