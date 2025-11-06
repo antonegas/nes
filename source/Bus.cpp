@@ -115,6 +115,9 @@ uint8_t Bus::read(uint16_t addr) {
     } else if (addr <= 0xFFFF) {
         // Read from cartridge
         return cart->cpuRead(addr);
+    } else {
+        // Never reached.
+        return 0x00;
     }
 }
 

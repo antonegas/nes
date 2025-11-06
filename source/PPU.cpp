@@ -105,6 +105,7 @@ uint8_t PPU::registerRead(uint16_t addr) {
 
             return data;
         default:
+            // Never reached.
             return 0x00;
     }
 }
@@ -193,6 +194,8 @@ uint8_t PPU::read(uint16_t addr) {
         if (addr & 0x000F == 0x0000) addr = 0x0000; 
 
         return paletteRam[addr];
+    } else {
+        return 0x00;
     }
 }
 
