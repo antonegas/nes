@@ -2,6 +2,7 @@
 #include <vector>
 #include <array>
 #include <algorithm>
+#include <iterator>
 
 #include "RomFile.h"
 #include "Mapper.h"
@@ -14,7 +15,7 @@ using std::uint8_t;
 RomFile::RomFile(std::vector<uint8_t> data) {
     if (data.size() < 16) return;
 
-    std::copy(data[0], data[15], this->header.raw);
+    std::copy(std::begin(data), std::begin(data) + 16, std::begin(this->header.raw));
 
     if (getType() == RomFile::Type::UNSUPPORTED) return;
 
@@ -23,25 +24,27 @@ RomFile::RomFile(std::vector<uint8_t> data) {
     if (hasTrainer()) {
         if (data.size() < current + 512) return;
 
-        std::copy(data[current], data[current + 512], trainer);
+        std::copy(std::begin(data) + current, std::begin(data) + current + 512, std::begin(trainer));
         current += 512;
     }
 
     if (data.size() < current + getPrgromSize())  return;
 
-    std::copy(data[current], data[current + getPrgromSize()], prgrom);
+    prgrom.resize(getPrgromSize());
+    std::copy(std::begin(data) + current, std::begin(data) + current + getPrgromSize(), std::begin(prgrom));
     current += getPrgromSize();
 
     if (data.size() < current + getChrromSize()) return;
 
-    std::copy(data[current], data[current + getChrromSize()], chrrom);
+    chrrom.resize(getChrromSize());
+    std::copy(std::begin(data) + current, std::begin(data) + current + getChrromSize(), std::begin(chrrom));
 }
 
 Mapper RomFile::getMapper() {
     // Add check to verify correct amount of prgrom and chrrom
     switch (getMapperNumber()) {
         case NROM::number:
-            NROM(prgrom, chrrom, getNametableLayout());
+            return NROM(prgrom, chrrom, getNametableLayout());
             break;
         default:
             return Mapper(std::vector<uint8_t>(), std::vector<uint8_t>());
