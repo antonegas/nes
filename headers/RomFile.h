@@ -13,7 +13,7 @@ NES 2.0: https://www.nesdev.org/wiki/NES_2.0
 #include "Mapper.h"
 #include "constants.h"
 
-using std::int32_t;
+using std::uint32_t;
 using std::uint16_t;
 using std::uint8_t;
 
@@ -36,7 +36,7 @@ class RomFile {
         ConsoleType getConsoleType();
         ConsoleTiming getConsoleTiming();
         ExpansionDevice getExpansionDevice();
-    private:
+    public:
         std::array<uint8_t, 0x200> trainer;
         std::vector<uint8_t> prgrom;
         std::vector<uint8_t> chrrom;
