@@ -13,6 +13,7 @@ NES 2.0: https://www.nesdev.org/wiki/NES_2.0
 #include "Mapper.h"
 #include "constants.h"
 
+using std::uint64_t;
 using std::uint32_t;
 using std::uint16_t;
 using std::uint8_t;
@@ -124,7 +125,7 @@ class RomFile {
                 bool hasPrgRam : 1;
                 bool hasBusConflicts : 1;
                 // byte end of 10-15
-                uint8_t padding : 42;
+                uint64_t padding : 42;
             } ines;
             struct NES2 {
                 // byte 0-3
