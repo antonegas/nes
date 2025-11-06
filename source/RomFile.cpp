@@ -96,7 +96,7 @@ ConsoleTiming RomFile::getConsoleTiming() {
         return ConsoleTiming::NTSC;
     }
 
-    switch (header.nes2.timing) {
+    switch (static_cast<ConsoleTiming>(header.nes2.timing)) {
         case ConsoleTiming::NTSC:
             return ConsoleTiming::NTSC;
         case ConsoleTiming::PAL:
@@ -117,8 +117,8 @@ bool RomFile::hasTrainer() {
 ExpansionDevice RomFile::getExpansionDevice() {
     if (getType() == RomFile::Type::UNSUPPORTED) return ExpansionDevice::UNSUPPORTED;
     if (getType() == RomFile::Type::INES) return ExpansionDevice::UNSPECIFIED;
-    if (header.nes2.expansionDevice == ExpansionDevice::UNSPECIFIED) return ExpansionDevice::UNSPECIFIED;
-    if (header.nes2.expansionDevice == ExpansionDevice::STANDARD) return ExpansionDevice::STANDARD;
+    if (static_cast<ExpansionDevice>(header.nes2.expansionDevice) == ExpansionDevice::UNSPECIFIED) return ExpansionDevice::UNSPECIFIED;
+    if (static_cast<ExpansionDevice>(header.nes2.expansionDevice) == ExpansionDevice::STANDARD) return ExpansionDevice::STANDARD;
 
     return ExpansionDevice::UNSUPPORTED;
 }

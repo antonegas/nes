@@ -157,7 +157,7 @@ class RomFile {
                 uint8_t chrramShift : 4;
                 uint8_t chrnvramShift : 4;
                 // byte 12
-                ConsoleTiming timing : 2;
+                uint8_t timing : 2;
                 uint8_t unused0 : 6;
                 // byte 13
                 union ConsoleType {
@@ -175,7 +175,7 @@ class RomFile {
                 uint8_t miscRomsCount : 2;
                 uint8_t unused1 : 6;
                 // byte 15
-                ExpansionDevice expansionDevice : 6;
+                uint8_t expansionDevice : 6;
                 uint8_t padding : 2;
             } nes2;
             std::array<uint8_t, 16> raw;
