@@ -19,7 +19,7 @@ using std::uint8_t;
  * Reference: https://www.nesdev.org/wiki/NROM
  */
 
-class NROM : Mapper {
+class NROM : public Mapper {
     public:
         NROM(
             std::vector<uint8_t> prgrom, 
