@@ -106,6 +106,7 @@ uint8_t Bus::read(uint16_t addr) {
         return apu.read(addr);
     } else if (addr == 0x4014) {
         // PPU OAM DMA.
+        return apu.read(addr);
     } else if (addr == 0x4015) {
         // APU status.
         return apu.read(addr);

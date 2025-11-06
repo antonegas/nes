@@ -74,7 +74,7 @@ void PPU::connectScreen(std::shared_ptr<Screen<256, 240>> screen) {
 
 uint8_t PPU::registerRead(uint16_t addr) {
     switch (addr) {
-        case 0x2002:
+        case 0x2002: {
             // PPUSTATUS
             uint8_t status = ppustatus.status & 0xE0;
 
@@ -83,6 +83,7 @@ uint8_t PPU::registerRead(uint16_t addr) {
             w = 0;
 
             return status;
+        }
         case 0x2004:
             // OAMDATA
             if (scanline <= 239 && 1 <= dot && dot <= 64 && !fblank()) {
@@ -91,7 +92,7 @@ uint8_t PPU::registerRead(uint16_t addr) {
             }
 
             return ((uint8_t*)primaryOam.data())[oamaddr];
-        case 0x2007:
+        case 0x2007:{
             // PPUDATA
             uint8_t data = ppudataBuffer;
             ppudataBuffer = read(v.addr);
@@ -104,6 +105,7 @@ uint8_t PPU::registerRead(uint16_t addr) {
             v.addr += 0x01 + 0x19 * ppuctrl.incrementMode;
 
             return data;
+        }
         default:
             // Never reached.
             return 0x00;
@@ -488,7 +490,7 @@ void PPU::fetchForeground() {
                 // X coordinate.
                 mpbm[entry].x = secondaryOam[entry].x;
                 return;
-            case 0x0005:
+            case 0x0005: {
                 uint16_t addr = spriteAddr(secondaryOam[entry]);
                 uint8_t low = read(addr);
 
@@ -500,7 +502,8 @@ void PPU::fetchForeground() {
 
                 mpbm[entry].low = low;
                 return;
-            case 0x0007:
+            }
+            case 0x0007: {
                 uint16_t addr = spriteAddr(secondaryOam[entry]);
                 uint8_t high = read(addr + 0x0008);
 
@@ -512,6 +515,7 @@ void PPU::fetchForeground() {
 
                 mpbm[entry].high = high;
                 return;
+            }
         }
     } else if (dot <= 340) {
         // Busy reading first byte of secondary OAM.
