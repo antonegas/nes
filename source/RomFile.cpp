@@ -102,7 +102,7 @@ ConsoleTiming RomFile::getConsoleTiming() {
         case ConsoleTiming::MULTIREGION:
             return ConsoleTiming::NTSC;
         default:
-            ConsoleTiming::UNSUPPORTED;
+            return ConsoleTiming::UNSUPPORTED;
     }
 }
 
