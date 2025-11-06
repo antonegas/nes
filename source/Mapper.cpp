@@ -15,4 +15,6 @@ uint16_t Mapper::mirrorAddr(uint16_t addr) {
         case NametableLayout::FOUR:
             return addr & 0x0FFF;
     };
+
+    return 0x00;
 }
