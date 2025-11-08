@@ -60,18 +60,18 @@ class CPU {
         uint8_t a = 0x00; // Accumulator
         uint8_t x = 0x00; // X index
         uint8_t y = 0x00; // Y index
-        uint16_t pc = 0x00; // Program counter (set by power/reset)
+        uint16_t pc = 0x0000; // Program counter (set by power/reset)
         uint8_t s = 0xFD; // Stack 
         union Status {
             struct {
-                uint8_t C : 1; // Carry
-                uint8_t Z : 1; // Zero
-                uint8_t I : 1; // Interrupt disable
-                uint8_t D : 1; // Decimal mode
-                uint8_t B : 1; //  B-flag
-                uint8_t U : 1; // Unused set to 1
-                uint8_t V : 1; // Overflow
-                uint8_t N : 1; // Negative
+                bool C : 1; // Carry
+                bool Z : 1; // Zero
+                bool I : 1; // Interrupt disable
+                bool D : 1; // Decimal mode
+                bool B : 1; //  B-flag
+                bool U : 1; // Unused set to 1
+                bool V : 1; // Overflow
+                bool N : 1; // Negative
             };
             uint8_t status = 0b00100100;
         } p; // Status register P: NV1BDIZC
