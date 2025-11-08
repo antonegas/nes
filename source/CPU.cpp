@@ -623,7 +623,7 @@ void CPU::LDY() {
     p.Z = mem == 0x00;
     p.N = mem & 0x80;
 
-    x = mem;
+    y = mem;
 }
 
 void CPU::LSR() {
