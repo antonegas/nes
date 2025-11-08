@@ -165,10 +165,9 @@ void CPU::interrupt(uint16_t addr, bool brk) {
     pc = (high << 8) | low;
 }
 
-void CPU::branch() {
+void CPU::branch(uint16_t mem) {
     // PC = PC + 2 + memory (signed)
     // +2 happens in relative addressing mode method.
-    uint16_t mem = (this->*addrMode)();
     uint16_t res = pc + mem;
 
     // There is an extra cycle since the branch was taken.
@@ -356,20 +355,23 @@ void CPU::ASL() {
 
 void CPU::BCC() {
     // Branch if C is clear.
+    uint16_t mem = (this->*addrMode)();
     if (p.C) return;
-    branch();
+    branch(mem);
 }
 
 void CPU::BCS() {
     // Branch if C is set.
+    uint16_t mem = (this->*addrMode)();
     if (!p.C) return;
-    branch();
+    branch(mem);
 }
 
 void CPU::BEQ() {
     // Branch if Z is set.
+    uint16_t mem = (this->*addrMode)();
     if (!p.Z) return;
-    branch();
+    branch(mem);
 }
 
 void CPU::BIT() {
@@ -386,20 +388,23 @@ void CPU::BIT() {
 
 void CPU::BMI() {
     // Branch if N is set.
+    uint16_t mem = (this->*addrMode)();
     if (!p.N) return;
-    branch();
+    branch(mem);
 }
 
 void CPU::BNE() {
     // Branch if Z is clear.
+    uint16_t mem = (this->*addrMode)();
     if (p.Z) return;
-    branch();
+    branch(mem);
 }
 
 void CPU::BPL() {
     // Branch if N is clear.
+    uint16_t mem = (this->*addrMode)();
     if (p.N) return;
-    branch();
+    branch(mem);
 }
 
 void CPU::BRK() {
@@ -409,14 +414,16 @@ void CPU::BRK() {
 
 void CPU::BVC() {
     // Branch if V is clear.
+    uint16_t mem = (this->*addrMode)();
     if (p.V) return;
-    branch();
+    branch(mem);
 }
 
 void CPU::BVS() {
     // Branch if V is set.
+    uint16_t mem = (this->*addrMode)();
     if (!p.V) return;
-    branch();
+    branch(mem);
 }
 
 void CPU::CLC() {

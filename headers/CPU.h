@@ -40,7 +40,7 @@ class CPU {
         uint8_t pop();
         void push(uint8_t data);
         void interrupt(uint16_t addr, bool brk);
-        void branch();
+        void branch(uint16_t mem);
         bool crossed(uint16_t arg, uint16_t addr);
         
         /**
