@@ -304,9 +304,9 @@ void CPU::ADC() {
     uint16_t res = a + mem + p.C;
 
     // Set affected flags.
-    p.C = res > 0x00FF;
-    p.Z = res == 0x0000;
-    p.V = (res ^ a) & (res ^ mem) & 0x0080;
+    p.C = res & 0xFF00;
+    p.Z = res & 0x00FF == 0x0000;
+    p.V = ~(res ^ a) & (res ^ mem) & 0x0080;
     p.N = res & 0x0080;
 
     a = res & 0xFF;
@@ -340,8 +340,8 @@ void CPU::ASL() {
 
     // Set affected flags.
     p.C = val & 0x80;
-    p.Z, res == 0x00;
-    p.N, res & 0x80;
+    p.Z = res == 0x00;
+    p.N = res & 0x80;
 
     if (addrMode == &ACC) {
         a = res;
@@ -780,7 +780,7 @@ void CPU::SBC() {
 
     // Set affected flags.
     p.C = res & 0xFF00;
-    p.Z = res == 0x0000;
+    p.Z = res & 0x00FF == 0x0000;
     p.V = (res ^ a) & (res ^ ~mem) & 0x0080;
     p.N = res & 0x0080;
 
