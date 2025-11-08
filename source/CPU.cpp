@@ -585,8 +585,7 @@ void CPU::JSR() {
     push(pc & 0x00FF);
 
     // PC = memory
-    uint16_t addr = (this->*addrMode)();
-    uint8_t mem = read(addr);
+    uint16_t mem = (this->*addrMode)();
 
     pc = mem;
 }
