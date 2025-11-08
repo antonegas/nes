@@ -356,22 +356,19 @@ void CPU::ASL() {
 void CPU::BCC() {
     // Branch if C is clear.
     uint16_t mem = (this->*addrMode)();
-    if (p.C) return;
-    branch(mem);
+    if (!p.C) branch(mem);
 }
 
 void CPU::BCS() {
     // Branch if C is set.
     uint16_t mem = (this->*addrMode)();
-    if (!p.C) return;
-    branch(mem);
+    if (p.C) branch(mem);
 }
 
 void CPU::BEQ() {
     // Branch if Z is set.
     uint16_t mem = (this->*addrMode)();
-    if (!p.Z) return;
-    branch(mem);
+    if (p.Z) branch(mem);
 }
 
 void CPU::BIT() {
@@ -389,22 +386,19 @@ void CPU::BIT() {
 void CPU::BMI() {
     // Branch if N is set.
     uint16_t mem = (this->*addrMode)();
-    if (!p.N) return;
-    branch(mem);
+    if (p.N) branch(mem);
 }
 
 void CPU::BNE() {
     // Branch if Z is clear.
     uint16_t mem = (this->*addrMode)();
-    if (p.Z) return;
-    branch(mem);
+    if (!p.Z) branch(mem);
 }
 
 void CPU::BPL() {
     // Branch if N is clear.
     uint16_t mem = (this->*addrMode)();
-    if (p.N) return;
-    branch(mem);
+    if (!p.N) branch(mem);
 }
 
 void CPU::BRK() {
@@ -415,15 +409,13 @@ void CPU::BRK() {
 void CPU::BVC() {
     // Branch if V is clear.
     uint16_t mem = (this->*addrMode)();
-    if (p.V) return;
-    branch(mem);
+    if (!p.V) branch(mem);
 }
 
 void CPU::BVS() {
     // Branch if V is set.
     uint16_t mem = (this->*addrMode)();
-    if (!p.V) return;
-    branch(mem);
+    if (p.V) branch(mem);
 }
 
 void CPU::CLC() {
