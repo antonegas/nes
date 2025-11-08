@@ -275,8 +275,7 @@ uint16_t CPU::REL() {
         arg = arg | 0xFF00;
     }
 
-    uint16_t addr = pc + arg;
-    return addr;
+    return arg;
 }
 
 uint16_t CPU::IND() {
