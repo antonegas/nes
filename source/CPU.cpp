@@ -907,12 +907,12 @@ void CPU::LAS() {
 
 void CPU::LAX() {
     // A = memory, then X = memory or X = A
-    // LDA();
-    // if (addrMode == &IMM) {
-    //     TAX();
-    // } else {
-    //     LDX();
-    // }
+    LDA();
+    if (addrMode == &IMM) {
+        TAX();
+    } else {
+        LDX();
+    }
 }
 
 void CPU::RLA() {
