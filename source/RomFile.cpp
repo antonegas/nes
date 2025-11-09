@@ -125,7 +125,7 @@ ExpansionDevice RomFile::getExpansionDevice() {
 
 uint32_t RomFile::getPrgromSize() {
     if (getType() == RomFile::Type::UNSUPPORTED) return 0x00000000;
-    if (getType() == RomFile::Type::INES) return header.ines.prgramBlocks << 14;
+    if (getType() == RomFile::Type::INES) return header.ines.prgromBlocks << 14;
 
     // Exponent ROM size is not supported.
     if (header.nes2.prgromBlocksHigh == 0x0F) return 0x00000000;
