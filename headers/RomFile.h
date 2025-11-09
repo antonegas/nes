@@ -9,6 +9,7 @@ NES 2.0: https://www.nesdev.org/wiki/NES_2.0
 #include <cstdint>
 #include <vector>
 #include <array>
+#include <memory>
 
 #include "Mapper.h"
 #include "constants.h"
@@ -31,9 +32,10 @@ using std::uint8_t;
 
 class RomFile {
     public:
+        RomFile() = default;
         RomFile(std::vector<uint8_t> data);
 
-        Mapper getMapper();
+        std::shared_ptr<Mapper> getMapper();
         ConsoleType getConsoleType();
         ConsoleTiming getConsoleTiming();
         ExpansionDevice getExpansionDevice();

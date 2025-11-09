@@ -3,6 +3,7 @@
 #include <array>
 #include <algorithm>
 #include <iterator>
+#include <memory>
 
 #include "RomFile.h"
 #include "Mapper.h"
@@ -40,14 +41,13 @@ RomFile::RomFile(std::vector<uint8_t> data) {
     std::copy(std::begin(data) + current, std::begin(data) + current + getChrromSize(), std::begin(chrrom));
 }
 
-Mapper RomFile::getMapper() {
+std::shared_ptr<Mapper> RomFile::getMapper() {
     // Add check to verify correct amount of prgrom and chrrom
     switch (getMapperNumber()) {
         case NROM::number:
-            return NROM(prgrom, chrrom, getNametableLayout());
-            break;
+            return std::make_shared<NROM>(prgrom, chrrom, getNametableLayout());
         default:
-            return Mapper(std::vector<uint8_t>(), std::vector<uint8_t>());
+            return std::make_shared<Mapper>(std::vector<uint8_t>(), std::vector<uint8_t>());
     }
 }
 
