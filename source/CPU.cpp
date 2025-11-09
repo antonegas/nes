@@ -291,8 +291,8 @@ void CPU::ADC() {
 
     // Set affected flags.
     p.C = res & 0xFF00;
-    p.Z = res & 0x00FF == 0x0000;
-    p.V = ~(res ^ a) & (res ^ mem) & 0x0080;
+    p.Z = !(res & 0x00FF);
+    p.V = (res ^ a) & (res ^ mem) & 0x0080;
     p.N = res & 0x0080;
 
     a = res & 0xFF;
@@ -728,7 +728,7 @@ void CPU::SBC() {
 
     // Set affected flags.
     p.C = res & 0xFF00;
-    p.Z = res & 0x00FF == 0x0000;
+    p.Z = !(res & 0x00FF);
     p.V = (res ^ a) & (res ^ ~mem) & 0x0080;
     p.N = res & 0x0080;
 
