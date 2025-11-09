@@ -8,6 +8,7 @@ using std::uint8_t;
 
 void CPU::tick() {
     // If a KIL instruction is called the CPU should halt.
+    // TODO: Make KIL have one wait cycle.
     if (op == &KIL) return;
 
     // CPU switches being allowing DMA to read or write each cycle.
@@ -627,7 +628,7 @@ void CPU::PHA() {
 
 void CPU::PHP() {
     // Push status register.
-    push(p.status | 0x10);
+    push(p.status | 0x10); // Push with B flag set.
 }
 
 void CPU::PLA() {
@@ -642,6 +643,8 @@ void CPU::PLA() {
 void CPU::PLP() {
     // Pop into status register.
     p.status = pop();
+    p.B = 0; // Pop with B flag ignored.
+    p.U = 1; // Pop with unused flag set.
 }
 
 void CPU::ROL() {
@@ -699,6 +702,8 @@ void CPU::ROR() {
 void CPU::RTI() {
     // Pop status register.
     p.status = pop();
+    p.B = 0; // Pop with B flag ignored.
+    p.U = 1; // Pop with unused flag set.
 
     // Pop program counter.
     uint16_t low = pop();
