@@ -973,11 +973,11 @@ void CPU::SLO() {
 
 void CPU::SRE() {
     // value = value >> 1, then A = A ^ memory
-    // LSR();
-    // EOR();
+    LSR();
+    EOR();
 
-    // // Should not give an oops cycle.
-    // oops = false;
+    // Should not give an oops cycle.
+    oops = false;
 }
 
 void CPU::TAS() {
