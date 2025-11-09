@@ -873,7 +873,7 @@ void CPU::DCP() {
     DEC();
     CMP();
 
-    // // Should not give an oops cycle.
+    // Should not give an oops cycle.
     oops = false;
 }
 
@@ -882,7 +882,7 @@ void CPU::ISC() {
     INC();
     SBC();
 
-    // // Should not give an oops cycle.
+    // Should not give an oops cycle.
     oops = false;
 }
 
@@ -920,7 +920,7 @@ void CPU::RLA() {
     ROL();
     AND();
 
-    // // Should not give an oops cycle.
+    // Should not give an oops cycle.
     oops = false;
 }
 
@@ -967,7 +967,7 @@ void CPU::SLO() {
     ASL();
     ORA();
 
-    // // Should not give an oops cycle.
+    // Should not give an oops cycle.
     oops = false;
 }
 
