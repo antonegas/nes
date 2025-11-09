@@ -879,11 +879,11 @@ void CPU::DCP() {
 
 void CPU::ISC() {
     // memory = memory + 1, then A = A - memory - ~C
-    // INC();
-    // SBC();
+    INC();
+    SBC();
 
     // // Should not give an oops cycle.
-    // oops = false;
+    oops = false;
 }
 
 void CPU::KIL() {
