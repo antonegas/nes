@@ -91,7 +91,7 @@ class CPU {
         void ABX(); // Absolute indexed by X
         void ABY(); // Absolute indexed by Y
         void IDX(); // Indexed indirect by X
-        void IDY(); // Indirect Indexed by Y
+        void IDY(); // Indirect indexed by Y
 
         void IMP(); // Implicit addressing
         void ACC(); // Accumulator addressing

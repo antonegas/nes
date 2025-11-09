@@ -228,7 +228,7 @@ void CPU::IDY() {
     uint16_t arg = read(pc++);
     uint16_t low = read(arg);
     uint16_t high = read((arg + 1) & 0x00FF);
-    opAddr = (high << 8) | low + y;
+    opAddr = ((high << 8) | low) + y;
 
     // If a page is crossed there might be an oops cycle.
     oops = crossed(high << 8, opAddr);
