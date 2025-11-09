@@ -358,8 +358,8 @@ void CPU::BIT() {
 
     // Set affected flags.
     p.Z = res == 0x00;
-    p.V = res & 0x40;
-    p.N = res & 0x80;
+    p.V = mem & 0x40;
+    p.N = mem & 0x80;
 }
 
 void CPU::BMI() {
