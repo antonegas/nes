@@ -866,71 +866,72 @@ void CPU::TYA() {
     p.N = a & 0x80;
 }
 
+// TODO: Most of the illegal opcodes are not implemented correctly
 void CPU::AHX() {
     // memory = A & X & (address >> 8)
     // NOTE: in real hardware this behavior is not stable.
-    uint16_t addr = (this->*addrMode)();
-    uint16_t res = a & x & (addr >> 8);
+    // uint16_t addr = (this->*addrMode)();
+    // uint16_t res = a & x & (addr >> 8);
 
-    write(addr, res);
+    // write(addr, res);
 
-    // Should not give an oops cycle.
-    oops = false;
+    // // Should not give an oops cycle.
+    // oops = false;
 }
 
 void CPU::ALR() {
     // A = A & memory, then value = value >> 1
-    AND();
-    LSR();
+    // AND();
+    // LSR();
 }
 
 void CPU::ANC() {
     // A = A & memory
-    AND();
+    // AND();
 
-    // Set affected flags.
-    p.C = a & 0x80;
+    // // Set affected flags.
+    // p.C = a & 0x80;
 }
 
 void CPU::ARR() {
     // A = A & memory, then value = value >> 1 through C
-    AND();
-    ROR();
+    // AND();
+    // ROR();
 
-    // Set affected flags.
-    p.V = (a ^ (a << 1)) & 0x40;
+    // // Set affected flags.
+    // p.V = (a ^ (a << 1)) & 0x40;
 }
 
 void CPU::AXS() {
     // X = (A & X) - memory
-    uint16_t addr = (this->*addrMode)();
-    uint8_t mem = read(addr);
-    uint16_t res = (a & x) - mem;
+    // uint16_t addr = (this->*addrMode)();
+    // uint8_t mem = read(addr);
+    // uint16_t res = (a & x) - mem;
 
-    // Set affected flags.
-    p.C = (a & x) >= mem;
-    p.Z = (a & x) == mem;
-    p.N = res & 0x80;
+    // // Set affected flags.
+    // p.C = (a & x) >= mem;
+    // p.Z = (a & x) == mem;
+    // p.N = res & 0x80;
     
-    x = res;
+    // x = res;
 }
 
 void CPU::DCP() {
     // memory = memory - 1, then A - memory
-    DEC();
-    CMP();
+    // DEC();
+    // CMP();
 
-    // Should not give an oops cycle.
-    oops = false;
+    // // Should not give an oops cycle.
+    // oops = false;
 }
 
 void CPU::ISC() {
     // memory = memory + 1, then A = A - memory - ~C
-    INC();
-    SBC();
+    // INC();
+    // SBC();
 
-    // Should not give an oops cycle.
-    oops = false;
+    // // Should not give an oops cycle.
+    // oops = false;
 }
 
 void CPU::KIL() {
@@ -939,114 +940,114 @@ void CPU::KIL() {
 
 void CPU::LAS() {
     // A = S & memory, X = S & memory, S = S & memory
-    uint16_t addr = (this->*addrMode)();
-    uint8_t mem = read(addr);
-    uint8_t res = s & mem;
+    // uint16_t addr = (this->*addrMode)();
+    // uint8_t mem = read(addr);
+    // uint8_t res = s & mem;
 
-    // Set affected flags.
-    p.Z = res == 0x00;
-    p.N = res & 0x80;
+    // // Set affected flags.
+    // p.Z = res == 0x00;
+    // p.N = res & 0x80;
 
-    a = res;
-    x = res;
-    s = res;
+    // a = res;
+    // x = res;
+    // s = res;
 }
 
 void CPU::LAX() {
     // A = memory, then X = memory or X = A
-    LDA();
-    if (addrMode == &IMM) {
-        TAX();
-    } else {
-        LDX();
-    }
+    // LDA();
+    // if (addrMode == &IMM) {
+    //     TAX();
+    // } else {
+    //     LDX();
+    // }
 }
 
 void CPU::RLA() {
     // value = value << 1 through C, then A = A & memory
-    ROL();
-    AND();
+    // ROL();
+    // AND();
 
-    // Should not give an oops cycle.
-    oops = false;
+    // // Should not give an oops cycle.
+    // oops = false;
 }
 
 void CPU::RRA() {
     // value = value >> 1 through C, then A = A + memory + C
-    ROR();
-    ADC();
+    // ROR();
+    // ADC();
 
-    // Should not give an oops cycle.
-    oops = false;
+    // // Should not give an oops cycle.
+    // oops = false;
 }
 
 void CPU::SAX() {
     // memory = A & X
-    uint16_t addr = (this->*addrMode)();
-    write(addr, a & x);
+    // uint16_t addr = (this->*addrMode)();
+    // write(addr, a & x);
 }
 
 void CPU::SHX() {
     // memory = X & (address >> 8)
     // NOTE: in real hardware this behavior is not stable.
-    uint16_t addr = (this->*addrMode)();
-    uint16_t res = x & (addr >> 8);
+    // uint16_t addr = (this->*addrMode)();
+    // uint16_t res = x & (addr >> 8);
 
-    write(addr, res);
+    // write(addr, res);
 
-    // Should not give an oops cycle.
-    oops = false;
+    // // Should not give an oops cycle.
+    // oops = false;
 }
 
 void CPU::SHY() {
     // memory = Y & (address >> 8)
     // NOTE: in real hardware this behavior is not stable.
-    uint16_t addr = (this->*addrMode)();
-    uint16_t res = y & (addr >> 8);
+    // uint16_t addr = (this->*addrMode)();
+    // uint16_t res = y & (addr >> 8);
 
-    write(addr, res);
+    // write(addr, res);
 
-    // Should not give an oops cycle.
-    oops = false;
+    // // Should not give an oops cycle.
+    // oops = false;
 }
 
 void CPU::SLO() {
     // value = value << 1, then A = A | memory
-    ASL();
-    ORA();
+    // ASL();
+    // ORA();
 
-    // Should not give an oops cycle.
-    oops = false;
+    // // Should not give an oops cycle.
+    // oops = false;
 }
 
 void CPU::SRE() {
     // value = value >> 1, then A = A ^ memory
-    LSR();
-    EOR();
+    // LSR();
+    // EOR();
 
-    // Should not give an oops cycle.
-    oops = false;
+    // // Should not give an oops cycle.
+    // oops = false;
 }
 
 void CPU::TAS() {
     // S = A & X, memory = A & X & (address >> 8)
     // NOTE: in real hardware this behavior is not stable.
-    uint16_t addr = (this->*addrMode)();
-    uint8_t mem = read(addr);
-    uint16_t res = a & x;
+    // uint16_t addr = (this->*addrMode)();
+    // uint8_t mem = read(addr);
+    // uint16_t res = a & x;
 
-    s = res;
+    // s = res;
 
-    res = res & (addr >> 8);
+    // res = res & (addr >> 8);
 
-    write(addr, res);
+    // write(addr, res);
 
-    // Should not give an oops cycle.
-    oops = false;
+    // // Should not give an oops cycle.
+    // oops = false;
 }
 
 void CPU::XAA() {
     // A = X, then A = A & memory
-    TXA();
-    AND();
+    // TXA();
+    // AND();
 }
