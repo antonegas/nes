@@ -30,8 +30,10 @@ class CPU {
         
         uint8_t wait = 0x00;
         bool oops = false;
+        uint8_t opcode = 0x00;
+        uint16_t opAddr = 0x0000;
         uint8_t priority = 0x00; // triggered interrupt priority.
-        uint16_t (CPU::*addrMode)() = nullptr;
+        void (CPU::*addrMode)() = nullptr;
         void (CPU::*op)() = nullptr;
         void (CPU::*delayed)() = nullptr;
 
@@ -40,7 +42,7 @@ class CPU {
         uint8_t pop();
         void push(uint8_t data);
         void interrupt(uint16_t addr, bool brk);
-        void branch(uint16_t mem);
+        void branch();
         bool crossed(uint16_t arg, uint16_t addr);
         
         /**
@@ -84,20 +86,20 @@ class CPU {
          * Reference: https://www.nesdev.org/wiki/CPU_addressing_modes
          */
 
-        uint16_t ZPX(); // Zero page indexed by X
-        uint16_t ZPY(); // Zero page indexed by Y
-        uint16_t ABX(); // Absolute indexed by X
-        uint16_t ABY(); // Absolute indexed by Y
-        uint16_t IDX(); // Indexed indirect by X
-        uint16_t IDY(); // Indirect Indexed by Y
+        void ZPX(); // Zero page indexed by X
+        void ZPY(); // Zero page indexed by Y
+        void ABX(); // Absolute indexed by X
+        void ABY(); // Absolute indexed by Y
+        void IDX(); // Indexed indirect by X
+        void IDY(); // Indirect Indexed by Y
 
-        uint16_t IMP(); // Implicit addressing
-        uint16_t ACC(); // Accumulator addressing
-        uint16_t IMM(); // Immediate addressing
-        uint16_t ZP0(); // Zero page addressing
-        uint16_t ABS(); // Absolute adressing
-        uint16_t REL(); // Relative addressing
-        uint16_t IND(); // Indirect addressing
+        void IMP(); // Implicit addressing
+        void ACC(); // Accumulator addressing
+        void IMM(); // Immediate addressing
+        void ZP0(); // Zero page addressing
+        void ABS(); // Absolute adressing
+        void REL(); // Relative addressing
+        void IND(); // Indirect addressing
 
         /**
          * CPU INSTRUCTIONS
@@ -203,7 +205,7 @@ class CPU {
          */
 
         typedef struct {
-            uint16_t (CPU::*addrMode)() = nullptr;
+            void (CPU::*addrMode)() = nullptr;
             void (CPU::*op)() = nullptr;
             uint8_t cycles = 0;
         } Lookup;
