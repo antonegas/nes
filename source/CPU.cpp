@@ -870,11 +870,11 @@ void CPU::AXS() {
 
 void CPU::DCP() {
     // memory = memory - 1, then A - memory
-    // DEC();
-    // CMP();
+    DEC();
+    CMP();
 
     // // Should not give an oops cycle.
-    // oops = false;
+    oops = false;
 }
 
 void CPU::ISC() {
