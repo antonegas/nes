@@ -964,11 +964,11 @@ void CPU::SHY() {
 
 void CPU::SLO() {
     // value = value << 1, then A = A | memory
-    // ASL();
-    // ORA();
+    ASL();
+    ORA();
 
     // // Should not give an oops cycle.
-    // oops = false;
+    oops = false;
 }
 
 void CPU::SRE() {
