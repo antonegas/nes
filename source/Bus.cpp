@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <memory>
 
 #include "Bus.h"
 
@@ -11,7 +12,7 @@ Bus::Bus() {
 }
 
 void Bus::update(uint64_t time) {
-    if (previousTime = 0x0000000000000000) {
+    if (previousTime == 0x0000000000000000) {
         previousTime = time;
         return;
     }
@@ -41,6 +42,8 @@ void Bus::update(uint64_t time) {
 }
 
 void Bus::tick() {
+    if (!cartInserted) return;
+
     // NTSC (3 dots / CPU cycle)
     uint8_t ppurate = 4;
     uint8_t cpurate = 12;
@@ -88,6 +91,9 @@ void Bus::reset() {
 void Bus::insertCart(std::shared_ptr<Mapper> cart) {
     this->cart = cart;
     ppu.insertCart(cart);
+    cartInserted = true;
+    ppu.power();
+    cpu.power();
 }
 
 void Bus::connectScreen(std::shared_ptr<Screen<256, 240>> screen) {

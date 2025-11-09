@@ -35,6 +35,7 @@ class Bus {
         uint64_t previousTime = 0x0000000000000000;
         uint64_t remainingCycles = 0x0000000000000000; // Nano cycles left after update.
         uint8_t cycle = 0x00; // Master clock modolo CPU * PPU master clocks / clock.
+        bool cartInserted = false;
 
         /**
          * MEMORY MAP
