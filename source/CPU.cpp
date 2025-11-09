@@ -532,9 +532,7 @@ void CPU::INY() {
 
 void CPU::JMP() {
     // PC = memory
-    uint8_t mem = read(opAddr);
-
-    pc = mem;
+    pc = opAddr;
 }
 
 void CPU::JSR() {
