@@ -917,11 +917,11 @@ void CPU::LAX() {
 
 void CPU::RLA() {
     // value = value << 1 through C, then A = A & memory
-    // ROL();
-    // AND();
+    ROL();
+    AND();
 
     // // Should not give an oops cycle.
-    // oops = false;
+    oops = false;
 }
 
 void CPU::RRA() {
