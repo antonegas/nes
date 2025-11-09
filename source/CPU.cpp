@@ -926,11 +926,11 @@ void CPU::RLA() {
 
 void CPU::RRA() {
     // value = value >> 1 through C, then A = A + memory + C
-    // ROR();
-    // ADC();
+    ROR();
+    ADC();
 
-    // // Should not give an oops cycle.
-    // oops = false;
+    // Should not give an oops cycle.
+    oops = false;
 }
 
 void CPU::SAX() {
