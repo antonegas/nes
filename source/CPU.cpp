@@ -572,12 +572,13 @@ void CPU::JMP() {
 }
 
 void CPU::JSR() {
-    // Push program counter.
-    push((pc >> 8) & 0x00FF);
-    push(pc & 0x00FF);
-
     // PC = memory
     uint16_t mem = (this->*addrMode)();
+
+    // Push program counter.
+    pc--;
+    push((pc >> 8) & 0x00FF);
+    push(pc & 0x00FF);
 
     pc = mem;
 }
