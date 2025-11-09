@@ -935,8 +935,7 @@ void CPU::RRA() {
 
 void CPU::SAX() {
     // memory = A & X
-    // uint16_t addr = (this->*addrMode)();
-    // write(addr, a & x);
+    write(opAddr, a & x);
 }
 
 void CPU::SHX() {
