@@ -165,7 +165,7 @@ void CPU::interrupt(uint16_t addr, bool brk) {
 
     // Set pc to a value defined at addr.
     uint16_t low = read(addr);
-    uint16_t high = read(addr);
+    uint16_t high = read(addr + 1);
     pc = (high << 8) | low;
 }
 
