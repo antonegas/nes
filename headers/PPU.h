@@ -62,8 +62,8 @@ class PPU {
             struct {
                 uint8_t nametable : 2;
                 uint8_t incrementMode : 1;
-                uint16_t spriteTable : 1;
-                uint16_t backgroundTable : 1;
+                uint8_t spriteTable : 1;
+                uint8_t backgroundTable : 1;
                 uint8_t spriteHeight : 1;
                 uint8_t unused : 1;
                 bool nmiEnable : 1;
