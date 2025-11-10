@@ -343,18 +343,15 @@ void PPU::drawDot() {
     } else if (foreground & 0x03 != 0x00) {
         output = foreground;
     }
+    
+    // Grayscale forces output color to be white/gray by AND:ing with 0x30.
+    if (ppumask.grayscale) output = output & 0x30;
 
     // Output dot to screen.
     uint8_t r = palette.getR(output);
     uint8_t g = palette.getG(output);
     uint8_t b = palette.getB(output);
 
-    // Grayscale forces output color to be white/gray by AND:ing with 0x30.
-    if (ppumask.grayscale) {
-        r = r & 0x30;
-        g = g & 0x30;
-        b = b & 0x30;
-    }
 
     screen->put(dot, scanline, r, g, b);
 }
