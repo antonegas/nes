@@ -153,7 +153,7 @@ uint16_t RomFile::getPrgnvramSize() {
 
 uint32_t RomFile::getChrromSize() {
     if (getType() == RomFile::Type::UNSUPPORTED) return 0x00000000;
-    if (getType() == RomFile::Type::INES) return header.ines.prgramBlocks << 13;
+    if (getType() == RomFile::Type::INES) return header.ines.chrromBlocks << 13;
 
     // Exponent ROM size is not supported.
     if (header.nes2.chrromBlocksHigh == 0x0F) return 0x00000000;
