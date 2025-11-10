@@ -308,6 +308,8 @@ void PPU::drawDot() {
         uint8_t backgroundPal = (backgroundPalHigh << 1) | backgroundPalLow;
         
         background = (backgroundPal << 2) | (backgroundHigh << 1) | backgroundLow;
+
+        if ((background & 0x03) == 0x00) background = 0x00;
     }
 
     // Get foreground pixel value.
@@ -338,14 +340,14 @@ void PPU::drawDot() {
         ppustatus.S = ppustatus.S | (hasSprite0Current & isForegroundSprite0);
 
         if (priority) {
-            output = background;
+            output = paletteRam[background];
         } else {
-            output = foreground;
+            output = paletteRam[foreground];
         }
     } else if (background & 0x03 != 0x00) {
-        output = background;
+        output = paletteRam[background];
     } else if (foreground & 0x03 != 0x00) {
-        output = foreground;
+        output = paletteRam[foreground];
     }
     
     // Grayscale forces output color to be white/gray by AND:ing with 0x30.
