@@ -62,15 +62,17 @@ void Bus::tick() {
     cycle = cycle % (ppurate * cpurate);
 
     // Tick CPU and/or PPU if the current main cycle lines up with their clock rate.
-    if ((cycle + offset) % cpurate == 0) cpu.tick();
+    if ((cycle + offset) % cpurate == 0) {
+        cpu.tick();
+
+        // If DMA is active move data to PPU.
+        if (dmaActive) dmaTransfer();
+    }
     if (cycle % ppurate == 0) ppu.tick();
 
     // If the PPU has indicated an NMI one should be triggered on the CPU.
     if (ppu.nmi) cpu.delay(&CPU::nmi);
     ppu.nmi = false;
-
-    // If DMA is active move data to PPU.
-    if (dmaActive) dmaTransfer();
 
     // Tick the main clock once.
     cycle++;
@@ -165,25 +167,32 @@ void Bus::dmaInit(uint8_t page) {
     cpu.suspended = true;
     dmaRead = true;
     dmaWait = true;
+    dmaActive = true;
     dmaPage = page;
+    dmaLower = 0x00;
 }
 
 void Bus::dmaTransfer() {
     if (!dmaWait) {
         cpu.suspended = false;
+        dmaActive = false;
         return;
     }
 
+    // Wait one CPU and DMA disagree wait one CPU cycle.
+    if (dmaRead && !cpu.dmaRead) return;
+    if (!dmaRead && cpu.dmaRead) return;
+    
     if (dmaRead && cpu.dmaRead) {
         dmaData = read((dmaPage << 8) | dmaLower);
         dmaRead = false;
+        dmaLower++;
     }
     if (!dmaRead && !cpu.dmaRead) {
         ppu.dmaWrite(dmaData);
         dmaRead = true;
-        dmaLower++;
-    }
 
-    // CPU can only be unhalted on DMA read cycles.
-    if (dmaLower == 0x00) dmaWait = false;
+        // CPU can only be unhalted on DMA read cycles.
+        if (dmaLower == 0x00) dmaWait = false;
+    }
 }

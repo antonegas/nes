@@ -172,7 +172,6 @@ class PPU {
          */
         
         uint8_t oamaddr = 0x00;
-        uint8_t dmaaddr = 0x00;
 
         typedef struct {
             uint8_t y = 0x00;

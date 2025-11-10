@@ -50,7 +50,6 @@ void PPU::power() {
     t.addr = 0x0000;
     odd = false;
     nmi = false;
-    dmaaddr = 0x00;
 }
 
 void PPU::reset() {
@@ -61,7 +60,6 @@ void PPU::reset() {
     t.addr = 0x0000;
     odd = false;
     nmi = false;
-    dmaaddr = 0x00;
 }
 
 void PPU::insertCart(std::shared_ptr<Mapper> cart) {
@@ -177,7 +175,7 @@ void PPU::registerWrite(uint16_t addr, uint8_t data) {
 
 void PPU::dmaWrite(uint8_t data) {
     ((uint8_t*)primaryOam.data())[oamaddr] = data;
-    dmaaddr++;
+    oamaddr++;
 }
 
 bool PPU::fblank() {
