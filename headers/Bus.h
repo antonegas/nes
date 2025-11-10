@@ -10,6 +10,8 @@
 #include "APU.h"
 #include "BaseController.h"
 #include "Mapper.h"
+#include "Screen.h"
+#include "Palette.h"
 
 using std::uint64_t;
 using std::uint16_t;
@@ -28,6 +30,7 @@ class Bus {
         void reset();
         void insertCart(std::shared_ptr<Mapper> cart);
         void connectScreen(std::shared_ptr<Screen<256, 240>> screen);
+        void setPalette(Palette palette);
         uint8_t read(uint16_t addr);
         void write(uint16_t addr, uint8_t data);
     private:

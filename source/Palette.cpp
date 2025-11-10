@@ -6,14 +6,17 @@ using std::uint16_t;
 using std::uint8_t;
 
 uint8_t Palette::getR(uint16_t entry) {
+    if (data.size() == 0) return 0x00;
     return data[(entry * 3 + emphasis * 192) % data.size()];
 }
 
 uint8_t Palette::getG(uint16_t entry) {
+    if (data.size() == 0) return 0x00;
     return data[(entry * 3 + emphasis * 192 + 1) % data.size()];
 }
 
 uint8_t Palette::getB(uint16_t entry) {
+    if (data.size() == 0) return 0x00;
     return data[(entry * 3 + emphasis * 192 + 2) % data.size()];
 }
 

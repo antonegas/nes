@@ -100,6 +100,10 @@ void Bus::connectScreen(std::shared_ptr<Screen<256, 240>> screen) {
     ppu.connectScreen(screen);
 }
 
+void Bus::setPalette(Palette palette) {
+    ppu.setPalette(palette);
+}
+
 uint8_t Bus::read(uint16_t addr) {
     if (addr <= 0x1FFF) {
         // CPU RAM.

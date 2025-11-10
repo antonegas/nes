@@ -72,6 +72,10 @@ void PPU::connectScreen(std::shared_ptr<Screen<256, 240>> screen) {
     this->screen = screen;
 }
 
+void PPU::setPalette(Palette palette) {
+    this->palette = palette;
+}
+
 uint8_t PPU::registerRead(uint16_t addr) {
     switch (addr) {
         case 0x2002: {
@@ -79,7 +83,7 @@ uint8_t PPU::registerRead(uint16_t addr) {
             uint8_t status = ppustatus.status & 0xE0;
 
             // Reading PPUSTATUS has side effects.
-            ppustatus.V = 0;
+            ppustatus.V = false;
             w = 0;
 
             return status;
