@@ -197,7 +197,7 @@ uint8_t PPU::read(uint16_t addr) {
         addr = addr & 0x001F;
 
         // Every 4:th byte is mapped to 0x00 of the palette RAM.
-        if (addr & 0x000F == 0x0000) addr = 0x0000; 
+        if ((addr & 0x000F) == 0x0000) addr = 0x0000; 
 
         return paletteRam[addr];
     } else {
@@ -216,7 +216,7 @@ void PPU::write(uint16_t addr, uint8_t data) {
         addr = addr & 0x001F;
 
         // Every 4:th byte is mapped to 0x00 of the palette RAM.
-        if (addr & 0x000F == 0x0000) addr = 0x0000; 
+        if ((addr & 0x000F) == 0x0000) addr = 0x0000; 
 
         paletteRam[addr] = data;
     }
@@ -301,10 +301,10 @@ void PPU::drawDot() {
     // Get background pixel value.
     if (isBackgroundEnabled) {
         uint16_t selected = 0x8000 >> fineX;
-        uint8_t backgroundLow = selected & shifterPatternLow != 0x0000;
-        uint8_t backgroundHigh = selected & shifterPatternHigh != 0x0000;
-        uint8_t backgroundPalLow = selected & shifterPalLow != 0x0000;
-        uint8_t backgroundPalHigh = selected & shifterPalHigh != 0x0000;
+        uint8_t backgroundLow = (selected & shifterPatternLow) != 0x0000;
+        uint8_t backgroundHigh = (selected & shifterPatternHigh) != 0x0000;
+        uint8_t backgroundPalLow = (selected & shifterPalLow) != 0x0000;
+        uint8_t backgroundPalHigh = (selected & shifterPalHigh) != 0x0000;
         uint8_t backgroundPal = (backgroundPalHigh << 1) | backgroundPalLow;
         
         background = (backgroundPal << 2) | (backgroundHigh << 1) | backgroundLow;
@@ -320,8 +320,8 @@ void PPU::drawDot() {
         for (size_t i = 0; i < 8; i++) {
             if (mpbm[i].x > 0) continue;
 
-            foregroundLow = mpbm[i].low & 0x80 != 0x00;
-            foregroundHigh = mpbm[i].high & 0x80 != 0x00;
+            foregroundLow = (mpbm[i].low & 0x80) != 0x00;
+            foregroundHigh = (mpbm[i].high & 0x80) != 0x00;
 
             foreground = (foregroundHigh << 1) | foregroundLow;
 
@@ -335,7 +335,7 @@ void PPU::drawDot() {
     }
     
     // Get which palette index to output.
-    if (background & 0x03 != 0x00 && foreground & 0x03 != 0x00) {
+    if ((background & 0x03) != 0x00 && (foreground & 0x03) != 0x00) {
         // Set sprite 0 hit flag.
         ppustatus.S = ppustatus.S | (hasSprite0Current & isForegroundSprite0);
 
@@ -344,9 +344,9 @@ void PPU::drawDot() {
         } else {
             output = paletteRam[foreground];
         }
-    } else if (background & 0x03 != 0x00) {
+    } else if ((background & 0x03) != 0x00) {
         output = paletteRam[background];
-    } else if (foreground & 0x03 != 0x00) {
+    } else if ((foreground & 0x03) != 0x00) {
         output = paletteRam[foreground];
     }
     
@@ -430,7 +430,7 @@ void PPU::fetchBackground() {
 
 void PPU::fetchForeground() {
     if (dot <= 64) {
-        if (dot & 0x0001 == 0x0000) ((uint8_t*)secondaryOam.data())[(dot - 2) >> 1] = 0xFF;
+        if ((dot & 0x0001) == 0x0000) ((uint8_t*)secondaryOam.data())[(dot - 2) >> 1] = 0xFF;
     } else if (dot <= 256) {
         // Read on odd cycles.
         if (dot & 0x0001) return;
@@ -440,7 +440,7 @@ void PPU::fetchForeground() {
         if (primaryPtr >= 0x0100 || ppustatus.O) return; 
 
         // If current sprite was in range copy it to secondary OAM.
-        if (secondaryPtr & 0x03 != 0x00) {
+        if ((secondaryPtr & 0x03) != 0x00) {
             ((uint8_t*)secondaryOam.data())[secondaryPtr] = ((uint8_t*)primaryOam.data())[primaryPtr];
 
             // Move to next field in both OAMs.
