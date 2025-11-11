@@ -400,30 +400,32 @@ void PPU::fetchBackground() {
             if (nextAttr & 0x02) {
                 shifterPalHigh = shifterPalHigh | 0x00FF;
             }
-            return;
+            break;
         case 0x0001:
             nextTile = read(tileAddr());
-            return;
+            break;
         case 0x0003:
             nextAttr = read(attrAddr());
-            return;
+            break;
         case 0x0005:
             nextPatternLow = read(
                 (ppuctrl.backgroundTable << 12) |
                 (nextTile << 4) |
                 v.fineY
             );
-            return;
+            break;
         case 0x0007:
             nextPatternHigh = read(
                 (ppuctrl.backgroundTable << 12) |
                 (nextTile << 4) |
                 (v.fineY + 8)
             );
-            return;
+            break;
         default:
-            return;
+            break;
     }
+
+    if (dot == 256) v.incrementY();
 }
 
 void PPU::fetchForeground() {
