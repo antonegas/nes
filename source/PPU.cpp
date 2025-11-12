@@ -244,7 +244,7 @@ uint16_t PPU::tileAddr() {
 }
 
 uint16_t PPU::attrAddr() {
-    return 0x23C0 | (v.nametable << 10) | (((v.coarseY & 0x1C) >> 2) << 3) | ((v.coarseX & 0x1C) >> 2);
+    return 0x23C0 | (v.nametable << 10) | ((v.coarseY >> 2) << 3) | (v.coarseX >> 2);
 }
 
 void PPU::tickVisibleFrame() {
