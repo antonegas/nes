@@ -364,6 +364,8 @@ void PPU::fetchBackground() {
     if (dot == 0) return;
 
     if (dot == 257) {
+        loadShifters();
+
         // Set v.X = t.X
         v.coarseX = t.coarseX;
         v.nametable = (v.nametable & 0x02) | (t.nametable & 0x01);
@@ -391,16 +393,7 @@ void PPU::fetchBackground() {
             v.incrementX();
             break;
         case 0x0001:
-            // Load shifters.
-            shifterPatternLow = shifterPatternLow | nextPatternLow;
-            shifterPatternHigh = shifterPatternHigh | nextPatternHigh;
-
-            if (nextAttr & 0x01) {
-                shifterPalLow = shifterPalLow | 0x00FF;
-            }
-            if (nextAttr & 0x02) {
-                shifterPalHigh = shifterPalHigh | 0x00FF;
-            }
+            loadShifters();
 
             nextTile = read(tileAddr());
             break;
@@ -590,5 +583,17 @@ void PPU::updateShifters() {
                 mpbm[i].low = mpbm[i].low << 1;
             }
         }
+    }
+}
+
+void PPU::loadShifters() {
+    shifterPatternLow = shifterPatternLow | nextPatternLow;
+    shifterPatternHigh = shifterPatternHigh | nextPatternHigh;
+
+    if (nextAttr & 0x01) {
+        shifterPalLow = shifterPalLow | 0x00FF;
+    }
+    if (nextAttr & 0x02) {
+        shifterPalHigh = shifterPalHigh | 0x00FF;
     }
 }
