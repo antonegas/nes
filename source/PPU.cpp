@@ -389,7 +389,8 @@ void PPU::fetchBackground() {
     switch (dot & 0x0007) {
         case 0x0000:
             v.incrementX();
-            
+            break;
+        case 0x0001:
             // Load shifters.
             shifterPatternLow = shifterPatternLow | nextPatternLow;
             shifterPatternHigh = shifterPatternHigh | nextPatternHigh;
@@ -400,8 +401,7 @@ void PPU::fetchBackground() {
             if (nextAttr & 0x02) {
                 shifterPalHigh = shifterPalHigh | 0x00FF;
             }
-            break;
-        case 0x0001:
+
             nextTile = read(tileAddr());
             break;
         case 0x0003:
