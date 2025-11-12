@@ -392,7 +392,7 @@ void PPU::fetchBackground() {
             
             // Load shifters.
             shifterPatternLow = shifterPatternLow | nextPatternLow;
-            shifterPatternHigh = shifterPalHigh | nextPatternHigh;
+            shifterPatternHigh = shifterPatternHigh | nextPatternHigh;
 
             if (nextAttr & 0x01) {
                 shifterPalLow = shifterPalLow | 0x00FF;
