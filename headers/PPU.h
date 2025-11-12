@@ -254,6 +254,7 @@ class PPU {
         void fetchForeground();
         uint16_t spriteAddr(OAM tile);
         void updateShifters();
+        void loadShifters();
 };
 
 #endif // H_PPU
