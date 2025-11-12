@@ -399,6 +399,10 @@ void PPU::fetchBackground() {
             break;
         case 0x0003:
             nextAttr = read(attrAddr());
+
+            if (v.coarseY & 0x02) nextAttr = nextAttr >> 4;
+            if (v.coarseX & 0x02) nextAttr = nextAttr >> 2;
+            nextAttr = nextAttr & 0x03;
             break;
         case 0x0005:
             nextPatternLow = read(
