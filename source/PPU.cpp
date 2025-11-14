@@ -347,6 +347,8 @@ void PPU::drawDot() {
         output = paletteRam[background];
     } else if ((foreground & 0x03) != 0x00) {
         output = paletteRam[foreground];
+    } else {
+        output = paletteRam[0x00];
     }
     
     // Grayscale forces output color to be white/gray by AND:ing with 0x30.
