@@ -88,10 +88,6 @@ uint8_t PPU::registerRead(uint16_t addr) {
         }
         case 0x2004:
             // OAMDATA
-            if (scanline <= 239 && 1 <= dot && dot <= 64 && !fblank()) {
-                // Secondary OAM clear.
-                return 0xFF;
-            }
 
             return ((uint8_t*)primaryOam.data())[oamaddr];
         case 0x2007:{
