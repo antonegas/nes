@@ -102,6 +102,10 @@ void Bus::connectScreen(std::shared_ptr<Screen<256, 240>> screen) {
     ppu.connectScreen(screen);
 }
 
+void Bus::connectController(std::shared_ptr<BaseController> controller, uint16_t addr) {
+    controllers[addr & 0x0001] = controller;
+}
+
 void Bus::setPalette(Palette palette) {
     ppu.setPalette(palette);
 }
@@ -124,7 +128,11 @@ uint8_t Bus::read(uint16_t addr) {
         return apu.read(addr);
     } else if (addr <= 0x4017) {
         // Joycons.
-        return controllers[addr & 0x0001].read();
+        if (controllers[addr & 0x0001]) {
+            return controllers[addr & 0x0001]->read();
+        } else {
+            return 0x00;
+        }
     } else if (addr <= 0xFFFF) {
         // Read from cartridge
         if (cart) {
@@ -156,8 +164,8 @@ void Bus::write(uint16_t addr, uint8_t data) {
         apu.write(addr, data);
     } else if (addr == 0x4016) {
         // Joystick strobe.
-        controllers[0].reload();
-        controllers[1].reload();
+        if (controllers[0]) controllers[0]->reload();
+        if (controllers[1]) controllers[1]->reload();
     } else if (addr == 0x4017) {
         // APU frame counter.
         apu.write(addr, data);

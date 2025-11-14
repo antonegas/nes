@@ -9,7 +9,7 @@
 
 using std::uint8_t;
 
-class SDLStandardController : StandardController {
+class SDLStandardController : public StandardController {
     public:
         // TODO: Support custom mappings
         virtual void update(SDL_Event *event);

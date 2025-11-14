@@ -30,6 +30,7 @@ class Bus {
         void reset();
         void insertCart(std::shared_ptr<Mapper> cart);
         void connectScreen(std::shared_ptr<Screen<256, 240>> screen);
+        void connectController(std::shared_ptr<BaseController> controller, uint16_t addr);
         void setPalette(Palette palette);
         uint8_t read(uint16_t addr);
         void write(uint16_t addr, uint8_t data);
@@ -60,7 +61,7 @@ class Bus {
         CPU cpu;
         PPU ppu;
         APU apu;
-        std::array<BaseController, 2> controllers;
+        std::array<std::shared_ptr<BaseController>, 2> controllers;
         std::shared_ptr<Mapper> cart;
 
         /**

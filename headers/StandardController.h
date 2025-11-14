@@ -7,7 +7,7 @@
 
 using std::uint8_t;
 
-class StandardController : BaseController {
+class StandardController : public BaseController {
     public:
         virtual uint8_t read() override;
         virtual void reload() override;
