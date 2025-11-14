@@ -7,8 +7,8 @@ using std::uint8_t;
 uint8_t StandardController::read() {
     if (!remaining) return 0x01;
 
-    bool bit = buffer & 0x80; // Capture the bit before shifting.
-    buffer = buffer << 1;
+    bool bit = buffer & 0x01; // Capture the bit before shifting.
+    buffer = buffer >> 1;
     remaining--;
 
     return bit;

@@ -12,7 +12,7 @@ using std::uint8_t;
 class SDLStandardController : public StandardController {
     public:
         // TODO: Support custom mappings
-        virtual void update(SDL_Event *event);
+        virtual void update(SDL_GamepadButtonEvent *event);
         SDL_JoystickID id = 0x0000; // Default as invalid.
 };
 

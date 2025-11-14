@@ -4,46 +4,40 @@
 
 #include "SDL/SDLStandardController.h"
 
-void SDLStandardController::update(SDL_Event *event) {
+void SDLStandardController::update(SDL_GamepadButtonEvent *event) {
     // TODO: Maybe support joystick.
     // Skip events which are not gamepad button events.
-    if (
-        event->type != SDL_EVENT_GAMEPAD_BUTTON_DOWN && 
-        event->type != SDL_EVENT_GAMEPAD_BUTTON_UP
-    ) return;
-    
-    SDL_GamepadButtonEvent *buttonEvent = (SDL_GamepadButtonEvent*)event;
 
     // Don't use the wrong gamepad to get state.
-    if (buttonEvent->which != id) return;
+    if (event->which != id) return;
 
     // Update correct state bit.
-    switch (buttonEvent->button) {
-        case SDL_GAMEPAD_BUTTON_NORTH:
-        case SDL_GAMEPAD_BUTTON_WEST:
-            state.a = buttonEvent->down;
-            break;
-        case SDL_GAMEPAD_BUTTON_SOUTH:
+    switch (event->button) {
+        // case SDL_GAMEPAD_BUTTON_NORTH:
         case SDL_GAMEPAD_BUTTON_EAST:
-            state.b = buttonEvent->down;
+            state.a = event->down;
+            break;
+        // case SDL_GAMEPAD_BUTTON_WEST:
+        case SDL_GAMEPAD_BUTTON_SOUTH:
+            state.b = event->down;
             break;
         case SDL_GAMEPAD_BUTTON_BACK:
-            state.select = buttonEvent->down;
+            state.select = event->down;
             break;
         case SDL_GAMEPAD_BUTTON_START:
-            state.start = buttonEvent->down;
+            state.start = event->down;
             break;
         case SDL_GAMEPAD_BUTTON_DPAD_UP:
-            state.up = buttonEvent->down;
+            state.up = event->down;
             break;
         case SDL_GAMEPAD_BUTTON_DPAD_DOWN:
-            state.down = buttonEvent->down;
+            state.down = event->down;
             break;
         case SDL_GAMEPAD_BUTTON_DPAD_LEFT:
-            state.left = buttonEvent->down;
+            state.left = event->down;
             break;
         case SDL_GAMEPAD_BUTTON_DPAD_RIGHT:
-            state.right = buttonEvent->down;
+            state.right = event->down;
             break;
     }
 }
