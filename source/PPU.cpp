@@ -189,8 +189,11 @@ uint8_t PPU::read(uint16_t addr) {
 
     if (addr <= 0x1FFF) {
         return cart->ppuRead(addr);
-    } else if (addr <= 0x3EFF) {
+    } else if (addr <= 0x2FFF) {
         return vram[cart->mirrorAddr(addr)];
+    } else if (addr <= 0x3EFF) {
+        // Unmapped.
+        return 0x00;
     } else if (addr <= 0x3FFF) {
         addr = addr & 0x001F;
 
@@ -208,8 +211,10 @@ void PPU::write(uint16_t addr, uint8_t data) {
 
     if (addr <= 0x1FFF) {
         cart->ppuWrite(addr, data);
-    } else if (addr <= 0x3EFF) {
+    } else if (addr <= 0x2FFF) {
         vram[cart->mirrorAddr(addr)] = data;
+    } else if (addr <= 0x3EFF) {
+        // Unmapped
     } else if (addr <= 0x3FFF) {
         addr = addr & 0x001F;
 
