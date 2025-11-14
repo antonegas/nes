@@ -108,15 +108,15 @@ class PPU {
 
         union Loopy {
             struct {
-                uint8_t coarseX : 5;
-                uint8_t coarseY : 5;
-                uint8_t nametable : 2;
-                uint8_t fineY : 3;
-                uint8_t unused : 1;
+                uint16_t coarseX : 5;
+                uint16_t coarseY : 5;
+                uint16_t nametable : 2;
+                uint16_t fineY : 3;
+                uint16_t unused : 1;
             };
             struct {
-                uint8_t low;
-                uint8_t high;
+                uint16_t low : 8;
+                uint16_t high : 8;
             };
             uint16_t addr = 0x0000;
 
