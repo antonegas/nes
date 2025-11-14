@@ -184,9 +184,17 @@ uint8_t PPU::read(uint16_t addr) {
     addr = addr & 0x3FFF; // PPU addresses are 14 bits.
 
     if (addr <= 0x1FFF) {
-        return cart->ppuRead(addr);
+        if (cart) {
+            return cart->ppuRead(addr);
+        } else {
+            return 0x00;
+        }
     } else if (addr <= 0x2FFF) {
-        return vram[cart->mirrorAddr(addr)];
+        if (cart) {
+            return vram[cart->mirrorAddr(addr)];
+        } else {
+            return 0x00;
+        }
     } else if (addr <= 0x3EFF) {
         // Unmapped.
         return 0x00;
@@ -206,9 +214,9 @@ void PPU::write(uint16_t addr, uint8_t data) {
     addr = addr & 0x3FFF; // PPU addresses are 14 bits.
 
     if (addr <= 0x1FFF) {
-        cart->ppuWrite(addr, data);
+        if (cart) cart->ppuWrite(addr, data);
     } else if (addr <= 0x2FFF) {
-        vram[cart->mirrorAddr(addr)] = data;
+        if (cart) vram[cart->mirrorAddr(addr)] = data;
     } else if (addr <= 0x3EFF) {
         // Unmapped
     } else if (addr <= 0x3FFF) {
@@ -250,7 +258,7 @@ uint16_t PPU::attrAddr() {
 
 void PPU::tickVisibleFrame() {
     // Display a finished frame on the screen.
-    if (scanline == 239 && dot == 255) screen->swap();
+    if (scanline == 239 && dot == 255 && screen) screen->swap();
 
     if (fblank()) {
         drawDot();
@@ -360,7 +368,7 @@ void PPU::drawDot() {
     uint8_t b = palette.getB(output);
 
 
-    screen->put(dot, scanline, r, g, b);
+    if (screen) screen->put(dot, scanline, r, g, b);
 }
 
 void PPU::fetchBackground() {

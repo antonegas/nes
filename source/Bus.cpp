@@ -127,7 +127,11 @@ uint8_t Bus::read(uint16_t addr) {
         return controllers[addr & 0x0001].read();
     } else if (addr <= 0xFFFF) {
         // Read from cartridge
-        return cart->cpuRead(addr);
+        if (cart) {
+            return cart->cpuRead(addr);
+        } else {
+            return 0x00;
+        }
     } else {
         // Never reached.
         return 0x00;
@@ -159,7 +163,7 @@ void Bus::write(uint16_t addr, uint8_t data) {
         apu.write(addr, data);
     } else if (addr <= 0xFFFF) {
         // Write to cartridge.
-        cart->cpuWrite(addr, data);
+        if (cart) cart->cpuWrite(addr, data);
     }
 }
 
