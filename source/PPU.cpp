@@ -336,7 +336,7 @@ void PPU::drawDot() {
     // Get which palette index to output.
     if ((background & 0x03) != 0x00 && (foreground & 0x03) != 0x00) {
         // Set sprite 0 hit flag.
-        ppustatus.S = ppustatus.S | (hasSprite0Current & isForegroundSprite0);
+        ppustatus.S = ppustatus.S || (hasSprite0Current && isForegroundSprite0);
 
         if (priority) {
             output = paletteRam[background];
