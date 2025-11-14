@@ -104,7 +104,7 @@ uint8_t PPU::registerRead(uint16_t addr) {
 
             // When the CPU reads from the PPU memory PPUADDR is increased by 1 or 32 depending on 
             // increment mode.
-            v.addr += 0x01 + 0x19 * ppuctrl.incrementMode;
+            v.addr += 0x01 + 0x1F * ppuctrl.incrementMode;
 
             return data;
         }
@@ -168,7 +168,7 @@ void PPU::registerWrite(uint16_t addr, uint8_t data) {
 
             // When the CPU writing from the PPU memory PPUADDR is increased by 1 or 32 depending 
             // on increment mode.
-            v.addr += 0x01 + 0x19 * ppuctrl.incrementMode;
+            v.addr += 0x01 + 0x1F * ppuctrl.incrementMode;
             break;
     }
 }
