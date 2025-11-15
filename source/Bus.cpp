@@ -17,8 +17,6 @@ void Bus::update(uint64_t time) {
         return;
     }
 
-    uint64_t const MEGA = 1000000000;
-
     uint64_t passed = time - previousTime;
 
     // NTSC (21.477272 MHz +/- 40 Hz)
@@ -28,11 +26,11 @@ void Bus::update(uint64_t time) {
     // uint32_t mainClock = 26601712;
 
     // Calculate how many cycles has passed.
-    uint64_t nanoCycles = passed * mainClock + remainingCycles;
-    uint64_t cycles = nanoCycles / MEGA;
+    uint64_t nanoCycles = (passed * mainClock + remainingCycles);
+    uint64_t cycles = nanoCycles / 1000000000 / 12;
 
     // Set helper fields.
-    remainingCycles = nanoCycles - cycles * MEGA;
+    remainingCycles = nanoCycles - cycles * 1000000000 * 12;
     previousTime = time;
 
     // Tick the bus for the amount of cycles passed since last update.
@@ -44,9 +42,12 @@ void Bus::update(uint64_t time) {
 void Bus::tick() {
     if (!cartInserted) return;
 
+    uint8_t ppurate = 1;
+    uint8_t cpurate = 3;
+
     // NTSC (3 dots / CPU cycle)
-    uint8_t ppurate = 4;
-    uint8_t cpurate = 12;
+    // uint8_t ppurate = 4;
+    // uint8_t cpurate = 12;
 
     // PAL (3.2 dots / CPU cycle)
     // uint8_t ppurate = 5;
