@@ -10,6 +10,8 @@ template <std::size_t W, std::size_t H>
 class Screen {
     public:
         virtual void put(std::size_t x, std::size_t y, uint8_t r, uint8_t g, uint8_t b);
+        virtual void put(std::size_t x, std::size_t y, std::array<uint8_t, 3> color);
+        virtual std::array<uint8_t, 3> get(std::size_t x, std::size_t y);
         virtual void swap();
     protected:
         typedef struct {

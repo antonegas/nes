@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <array>
 
 #include "PPU.h"
 
@@ -258,7 +259,11 @@ uint16_t PPU::attrAddr() {
 
 void PPU::tickVisibleFrame() {
     // Display a finished frame on the screen.
-    if (scanline == 239 && dot == 255 && screen) screen->swap();
+    if (scanline == 239 && dot == 255 && screen) {
+        std::array<uint8_t, 3> color = screen->get(0, 0);
+        screen->swap();
+        screen->put(0, 0, color);
+    }
 
     if (fblank()) {
         drawDot();
