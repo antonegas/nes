@@ -35,7 +35,7 @@ void SDLScreen<W, H>::draw(SDL_Renderer *renderer) {
 
     // Draw pixels.
     SDL_FRect pixel = {0.0, 0.0, 1.0, 1.0};
-    typename Screen<W, H>::RGB color;
+    typename Screen<W, H>::RGBA color;
 
     for (std::size_t y = 0; y < H; y++) {
         for (std::size_t x = 0; x < W; x++) {
@@ -44,7 +44,7 @@ void SDLScreen<W, H>::draw(SDL_Renderer *renderer) {
             pixel.y = y + OFFSET_Y;
 
             // Draw pixel.
-            color = buffer[x][y];
+            color = buffer[x + y * W];
             SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, SDL_ALPHA_OPAQUE);
             SDL_RenderFillRect(renderer, &pixel);
         }

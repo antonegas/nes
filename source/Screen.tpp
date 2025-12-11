@@ -15,9 +15,9 @@ void Screen<W, H>::put(std::size_t x, std::size_t y, uint8_t r, uint8_t g, uint8
     if (x < 0 || x >= W) return;
     if (y < 0 || y >= H) return;
 
-    buffers[1][x][y].r = r;
-    buffers[1][x][y].g = g;
-    buffers[1][x][y].b = b;
+    buffers[1][x + y * W].r = r;
+    buffers[1][x + y * W].g = g;
+    buffers[1][x + y * W].b = b;
 }
 
 template <std::size_t W, std::size_t H>
@@ -25,9 +25,9 @@ void Screen<W, H>::put(std::size_t x, std::size_t y, std::array<uint8_t, 3> colo
     if (x < 0 || x >= W) return;
     if (y < 0 || y >= H) return;
 
-    buffers[1][x][y].r = color[0];
-    buffers[1][x][y].g = color[1];
-    buffers[1][x][y].b = color[2];
+    buffers[1][x + y * W].r = color[0];
+    buffers[1][x + y * W].g = color[1];
+    buffers[1][x + y * W].b = color[2];
 }
 
 template <std::size_t W, std::size_t H>
@@ -37,9 +37,9 @@ std::array<uint8_t, 3> Screen<W, H>::get(std::size_t x, std::size_t y) {
     if (x < 0 || x >= W) return color;
     if (y < 0 || y >= H) return color;
 
-    color[0] = buffers[1][x][y].r;
-    color[1] = buffers[1][x][y].g;
-    color[2] = buffers[1][x][y].b;
+    color[0] = buffers[1][x + y * W].r;
+    color[1] = buffers[1][x + y * W].g;
+    color[2] = buffers[1][x + y * W].b;
 
     return color;
 }
