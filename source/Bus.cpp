@@ -27,10 +27,10 @@ void Bus::update(uint64_t time) {
 
     // Calculate how many cycles has passed.
     uint64_t nanoCycles = (passed * mainClock + remainingCycles);
-    uint64_t cycles = nanoCycles / 1000000000 / 12;
+    uint64_t cycles = nanoCycles / 1000000000 / 4;
 
     // Set helper fields.
-    remainingCycles = nanoCycles - cycles * 1000000000 * 12;
+    remainingCycles = nanoCycles - cycles * 1000000000 * 4;
     previousTime = time;
 
     // Tick the bus for the amount of cycles passed since last update.
