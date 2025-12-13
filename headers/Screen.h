@@ -18,6 +18,7 @@ class Screen {
             uint8_t r = 0x00;
             uint8_t g = 0x00;
             uint8_t b = 0x00;
+            uint8_t a = 0xFF;
         } RGBA;
         typedef std::array<RGBA, W * H> Buffer;
 
