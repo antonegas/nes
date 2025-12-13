@@ -12,7 +12,7 @@ Bus::Bus() {
 }
 
 void Bus::update(uint64_t time) {
-    if (previousTime == 0x0000000000000000) {
+    if (previousTime == 0x0000000000000000 || paused) {
         previousTime = time;
         return;
     }
@@ -37,6 +37,14 @@ void Bus::update(uint64_t time) {
     while (cycles--) {
         tick();
     }
+}
+
+void Bus::pause() {
+    paused = true;
+}
+
+void Bus::unpause() {
+    paused = false;
 }
 
 void Bus::tick() {

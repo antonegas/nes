@@ -20,11 +20,12 @@ using std::uint8_t;
 class Bus {
     public:
         Bus();
-        // TODO: Add ability to pause updates.
         // TODO: Add ability to step one CPU.
         // TODO: Add ability to step one CPU instruction.
         // TODO: Add ability to step one PPU dot.
         void update(uint64_t time);
+        void pause();
+        void unpause();
         void tick();
         void power();
         void reset();
@@ -38,6 +39,7 @@ class Bus {
         // TODO: Document under https://www.nesdev.org/wiki/Cycle_reference_chart
         uint64_t previousTime = 0x0000000000000000;
         uint64_t remainingCycles = 0x0000000000000000; // Nano cycles left after update.
+        bool paused = false;
         uint8_t cycle = 0x00; // Master clock modolo CPU * PPU master clocks / clock.
         bool cartInserted = false;
 
