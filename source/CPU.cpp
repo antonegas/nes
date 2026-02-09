@@ -9,7 +9,7 @@ using std::uint8_t;
 void CPU::tick() {
     // If a KIL instruction is called the CPU should halt.
     // TODO: Make KIL have one wait cycle.
-    if (op == &KIL) return;
+    if (op == &CPU::KIL) return;
 
     // CPU switches being allowing DMA to read or write each cycle.
     dmaRead = !dmaRead;
@@ -116,13 +116,13 @@ void CPU::nmi() {
 void CPU::delay(void (CPU::*interrupt)()) {
     if (priority >= 0x03) return;
 
-    if (interrupt == &reset) {
+    if (interrupt == &CPU::reset) {
         delayed = interrupt;
         priority = 0x03;
-    } else if (interrupt == &nmi && priority < 0x02) {
+    } else if (interrupt == &CPU::nmi && priority < 0x02) {
         delayed = interrupt;
         priority = 0x02;
-    } else if (interrupt == &irq && priority < 0x01 && !p.I) {
+    } else if (interrupt == &CPU::irq && priority < 0x01 && !p.I) {
         delayed = interrupt;
         priority = 0x01;
     }
@@ -313,7 +313,7 @@ void CPU::AND() {
 void CPU::ASL() {
     // value = value << 1
     uint8_t val = 0x00;
-    if (addrMode == &ACC) {
+    if (addrMode == &CPU::ACC) {
         val = a;
     } else {
         val = read(opAddr);
@@ -326,7 +326,7 @@ void CPU::ASL() {
     p.Z = res == 0x00;
     p.N = res & 0x80;
 
-    if (addrMode == &ACC) {
+    if (addrMode == &CPU::ACC) {
         a = res;
     } else {
         write(opAddr, res);
@@ -582,7 +582,7 @@ void CPU::LDY() {
 void CPU::LSR() {
     // value = value >> 1
     uint8_t val = 0x00;
-    if (addrMode == &ACC) {
+    if (addrMode == &CPU::ACC) {
         val = a;
     } else {
         val = read(opAddr);
@@ -595,7 +595,7 @@ void CPU::LSR() {
     p.Z = res == 0x00;
     p.N = 0;
 
-    if (addrMode == &ACC) {
+    if (addrMode == &CPU::ACC) {
         a = res;
     } else {
         write(opAddr, res);
@@ -650,7 +650,7 @@ void CPU::PLP() {
 void CPU::ROL() {
     // value = value << 1 through C
     uint8_t val = 0x00;
-    if (addrMode == &ACC) {
+    if (addrMode == &CPU::ACC) {
         val = a;
     } else {
         val = read(opAddr);
@@ -663,7 +663,7 @@ void CPU::ROL() {
     p.Z = res == 0x00;
     p.N = res & 0x80;
 
-    if (addrMode == &ACC) {
+    if (addrMode == &CPU::ACC) {
         a = res;
     } else {
         write(opAddr, res);
@@ -676,7 +676,7 @@ void CPU::ROL() {
 void CPU::ROR() {
     // value = value >> 1 through C
     uint8_t val = 0x00;
-    if (addrMode == &ACC) {
+    if (addrMode == &CPU::ACC) {
         val = a;
     } else {
         val = read(opAddr);
@@ -689,7 +689,7 @@ void CPU::ROR() {
     p.Z = res == 0x00;
     p.N = res & 0x80;
 
-    if (addrMode == &ACC) {
+    if (addrMode == &CPU::ACC) {
         a = res;
     } else {
         write(opAddr, res);
@@ -908,7 +908,7 @@ void CPU::LAS() {
 void CPU::LAX() {
     // A = memory, then X = memory or X = A
     LDA();
-    if (addrMode == &IMM) {
+    if (addrMode == &CPU::IMM) {
         TAX();
     } else {
         LDX();
