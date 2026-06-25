@@ -173,7 +173,7 @@ class PPU {
         
         uint8_t oamaddr = 0x00;
 
-        typedef struct {
+        using OAM = struct {
             uint8_t y = 0x00;
             uint8_t tile = 0x00;
             union Attribute {
@@ -187,7 +187,7 @@ class PPU {
                 uint8_t data = 0x00;
             } attr;
             uint8_t x = 0x00;
-        } OAM;
+        };
 
         std::array<OAM, 64> primaryOam;
         std::array<OAM, 8> secondaryOam;
@@ -207,14 +207,14 @@ class PPU {
          * NesDev reference: https://forums.nesdev.org/viewtopic.php?t=26291
          */
 
-        typedef struct {
+        using MPBM = struct {
             uint8_t low = 0x00;
             uint8_t high = 0x00;
             uint8_t pal : 2 = 0x00;
             bool prio : 1 = false;
             uint8_t unused : 5 = 0x00;
             uint8_t x = 0x00;
-        } MPBM;
+        };
 
         std::array<MPBM, 8> mpbm;
 

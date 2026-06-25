@@ -204,11 +204,11 @@ class CPU {
          * Reference: https://www.oxyron.de/html/opcodes02.html
          */
 
-        typedef struct {
+        using Lookup = struct {
             void (CPU::*addrMode)() = nullptr;
             void (CPU::*op)() = nullptr;
             uint8_t cycles = 0;
-        } Lookup;
+        };
 
         std::array<Lookup, 256> opcodes = {{
         //                    X0               X1               X2               X3               X4               X5               X6               X7               X8               X9               XA               XB               XC               XD               XE               XF

@@ -14,12 +14,12 @@ class Screen {
         virtual std::array<uint8_t, 3> get(std::size_t x, std::size_t y);
         virtual void swap();
     protected:
-        typedef struct {
+        using RGBA = struct {
             uint8_t r = 0x00;
             uint8_t g = 0x00;
             uint8_t b = 0x00;
             uint8_t a = 0xFF;
-        } RGBA;
+        };
         typedef std::array<RGBA, W * H> Buffer;
 
         std::array<Buffer, 2> buffers;
