@@ -173,7 +173,7 @@ class PPU {
         
         uint8_t oamaddr = 0x00;
 
-        using OAM = struct {
+        struct OAM {
             uint8_t y = 0x00;
             uint8_t tile = 0x00;
             union Attribute {
@@ -207,7 +207,7 @@ class PPU {
          * NesDev reference: https://forums.nesdev.org/viewtopic.php?t=26291
          */
 
-        using MPBM = struct {
+        struct MPBM {
             uint8_t low = 0x00;
             uint8_t high = 0x00;
             uint8_t pal : 2 = 0x00;

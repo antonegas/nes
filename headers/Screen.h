@@ -14,7 +14,7 @@ class Screen {
         virtual std::array<uint8_t, 3> get(std::size_t x, std::size_t y);
         virtual void swap();
     protected:
-        using RGBA = struct {
+        struct RGBA {
             uint8_t r = 0x00;
             uint8_t g = 0x00;
             uint8_t b = 0x00;

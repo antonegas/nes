@@ -204,7 +204,7 @@ class CPU {
          * Reference: https://www.oxyron.de/html/opcodes02.html
          */
 
-        using Lookup = struct {
+        struct Lookup {
             void (CPU::*addrMode)() = nullptr;
             void (CPU::*op)() = nullptr;
             uint8_t cycles = 0;
