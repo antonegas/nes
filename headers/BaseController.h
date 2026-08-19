@@ -22,9 +22,9 @@ class BaseController {
         // NOTE: OUT is the D0 bit from the write bus.
         // TODO: Update documentation (https://www.nesdev.org/wiki/Controller_port_pinout) is a better reference.
 
-        virtual uint8_t read(uint16_t) { return clk() & 0x19; }
-        virtual void write(uint16_t, uint8_t data) { if (data & 0x01) out(); }
-    private:
+        uint8_t read(uint16_t) { return clk() & 0x19; }
+        void write(uint16_t, uint8_t data) { if (data & 0x01) out(); }
+    protected:
         virtual void out() {}
         virtual uint8_t clk() { return 0x00; }
 };
